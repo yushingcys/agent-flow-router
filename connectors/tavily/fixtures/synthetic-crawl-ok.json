@@ -1,0 +1,29 @@
+{
+    "name": "synthetic-crawl-ok",
+    "description": "SYNTHETIC chain for tavily#crawl, from the documented 200 example (docs.tavily.com api-reference/endpoint/crawl, 2026-10-23) with raw_content hand-truncated: base_url, results[].url/raw_content/favicon, response_time, request_id.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "base_url": "docs.tavily.com",
+                    "results": [
+                        {
+                            "url": "https://docs.tavily.com/welcome",
+                            "raw_content": "Welcome - Tavily Docs\n\nExplore our docs.",
+                            "favicon": "https://docs.tavily.com/favicon.png"
+                        },
+                        {
+                            "url": "https://docs.tavily.com/documentation/api-credits",
+                            "raw_content": "Credits & Pricing - Tavily Docs\n\nYou get 1,000 free API Credits every month.",
+                            "favicon": "https://docs.tavily.com/favicon.png"
+                        }
+                    ],
+                    "response_time": 1.23,
+                    "request_id": "00000000-0000-4000-8000-000000000005"
+                }
+            }
+        }
+    ]
+}

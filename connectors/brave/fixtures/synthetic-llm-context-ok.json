@@ -1,0 +1,41 @@
+{
+    "name": "synthetic-llm-context-ok",
+    "description": "SYNTHETIC happy chain for brave#res/v1/llm/context. Shape from the API reference and the documented example on brave.com/search/api (2026-10-23); snippets invented. Replace via `deno task record` when BRAVE_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=tallest+mountain+in+the+solar+system&maximum_number_of_tokens=2048"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "grounding": {
+                        "generic": [
+                            {
+                                "url": "https://en.wikipedia.org/wiki/Olympus_Mons",
+                                "title": "Olympus Mons",
+                                "snippets": [
+                                    "Olympus Mons is a large shield volcano on Mars, about 21.9 km high.",
+                                    "It is the tallest planetary mountain in the Solar System."
+                                ]
+                            }
+                        ],
+                        "map": []
+                    },
+                    "sources": {
+                        "https://en.wikipedia.org/wiki/Olympus_Mons": {
+                            "title": "Olympus Mons",
+                            "hostname": "en.wikipedia.org",
+                            "age": [
+                                "Friday, February 06, 2026",
+                                "2026-02-06",
+                                "8 months ago"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

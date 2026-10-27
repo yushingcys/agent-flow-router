@@ -1,0 +1,51 @@
+import { defineProvider, presets } from "@shared/core";
+
+/**
+ * Octen (octen.ai) — real-time web access. PORT SCOPE: only the four
+ * endpoints v1 had ENABLED (search, broad-search, extract, embedding). The
+ * other seven were deliberately disabled there ($0 token-pricing
+ * placeholders, invite-only betas, or an inadmissible rate matrix) — porting
+ * them would expose the exact free compute v1 disabled them to avoid; they
+ * arrive with the pricing pass, as their own change.
+ *
+ * Usage is NATIVE per endpoint (calls / sub-queries / URLs / tokens read
+ * from the response's `meta.usage` receipt), so each endpoint carries its
+ * own settle fn — no provider-level usage.
+ */
+export default defineProvider({
+    name: "octen",
+    meta: {
+        displayName: "Octen",
+        summary: "Real-time web search, extraction, and embeddings.",
+        // No gateway clause: the OpenAI/Anthropic-compatible endpoints are
+        // disabled in v1 itself ($0 placeholders) and not ported here —
+        // the description names only what this connector exposes.
+        description: "Real-time access to the live web — minute-fresh web " +
+            "and broad multi-query search, clean content extraction, and " +
+            "text embeddings.",
+        homepageUrl: "https://octen.ai",
+        docsUrl: "https://docs.octen.ai",
+        categories: ["web-search"],
+    },
+    auth: { inject: presets.auth.header("x-api-key") },
+    request: { baseUrl: "https://api.octen.ai" },
+    usage: {
+        /** THE credit system (design D26): octen prices every endpoint in
+         *  its own credits ($0.001 list — v1 OCTEN_CREDIT_DOLLARS; the
+         *  $/credit conversion is the broker card's one octen row). */
+        credits: { default: { label: "Octen credits" } },
+        /** Octen reports NO credit total — its `meta.usage` receipt is
+         *  raw QUANTITIES the evidence fns already read, so the claim is
+         *  always empty (the derived fold settles) and this fn's whole
+         *  job is the strip: billing facts never ride the payload
+         *  (design D27). SCOPED to `$.meta.usage` (reconcile 2026-09-16):
+         *  the previous deep `omit(["usage"])` walked EVERY level and
+         *  could silently delete a `usage` key inside scraped/extracted
+         *  user content (/extract json output, full-content pages). Only
+         *  the vendor's own receipt is billing metadata. */
+        consolidate: ({ data, utils }) => ({
+            credits: {},
+            output: utils.json.pluck(data.output, "$.meta.usage").rest,
+        }),
+    },
+});

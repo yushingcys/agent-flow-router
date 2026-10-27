@@ -1,0 +1,100 @@
+{
+    "name": "synthetic-web-search-ok",
+    "description": "SYNTHETIC happy chain for brave#res/v1/web/search. Shape from the Brave Search API reference response schema (api-dashboard.search.brave.com/api-reference, 2026-10-23); values invented. Replace via `deno task record` when BRAVE_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=deno+workspaces&count=2"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "type": "search",
+                    "query": {
+                        "original": "deno workspaces",
+                        "show_strict_warning": false,
+                        "is_navigational": false,
+                        "spellcheck_off": false,
+                        "country": "us",
+                        "more_results_available": true
+                    },
+                    "mixed": {
+                        "type": "mixed",
+                        "main": [
+                            {
+                                "type": "web",
+                                "index": 0,
+                                "all": false
+                            },
+                            {
+                                "type": "web",
+                                "index": 1,
+                                "all": false
+                            }
+                        ],
+                        "top": [],
+                        "side": []
+                    },
+                    "web": {
+                        "type": "search",
+                        "family_friendly": true,
+                        "results": [
+                            {
+                                "type": "search_result",
+                                "subtype": "generic",
+                                "title": "Workspaces and monorepos",
+                                "url": "https://docs.deno.com/runtime/fundamentals/workspaces/",
+                                "description": "Deno supports <strong>workspaces</strong>, also known as monorepos, which allow you to manage multiple related packages.",
+                                "age": "March 2, 2026",
+                                "page_age": "2026-03-02T00:00:00",
+                                "language": "en",
+                                "family_friendly": true,
+                                "is_source_local": false,
+                                "is_source_both": false,
+                                "profile": {
+                                    "name": "Deno",
+                                    "url": "https://docs.deno.com/runtime/fundamentals/workspaces/",
+                                    "long_name": "docs.deno.com",
+                                    "img": "https://imgs.search.brave.com/profile/docs.deno.com"
+                                },
+                                "meta_url": {
+                                    "scheme": "https",
+                                    "netloc": "docs.deno.com",
+                                    "hostname": "docs.deno.com",
+                                    "favicon": "https://imgs.search.brave.com/favicon/docs.deno.com",
+                                    "path": "› runtime › fundamentals › workspaces"
+                                }
+                            },
+                            {
+                                "type": "search_result",
+                                "subtype": "generic",
+                                "title": "Deno 2 workspace monorepo guide",
+                                "url": "https://example.dev/blog/deno-2-workspaces",
+                                "description": "A walkthrough of setting up a Deno 2 <strong>workspace</strong> with shared import maps.",
+                                "age": "2 weeks ago",
+                                "language": "en",
+                                "family_friendly": true,
+                                "is_source_local": false,
+                                "is_source_both": false,
+                                "profile": {
+                                    "name": "Example",
+                                    "url": "https://example.dev/blog/deno-2-workspaces",
+                                    "long_name": "example.dev",
+                                    "img": "https://imgs.search.brave.com/profile/example.dev"
+                                },
+                                "meta_url": {
+                                    "scheme": "https",
+                                    "netloc": "example.dev",
+                                    "hostname": "example.dev",
+                                    "favicon": "https://imgs.search.brave.com/favicon/example.dev",
+                                    "path": "› blog › deno-2-workspaces"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

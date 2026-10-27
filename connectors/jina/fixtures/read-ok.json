@@ -1,0 +1,47 @@
+{
+    "name": "read-ok",
+    "description": "Recorded 2026-10-23: POST https://r.jina.ai/ {url: https://example.com} with Accept: application/json, sent WITHOUT a key (Reader allows 20 RPM keyless; same envelope with a key). Multilingual paragraphs of the content trimmed; usage numbers untouched.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://r.jina.ai/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "status": 20000,
+                    "data": {
+                        "title": "Example Domain",
+                        "description": "",
+                        "url": "https://example.com/",
+                        "content": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\n[Learn more](https://iana.org/help/example-domains)",
+                        "publishedTime": "Wed, 21 Oct 2026 19:59:02 GMT",
+                        "metadata": {
+                            "lang": "en",
+                            "viewport": "width=device-width,initial-scale=1"
+                        },
+                        "external": { "icon": { "data:,": {} } },
+                        "httpStatus": 200,
+                        "httpStatusText": "OK",
+                        "usage": {
+                            "outputTokens": 341,
+                            "measuredTokens": 341,
+                            "scaledTokens": 341,
+                            "tokens": 341
+                        }
+                    },
+                    "meta": {
+                        "usage": {
+                            "outputTokens": 341,
+                            "measuredTokens": 341,
+                            "scaledTokens": 341,
+                            "tokens": 341
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

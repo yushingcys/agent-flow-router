@@ -1,0 +1,57 @@
+import { assertEquals } from "@std/assert";
+import { fromFileUrl } from "@std/path";
+import {
+    liveSkip,
+    loadFixture,
+    runEndpoint,
+    testSealedUnit,
+} from "@shared/testing";
+
+const fixturesDir = fromFileUrl(new URL("./fixtures/", import.meta.url));
+
+Deno.test("octen#broad-search happy (recorded): receipt queries are the counted results", async () => {
+    const unit = await testSealedUnit("octen#broad-search");
+    const fixture = await loadFixture(`${fixturesDir}happy.json`);
+    const result = await runEndpoint({
+        unit,
+        input: { body: { query: "deno 2 release notes", max_queries: 2 } },
+        mode: "replay",
+        fixture,
+    });
+    assertEquals(result.httpStatus, 200);
+    // settled on the RECEIPT's num_search_queries (2), not the request's
+    // max_queries fallback; the token tier reports 0 (present in the
+    // receipt) and folds to nothing — 2 sub-queries × 1 credit is the
+    // whole bill. Both components are metered, so no flat 1 is appended.
+    assertEquals(result.usage, {
+        credits: { default: 2 },
+        evidence: { receipt_queries: 2, full_content_tokens: 0 },
+    });
+    const output = result.output as Record<string, Record<string, unknown>>;
+    assertEquals("usage" in output.meta, false);
+    // real envelope: the fan-out lives under data
+    const data = output.data as Record<string, unknown>;
+    assertEquals(Array.isArray(data.queries), true);
+});
+
+Deno.test({
+    name: "octen#broad-search live (gated on OCTEN_API_KEY)",
+    ignore: liveSkip("octen"),
+    fn: async () => {
+        const unit = await testSealedUnit("octen#broad-search");
+        const result = await runEndpoint({
+            unit,
+            input: { body: { query: "deno 2 release notes", max_queries: 2 } },
+            mode: "live",
+        });
+        assertEquals(
+            result.isProviderError,
+            false,
+            JSON.stringify(result.output),
+        );
+        assertEquals(
+            typeof result.usage.evidence["receipt_queries"],
+            "number",
+        );
+    },
+});

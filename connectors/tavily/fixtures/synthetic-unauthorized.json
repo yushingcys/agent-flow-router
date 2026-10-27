@@ -1,0 +1,17 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC 401 chain for any tavily endpoint, using the documented `{detail: {error}}` error envelope.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 401,
+                "body": {
+                    "detail": {
+                        "error": "Unauthorized: missing or invalid API key."
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "name": "synthetic-rerank-ok",
+    "description": "SYNTHETIC happy chain for jina#v1/rerank, shaped by the api.jina.ai OpenAPI RerankingResponse (model, object, usage.total_tokens, results[{index, relevance_score, document}]). Replace via `deno task record` when JINA_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.jina.ai/v1/rerank"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "model": "jina-reranker-v3",
+                    "object": "list",
+                    "usage": { "total_tokens": 42 },
+                    "results": [
+                        {
+                            "index": 1,
+                            "relevance_score": 0.91,
+                            "document": "Solar and wind power are growing fastest."
+                        },
+                        {
+                            "index": 0,
+                            "relevance_score": 0.12,
+                            "document": "Blockchain is reshaping payments."
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

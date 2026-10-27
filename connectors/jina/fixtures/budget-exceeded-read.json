@@ -1,0 +1,23 @@
+{
+    "name": "budget-exceeded-read",
+    "description": "Recorded 2026-10-23 keyless: POST https://r.jina.ai/ {url: https://example.com, tokenBudget: 10}. Jina refuses a page that would cost more than the budget with 409 BudgetExceededError.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://r.jina.ai/"
+            },
+            "res": {
+                "status": 409,
+                "body": {
+                    "data": null,
+                    "code": 409,
+                    "name": "BudgetExceededError",
+                    "status": 40904,
+                    "message": "Token budget (10) exceeded, intended charge amount 341",
+                    "readableMessage": "BudgetExceededError: Token budget (10) exceeded, intended charge amount 341"
+                }
+            }
+        }
+    ]
+}

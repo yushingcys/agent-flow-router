@@ -1,0 +1,22 @@
+{
+    "name": "provider-error",
+    "description": "recorded chain for exa#search, scenario 'provider-error' (per-endpoint recording; predates the shared-chain strategy)",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.exa.ai/search",
+                "body": {
+                    "query": "anything"
+                }
+            },
+            "res": {
+                "status": 401,
+                "body": {
+                    "error": "x-api-key header is invalid",
+                    "tag": "UNAUTHORIZED"
+                }
+            }
+        }
+    ]
+}

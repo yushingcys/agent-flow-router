@@ -1,0 +1,51 @@
+{
+    "name": "synthetic-news-search-ok",
+    "description": "SYNTHETIC happy chain for brave#res/v1/news/search. Shape from the Brave Search API reference response schema (api-dashboard.search.brave.com/api-reference, 2026-10-23); values invented. Replace via `deno task record` when BRAVE_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=open+source+ai&freshness=pw"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "type": "news",
+                    "query": {
+                        "original": "open source ai",
+                        "spellcheck_off": false,
+                        "show_strict_warning": false
+                    },
+                    "results": [
+                        {
+                            "type": "news_result",
+                            "title": "Open-source AI models close the gap",
+                            "url": "https://news.example.com/2026/10/open-source-ai",
+                            "description": "Open-weight models matched closed frontier systems on several benchmarks this week.",
+                            "age": "2 days ago",
+                            "page_age": "2026-10-21T09:15:00",
+                            "breaking": false,
+                            "profile": {
+                                "name": "Example News",
+                                "url": "https://news.example.com",
+                                "long_name": "news.example.com",
+                                "img": "https://imgs.search.brave.com/profile/news.example.com"
+                            },
+                            "meta_url": {
+                                "scheme": "https",
+                                "netloc": "news.example.com",
+                                "hostname": "news.example.com",
+                                "favicon": "https://imgs.search.brave.com/favicon/news.example.com",
+                                "path": "› 2026 › 10 › open-source-ai"
+                            },
+                            "thumbnail": {
+                                "src": "https://imgs.search.brave.com/thumb/news1.jpg",
+                                "original": "https://news.example.com/img/open-source-ai.jpg"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,578 @@
+import {
+    type Currency,
+    type EndpointDoc,
+    type FnEntry,
+    formatZodError,
+    getPath,
+    type HookLogger,
+    type HttpResult,
+    type Json,
+    JsonPathError,
+    type JsonUtil,
+    type LifecycleRequestInfo,
+    type LifecycleResources,
+    type LifecycleSleepFn,
+    type LifecycleUtils,
+    type MoneyUtil,
+    PATH_PATTERN,
+    type ResourceOpUtils,
+    type RunInput,
+    SLEEP_BUDGET_MS,
+    SLEEP_MAX_MS_PER_CALL,
+    zHttpCall,
+    zResourceQuery,
+} from "@shared/core";
+import { zRequestOverrides } from "@shared/core";
+import type { Logger } from "@shared/logging";
+import { EngineError, EngineErrorCode } from "./errors.ts";
+import type {
+    PreparedRequest,
+    ResourceReader,
+    Transport,
+} from "./interfaces/mod.ts";
+import { toWireQuery } from "./request.ts";
+import { sniffDecode } from "./transport.ts";
+
+function lastSegment(path: string): string {
+    const match = path.match(/\.([A-Za-z_][A-Za-z0-9_-]*)(\[\d+\])*$/);
+    return match ? match[1] : path;
+}
+
+/** Path lookup that separates the three cases: syntax error (throw always),
+ *  absent (undefined), present (the value). */
+function lookup(value: Json, path: string): Json | undefined {
+    if (!PATH_PATTERN.test(path)) {
+        throw new JsonPathError(
+            "PATH_SYNTAX",
+            `invalid path syntax: ${path}`,
+        );
+    }
+    return getPath(value, path);
+}
+
+function deepOmit(value: Json, keys: ReadonlySet<string>): Json {
+    if (value === null || typeof value !== "object") return value;
+    if (Array.isArray(value)) return value.map((item) => deepOmit(item, keys));
+    const out: Record<string, Json> = {};
+    for (const [key, item] of Object.entries(value)) {
+        if (keys.has(key)) continue;
+        out[key] = deepOmit(item, keys);
+    }
+    return out;
+}
+
+/** Remove EXACTLY the node at a (valid, present) restricted path —
+ *  copy-on-write along the walk; containers stay otherwise untouched. */
+function removeAtPath(value: Json, path: string): Json {
+    const segments =
+        path.slice(1).match(/\.[A-Za-z_][A-Za-z0-9_-]*|\[\d+\]/g) ?? [];
+    if (segments.length === 0) return null; // plucking $ leaves nothing
+    const walk = (current: Json, depth: number): Json => {
+        const segment = segments[depth];
+        const last = depth === segments.length - 1;
+        if (segment.startsWith("[")) {
+            if (!Array.isArray(current)) return current;
+            const index = Number(segment.slice(1, -1));
+            const out = [...current];
+            if (last) out.splice(index, 1);
+            else out[index] = walk(out[index], depth + 1);
+            return out;
+        }
+        if (
+            current === null || typeof current !== "object" ||
+            Array.isArray(current)
+        ) return current;
+        const key = segment.slice(1);
+        const out = { ...current };
+        if (last) delete out[key];
+        else out[key] = walk(out[key], depth + 1);
+        return out;
+    };
+    return walk(value, 0);
+}
+
+function deepMerge(value: Json, fields: Record<string, Json>): Json {
+    if (value === null || typeof value !== "object" || Array.isArray(value)) {
+        // merging fields into a non-object replaces it with the fields object
+        return { ...fields };
+    }
+    const out: Record<string, Json> = { ...value };
+    for (const [key, field] of Object.entries(fields)) {
+        const existing = out[key];
+        out[key] = existing !== null && typeof existing === "object" &&
+                !Array.isArray(existing) &&
+                field !== null && typeof field === "object" &&
+                !Array.isArray(field)
+            ? deepMerge(existing, field as Record<string, Json>)
+            : field;
+    }
+    return out;
+}
+
+/**
+ * The engine's JsonUtil implementation — `ctx.utils.json` (interface in
+ * @shared/core schema/json/util.ts — the interface/impl split mirrors the
+ * Logger pattern: contract in core, execution here).
+ * Part of the fn ABI (versioned by ENGINE_VERSION), never fnTable content.
+ *
+ * STRICTNESS (see the interface contract in @shared/core): lookups throw on
+ * absence (a typo'd path must never silently bill zero); `optional*` variants
+ * return undefined on absence but STILL throw on a present value of the
+ * wrong type; transformers stay shape-tolerant. Throws inside slot fns
+ * surface as FN_CONTRACT — wrong bills fail closed.
+ */
+export const jsonUtil: JsonUtil = {
+    get: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) {
+            throw new JsonPathError(
+                "PATH_NOT_FOUND",
+                `json.get: nothing at ${path} (use optionalGet if absence is expected)`,
+            );
+        }
+        return found;
+    },
+    optionalGet: (value, path) => lookup(value, path),
+    num: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) {
+            throw new JsonPathError(
+                "PATH_NOT_FOUND",
+                `json.num: nothing at ${path} (use optionalNum if absence is expected)`,
+            );
+        }
+        if (typeof found !== "number" || !Number.isFinite(found)) {
+            throw new JsonPathError(
+                "TYPE_MISMATCH",
+                `json.num: value at ${path} is not a finite number`,
+            );
+        }
+        return found;
+    },
+    optionalNum: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) return undefined;
+        if (typeof found !== "number" || !Number.isFinite(found)) {
+            throw new JsonPathError(
+                "TYPE_MISMATCH",
+                `json.optionalNum: value at ${path} is not a finite number`,
+            );
+        }
+        return found;
+    },
+    str: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) {
+            throw new JsonPathError(
+                "PATH_NOT_FOUND",
+                `json.str: nothing at ${path} (use optionalStr if absence is expected)`,
+            );
+        }
+        if (typeof found !== "string" || found.length === 0) {
+            throw new JsonPathError(
+                "TYPE_MISMATCH",
+                `json.str: value at ${path} is not a non-empty string`,
+            );
+        }
+        return found;
+    },
+    optionalStr: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) return undefined;
+        if (typeof found !== "string") {
+            throw new JsonPathError(
+                "TYPE_MISMATCH",
+                `json.optionalStr: value at ${path} is not a string`,
+            );
+        }
+        return found.length === 0 ? undefined : found;
+    },
+    len: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) {
+            throw new JsonPathError(
+                "PATH_NOT_FOUND",
+                `json.len: nothing at ${path} (use optionalLen if absence is expected)`,
+            );
+        }
+        if (!Array.isArray(found)) {
+            throw new JsonPathError(
+                "TYPE_MISMATCH",
+                `json.len: value at ${path} is not an array`,
+            );
+        }
+        return found.length;
+    },
+    optionalLen: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) return undefined;
+        if (!Array.isArray(found)) {
+            throw new JsonPathError(
+                "TYPE_MISMATCH",
+                `json.optionalLen: value at ${path} is not an array`,
+            );
+        }
+        return found.length;
+    },
+    /** Deep-remove the named keys anywhere in the value. */
+    omit: (value, keys) => deepOmit(value, new Set(keys)),
+    /** Keep only the values at the given paths (absent paths skipped), keyed by last segment. */
+    pick: (value, paths) => {
+        const out: Record<string, Json> = {};
+        for (const path of paths) {
+            const found = lookup(value, path);
+            if (found !== undefined) out[lastSegment(path)] = found;
+        }
+        return out;
+    },
+    /** Deep-merge (append) fields into an object value; non-objects are replaced. */
+    merge: (value, fields) => deepMerge(value, fields),
+    /** One-motion extract (design D27): {value at path, input without it}. */
+    pluck: (value, path) => {
+        const found = lookup(value, path);
+        if (found === undefined) return { rest: value };
+        return { value: found, rest: removeAtPath(value, path) };
+    },
+};
+
+/**
+ * The engine's MoneyUtil implementation — `ctx.utils.money` (interface in
+ * @shared/core schema/usage/monetary.ts; conversions match the hosted gateway
+ * monetary-conversions.ts). Micro-dollar is the canonical storage unit.
+ */
+export const moneyUtil: MoneyUtil = {
+    fromDollars: (dollars, currency = "USD" as Currency) => ({
+        currency,
+        value: Math.round(dollars * 1_000_000),
+        unit: "MICRO_DOLLAR",
+    }),
+    fromMicroDollars: (microDollars, currency = "USD" as Currency) => ({
+        currency,
+        value: Math.round(microDollars),
+        unit: "MICRO_DOLLAR",
+    }),
+};
+
+/** The ctx.utils namespace assembled by the engine (ALL of the hook ABI's
+ *  host half lives in THIS file; the interfaces live in @shared/core). */
+export const fnUtils = Object.freeze({ json: jsonUtil, money: moneyUtil });
+
+/**
+ * `ctx.utils` for the LIFECYCLE hook family — the pure ABI plus the two
+ * effect capabilities, bound PER INVOCATION (they need this tick's derived
+ * input + substituted request). The two differ ONLY in defaults:
+ *
+ *   - `http(call)` — the RAW, ZERO-defaults capability (v1
+ *     `client.request`): `method` + exactly one of `url`|`path` required;
+ *     `path` resolves against the doc request URL's ORIGIN (v1 apiPath
+ *     semantics); `headers` ARE the complete outbound header set (no
+ *     doc-header merge); `requestMs` overrides the per-request timeout.
+ *   - `request(overrides?)` — the DEFAULT RELAY: executes THE endpoint's
+ *     compiled request, initialized from data.request + the caller input
+ *     (method/url/headers from the request; `body ?? input.body`;
+ *     `queryParams ?? input.queryParams`), with a PRESENCE-BASED override
+ *     merge — including the target (`url`|`path`), so `request` can do
+ *     anything `http` can. `utils.request()` alone sends exactly what the
+ *     declarative sync pipeline would.
+ *
+ * SAME-ORIGIN CREDENTIAL RULE (design D16): credentials are injected at
+ * egress ONLY when the target origin equals the doc request's origin —
+ * cross-origin calls (both capabilities) go out BARE. Fns never see
+ * credentials either way.
+ *
+ * Responses come back sniff-decoded `{status, headers, body}` — the vendor's
+ * RESPONSE headers ride along (lowercased) because a 3xx's `location` IS the
+ * payload for presigned-URL endpoints and redirects are never followed;
+ * vendor non-2xx is DATA (returned); transport failures throw
+ * EXECUTION_FAILED (retriable) through the fn unless it catches. A malformed
+ * call/override shape is a fn bug → FN_CONTRACT, fail-closed.
+ */
+export function makeLifecycleUtils(opts: {
+    doc: EndpointDoc;
+    injectEntry: FnEntry;
+    transport: Transport;
+    /** This invocation's compiled request ({pathParam}s substituted). */
+    requestInfo: LifecycleRequestInfo;
+    /** This invocation's derived (validated + toRequest) input. */
+    input: RunInput;
+    /** The host sleeper (EngineCtx.sleep ?? real setTimeout) — wrapped
+     *  here with the per-call cap + per-invocation budget (utils are
+     *  built per phase call, so the budget naturally scopes to ONE
+     *  start/poll/stop invocation). */
+    sleep: (ms: number) => Promise<void>;
+    /** The ownership window — the real reader window when the doc
+     *  declares a binding, else the RESOURCES_UNDECLARED stub. */
+    resources: LifecycleResources;
+}): LifecycleUtils {
+    const { doc, injectEntry, transport, requestInfo, input } = opts;
+    const origin = new URL(doc.request.url).origin;
+
+    const execute = async (parts: {
+        method: PreparedRequest["method"];
+        url: string;
+        headers?: Record<string, string>;
+        /** The wire multimap (see PreparedRequest.query) — callers pass
+         *  `toWireQuery` output, never a raw record. */
+        query: Record<string, string[]>;
+        body?: Json;
+        requestMs?: number;
+    }): Promise<HttpResult> => {
+        // D16 — same-origin credential rule: auth travels only when the
+        // target shares the doc request's origin; else the request is BARE.
+        const sameOrigin = new URL(parts.url).origin === origin;
+        const prepared: PreparedRequest = {
+            method: parts.method,
+            url: parts.url,
+            headers: { ...parts.headers },
+            query: parts.query,
+            body: parts.body,
+            ...(sameOrigin
+                ? {
+                    auth: {
+                        inject: { ref: doc.auth.inject, entry: injectEntry },
+                        credentials: doc.auth.credentials,
+                    },
+                }
+                : {}),
+            provider: doc.provider,
+            timeouts: {
+                requestMs: parts.requestMs ?? doc.timeouts.requestMs,
+            },
+        };
+        const response = await transport.execute(prepared);
+        return {
+            status: response.status,
+            // a transport that does not surface headers presents `{}` — fns
+            // never branch on presence (the HttpResult contract)
+            headers: response.headers ?? {},
+            body: sniffDecode(response),
+        };
+    };
+
+    const utils: LifecycleUtils = {
+        json: jsonUtil,
+        money: moneyUtil,
+        sleep: makeBoundedSleep(doc.id, opts.sleep),
+        resources: opts.resources,
+        http: (call) => {
+            const parsed = zHttpCall.safeParse(call);
+            if (!parsed.success) {
+                throw new EngineError(
+                    EngineErrorCode.FN_CONTRACT,
+                    `${doc.id}: utils.http call invalid: ${
+                        formatZodError(parsed.error)
+                    }`,
+                );
+            }
+            const c = parsed.data;
+            return execute({
+                method: c.method,
+                url: c.url ?? origin + c.path,
+                headers: c.headers,
+                // normalized through the ONE serializer, so a lifecycle fn
+                // and the declarative pipeline spell lists identically
+                query: toWireQuery(doc.id, c.queryParams ?? {}),
+                body: c.body,
+                requestMs: c.requestMs,
+            });
+        },
+        request: (overrides) => {
+            const parsed = zRequestOverrides.safeParse(overrides ?? {});
+            if (!parsed.success) {
+                throw new EngineError(
+                    EngineErrorCode.FN_CONTRACT,
+                    `${doc.id}: utils.request overrides invalid: ${
+                        formatZodError(parsed.error)
+                    }`,
+                );
+            }
+            const o = parsed.data;
+            return execute({
+                method: o.method ?? requestInfo.method,
+                // presence-based target override: url | path | the
+                // compiled request's own url
+                url: o.url ??
+                    (o.path !== undefined ? origin + o.path : requestInfo.url),
+                headers: { ...requestInfo.headers, ...o.headers },
+                query: toWireQuery(
+                    doc.id,
+                    o.queryParams ?? input.queryParams ?? {},
+                ),
+                // PRESENCE-based body override (not ??): body is zJson and
+                // null IS valid JSON — `{body: null}` must override with
+                // null, never fall back to the caller input (PR #2 finding)
+                body: "body" in o && o.body !== undefined ? o.body : input.body,
+                requestMs: o.requestMs,
+            });
+        },
+    };
+    return Object.freeze(utils);
+}
+
+/** Adapt the host Logger into the fn-facing HookLogger (ctx.logger). */
+export function toHookLogger(logger: Logger): HookLogger {
+    return {
+        debug: (message, fields) => logger.debug(message, fields),
+        info: (message, fields) => logger.info(message, fields),
+        warn: (message, fields) => logger.warn(message, fields),
+        error: (message, fields) => logger.error(message, fields),
+    };
+}
+
+// ---------------------------------------------------------------------------
+// resource capabilities (design D32/D33/D34)
+// ---------------------------------------------------------------------------
+
+/**
+ * `utils.sleep` — the host sleeper bounded TWICE (design D34), both
+ * breaches FN_CONTRACT (an authoring bug, deterministic — retrying the
+ * activity replays it): per call ≤ SLEEP_MAX_MS_PER_CALL, cumulative per
+ * phase invocation ≤ SLEEP_BUDGET_MS. Long waits belong to the poll
+ * cadence, not to sleeping inside a phase.
+ */
+export function makeBoundedSleep(
+    label: string,
+    doSleep: (ms: number) => Promise<void>,
+): LifecycleSleepFn {
+    let slept = 0;
+    return (ms: number): Promise<void> => {
+        if (!Number.isFinite(ms) || ms < 0) {
+            throw new EngineError(
+                EngineErrorCode.FN_CONTRACT,
+                `${label}: utils.sleep(${ms}) — ms must be a nonnegative number`,
+            );
+        }
+        if (ms > SLEEP_MAX_MS_PER_CALL) {
+            throw new EngineError(
+                EngineErrorCode.FN_CONTRACT,
+                `${label}: utils.sleep(${ms}) exceeds the per-call cap ` +
+                    `${SLEEP_MAX_MS_PER_CALL} — long waits belong to the poll cadence`,
+            );
+        }
+        slept += ms;
+        if (slept > SLEEP_BUDGET_MS) {
+            throw new EngineError(
+                EngineErrorCode.FN_CONTRACT,
+                `${label}: cumulative utils.sleep ${slept}ms exceeds the ` +
+                    `per-phase budget ${SLEEP_BUDGET_MS}ms`,
+            );
+        }
+        return doSleep(ms);
+    };
+}
+
+/** The REAL ownership window: validates the fn's query shape
+ *  (FN_CONTRACT — the fn wrote it), delegates to the host reader
+ *  (failures → RESOURCE_OP_FAILED, retriable). */
+export function makeResourcesWindow(
+    label: string,
+    reader: ResourceReader,
+): LifecycleResources {
+    return {
+        owned: async (query) => {
+            const parsed = zResourceQuery.safeParse(query);
+            if (!parsed.success) {
+                throw new EngineError(
+                    EngineErrorCode.FN_CONTRACT,
+                    `${label}: utils.resources.owned query invalid: ${
+                        formatZodError(parsed.error)
+                    }`,
+                );
+            }
+            try {
+                return await reader.owned(parsed.data);
+            } catch (error) {
+                // NORMALIZE host-reader failures to the retriable code —
+                // a foreign EngineError code from a reader (e.g. a host
+                // reusing INVALID_INPUT) must not mark a transient read
+                // non-retriable
+                if (
+                    error instanceof EngineError &&
+                    error.code === EngineErrorCode.RESOURCE_OP_FAILED
+                ) throw error;
+                throw new EngineError(
+                    EngineErrorCode.RESOURCE_OP_FAILED,
+                    `${label}: ResourceReader.owned failed: ${error}`,
+                    { cause: error },
+                );
+            }
+        },
+    };
+}
+
+/** The STRUCTURAL withholding (design D32): a doc without a `resource`
+ *  binding gets this stub — capability follows declaration. */
+export function undeclaredResources(label: string): LifecycleResources {
+    return {
+        owned: () => {
+            throw new EngineError(
+                EngineErrorCode.RESOURCES_UNDECLARED,
+                `${label}: utils.resources touched but the doc declares no ` +
+                    `resource binding — declare \`resource:\` on the endpoint def`,
+            );
+        },
+    };
+}
+
+/**
+ * `ctx.utils` for RESOURCE fns (lifecycle verify/release/refresh, the
+ * reconcileUsage meters, view reads): the pure ABI + `http` (raw calls
+ * against the RESOURCE doc's provider origin, same-origin credential
+ * rule identical to endpoints) + bounded `sleep`. No view dispatch
+ * (design D42): a meter performs its own reads.
+ */
+export function makeResourceOpUtils(opts: {
+    /** The resource doc (id/provider/request/timeouts) + its auth pair. */
+    doc: {
+        id: string;
+        provider: string;
+        request: { url: string };
+        timeouts: { requestMs: number };
+    };
+    auth: NonNullable<PreparedRequest["auth"]>;
+    transport: Transport;
+    sleep: (ms: number) => Promise<void>;
+}): ResourceOpUtils {
+    const { doc, transport } = opts;
+    const origin = new URL(doc.request.url).origin;
+    const utils: ResourceOpUtils = {
+        json: jsonUtil,
+        money: moneyUtil,
+        sleep: makeBoundedSleep(doc.id, opts.sleep),
+        http: async (call) => {
+            const parsed = zHttpCall.safeParse(call);
+            if (!parsed.success) {
+                throw new EngineError(
+                    EngineErrorCode.FN_CONTRACT,
+                    `${doc.id}: utils.http call invalid: ${
+                        formatZodError(parsed.error)
+                    }`,
+                );
+            }
+            const c = parsed.data;
+            const url = c.url ?? origin + c.path;
+            const sameOrigin = new URL(url).origin === origin;
+            const prepared: PreparedRequest = {
+                method: c.method,
+                url,
+                headers: { ...c.headers },
+                query: toWireQuery(doc.id, c.queryParams ?? {}),
+                body: c.body,
+                ...(sameOrigin ? { auth: opts.auth } : {}),
+                provider: doc.provider,
+                timeouts: {
+                    requestMs: c.requestMs ?? doc.timeouts.requestMs,
+                },
+            };
+            const response = await transport.execute(prepared);
+            return {
+                status: response.status,
+                // {} when the transport surfaces none — fns never branch
+                // on presence (the HttpResult contract)
+                headers: response.headers ?? {},
+                body: sniffDecode(response),
+            };
+        },
+    };
+    return Object.freeze(utils);
+}

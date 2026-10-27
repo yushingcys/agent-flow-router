@@ -1,0 +1,23 @@
+{
+    "name": "unauthorized-search",
+    "description": "Recorded 2026-10-23: GET https://s.jina.ai/?q=jina without a key (Search requires one). Same envelope on POST /search; the replay matches the doc's POST.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://s.jina.ai/search"
+            },
+            "res": {
+                "status": 401,
+                "body": {
+                    "data": null,
+                    "code": 401,
+                    "name": "AuthenticationRequiredError",
+                    "status": 40103,
+                    "message": "Authentication is required to use this endpoint. Please provide a valid API key via Authorization header.",
+                    "readableMessage": "AuthenticationRequiredError: Authentication is required to use this endpoint. Please provide a valid API key via Authorization header."
+                }
+            }
+        }
+    ]
+}

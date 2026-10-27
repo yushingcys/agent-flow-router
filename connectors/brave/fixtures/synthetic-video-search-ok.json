@@ -1,0 +1,54 @@
+{
+    "name": "synthetic-video-search-ok",
+    "description": "SYNTHETIC happy chain for brave#res/v1/videos/search. Shape from the Brave Search API reference response schema (api-dashboard.search.brave.com/api-reference, 2026-10-23); values invented. Replace via `deno task record` when BRAVE_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=machine+learning+tutorial&count=1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "type": "videos",
+                    "query": {
+                        "original": "machine learning tutorial",
+                        "spellcheck_off": false,
+                        "show_strict_warning": false
+                    },
+                    "results": [
+                        {
+                            "type": "video_result",
+                            "url": "https://www.youtube.com/watch?v=aaaaaaaaaaa",
+                            "title": "Machine Learning in 30 Minutes",
+                            "description": "A compact introduction to supervised learning.",
+                            "age": "1 month ago",
+                            "page_age": "2026-09-20T00:00:00",
+                            "video": {
+                                "duration": "30:12",
+                                "views": 120000,
+                                "creator": "Example Channel",
+                                "publisher": "YouTube",
+                                "requires_subscription": false
+                            },
+                            "meta_url": {
+                                "scheme": "https",
+                                "netloc": "www.youtube.com",
+                                "hostname": "www.youtube.com",
+                                "favicon": "https://imgs.search.brave.com/favicon/www.youtube.com",
+                                "path": "› watch"
+                            },
+                            "thumbnail": {
+                                "src": "https://imgs.search.brave.com/thumb/ml.jpg",
+                                "original": "https://i.ytimg.com/vi/aaaaaaaaaaa/hqdefault.jpg"
+                            }
+                        }
+                    ],
+                    "extra": {
+                        "might_be_offensive": false
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "name": "synthetic-search-ok",
+    "description": "SYNTHETIC happy chain for tavily#search. Shape from the documented 200 example at docs.tavily.com api-reference/endpoint/search (2026-10-23): query, answer, images, results[].title/url/content/score/raw_content, response_time, usage.credits, request_id. Replace via `deno task record` when TAVILY_API_KEY exists.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "query": "deno workspace monorepo",
+                    "follow_up_questions": null,
+                    "answer": null,
+                    "images": [],
+                    "results": [
+                        {
+                            "title": "Workspaces and monorepos | Deno Docs",
+                            "url": "https://docs.deno.com/runtime/fundamentals/workspaces/",
+                            "content": "Deno supports workspaces, also known as monorepos, which allow you to manage multiple related packages.",
+                            "score": 0.83,
+                            "raw_content": null
+                        },
+                        {
+                            "title": "Deno 1.45: Workspace and Monorepo Support",
+                            "url": "https://deno.com/blog/v1.45",
+                            "content": "Deno 1.45 adds workspace support, letting you run several packages from one repository.",
+                            "score": 0.71,
+                            "raw_content": null
+                        }
+                    ],
+                    "response_time": 1.12,
+                    "usage": { "credits": 1 },
+                    "request_id": "00000000-0000-4000-8000-000000000001"
+                }
+            }
+        }
+    ]
+}

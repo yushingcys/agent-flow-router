@@ -1,0 +1,107 @@
+{
+    "name": "perplexity agent answer (synthetic)",
+    "description": "Synthetic completed Agent API response for perplexity/sonar with web_search and fetch_url, built from the documented ResponsesResponse shape: search_results, fetch_url_results and message output items, usage with cached input tokens, tool_calls_details and a USD cost breakdown.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "resp_7f3c2a91",
+                    "object": "response",
+                    "created_at": 1792742400,
+                    "status": "completed",
+                    "model": "perplexity/sonar",
+                    "output": [
+                        {
+                            "type": "search_results",
+                            "queries": ["deno 2 release highlights"],
+                            "results": [
+                                {
+                                    "id": 1,
+                                    "url": "https://example.com/deno-2",
+                                    "title": "Announcing Deno 2",
+                                    "snippet": "Deno 2 adds backwards compatibility with Node and npm.",
+                                    "date": "2024-10-09",
+                                    "last_updated": "2026-01-12",
+                                    "source": "web"
+                                },
+                                {
+                                    "id": 2,
+                                    "url": "https://example.org/deno-workspaces",
+                                    "title": "Workspaces in Deno 2",
+                                    "snippet": "Deno 2 supports workspaces and monorepos.",
+                                    "date": "2024-10-10",
+                                    "last_updated": "2025-06-02",
+                                    "source": "web"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "fetch_url_results",
+                            "contents": [
+                                {
+                                    "url": "https://example.com/deno-2",
+                                    "title": "Announcing Deno 2",
+                                    "snippet": "Deno 2 is backwards compatible with Node.js and npm, and adds workspaces, a stable standard library and JSR."
+                                }
+                            ]
+                        },
+                        {
+                            "type": "message",
+                            "id": "msg_51b0",
+                            "status": "completed",
+                            "role": "assistant",
+                            "content": [
+                                {
+                                    "type": "output_text",
+                                    "text": "Deno 2 adds Node and npm compatibility [1] and workspace support [2].",
+                                    "annotations": [
+                                        {
+                                            "type": "url_citation",
+                                            "url": "https://example.com/deno-2",
+                                            "start_index": 42,
+                                            "end_index": 45
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "usage": {
+                        "input_tokens": 4200,
+                        "output_tokens": 310,
+                        "total_tokens": 4510,
+                        "input_tokens_details": {
+                            "cache_creation_input_tokens": 0,
+                            "cache_read_input_tokens": 3584
+                        },
+                        "output_tokens_details": {
+                            "reasoning_tokens": 0
+                        },
+                        "tool_calls_details": {
+                            "search_web": { "invocation": 2 },
+                            "fetch_url": { "invocation": 1 }
+                        },
+                        "cost": {
+                            "currency": "USD",
+                            "input_cost": 0.000154,
+                            "cache_read_cost": 0.000224,
+                            "cache_creation_cost": null,
+                            "output_cost": 0.000775,
+                            "tool_calls_cost": 0.0055,
+                            "tool_calls_cost_details": {
+                                "search_web": 0.005,
+                                "fetch_url": 0.0005
+                            },
+                            "total_cost": 0.006653
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

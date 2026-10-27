@@ -1,0 +1,24 @@
+name: ci
+on:
+    pull_request:
+    push:
+        branches: [main]
+permissions:
+    contents: read
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - uses: denoland/setup-deno@v2
+              with:
+                  deno-version: v2.x
+            - run: deno task boundary:check
+            - run: deno fmt --check
+            - run: deno task lint
+            - run: deno task check
+            - run: deno task ids:check
+            - run: deno task version:check
+            - run: deno task test

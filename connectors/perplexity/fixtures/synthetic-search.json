@@ -1,0 +1,35 @@
+{
+    "name": "perplexity search results (synthetic)",
+    "description": "Synthetic Search API 200 built from the documented ApiSearchResponse shape ({ id, results: [{ title, url, snippet, date, last_updated }], server_time }).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "4e9b1c7a-2f6d-4a1b-9c3e-7d5a0b8f1e22",
+                    "server_time": "2026-10-23T09:00:00Z",
+                    "results": [
+                        {
+                            "title": "Announcing Deno 2",
+                            "url": "https://example.com/deno-2",
+                            "snippet": "Deno 2 adds backwards compatibility with Node and npm.",
+                            "date": "2024-10-09",
+                            "last_updated": "2026-01-12"
+                        },
+                        {
+                            "title": "Workspaces in Deno 2",
+                            "url": "https://example.org/deno-workspaces",
+                            "snippet": "Deno 2 supports workspaces and monorepos.",
+                            "date": null,
+                            "last_updated": null
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "name": "synthetic-image-search-ok",
+    "description": "SYNTHETIC happy chain for brave#res/v1/images/search. Shape from the Brave Search API reference response schema (api-dashboard.search.brave.com/api-reference, 2026-10-23); values invented. Replace via `deno task record` when BRAVE_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=mountain+landscape&count=1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "type": "images",
+                    "query": {
+                        "original": "mountain landscape",
+                        "spellcheck_off": false,
+                        "show_strict_warning": false
+                    },
+                    "results": [
+                        {
+                            "type": "image_result",
+                            "title": "Alpine lake at sunrise",
+                            "url": "https://photos.example.org/alpine-lake",
+                            "source": "photos.example.org",
+                            "page_fetched": "2026-09-30T12:00:00Z",
+                            "thumbnail": {
+                                "src": "https://imgs.search.brave.com/thumb/alpine.jpg",
+                                "width": 500,
+                                "height": 333
+                            },
+                            "properties": {
+                                "url": "https://photos.example.org/img/alpine-lake.jpg",
+                                "placeholder": "https://imgs.search.brave.com/ph/alpine.jpg",
+                                "width": 3000,
+                                "height": 2000
+                            },
+                            "meta_url": {
+                                "scheme": "https",
+                                "netloc": "photos.example.org",
+                                "hostname": "photos.example.org",
+                                "favicon": "https://imgs.search.brave.com/favicon/photos.example.org",
+                                "path": "› alpine-lake"
+                            },
+                            "confidence": "high"
+                        }
+                    ],
+                    "extra": {
+                        "might_be_offensive": false
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "name": "synthetic-extract-partial",
+    "description": "SYNTHETIC chain for tavily#extract: 2 URLs extracted, 1 in failed_results (documented partialSuccess shape, docs.tavily.com api-reference/endpoint/extract, 2026-10-23). usage.credits reads 0 as the docs warn it may below a 5-URL block.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "results": [
+                        {
+                            "url": "https://example.com/article",
+                            "raw_content": "# Example article\n\nExample extracted article content.",
+                            "images": []
+                        },
+                        {
+                            "url": "https://example.org/guide",
+                            "raw_content": "# Guide\n\nSecond page content.",
+                            "images": []
+                        }
+                    ],
+                    "failed_results": [
+                        {
+                            "url": "https://example.com/unavailable",
+                            "error": "Failed to retrieve content"
+                        }
+                    ],
+                    "response_time": 0.5,
+                    "usage": { "credits": 0 },
+                    "request_id": "00000000-0000-4000-8000-000000000003"
+                }
+            }
+        }
+    ]
+}

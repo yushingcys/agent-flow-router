@@ -1,0 +1,28 @@
+{
+    "name": "synthetic-invalid-token",
+    "description": "SYNTHETIC provider error for every brave endpoint: a bad X-Subscription-Token answered with the documented ErrorResponse envelope (code SUBSCRIPTION_TOKEN_INVALID). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=anything"
+            },
+            "res": {
+                "status": 422,
+                "body": {
+                    "type": "ErrorResponse",
+                    "error": {
+                        "id": "00000000-0000-0000-0000-000000000000",
+                        "status": 422,
+                        "code": "SUBSCRIPTION_TOKEN_INVALID",
+                        "detail": "The provided subscription token is invalid.",
+                        "meta": {
+                            "component": "authentication"
+                        }
+                    },
+                    "time": 1792713600
+                }
+            }
+        }
+    ]
+}

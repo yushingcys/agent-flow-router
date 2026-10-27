@@ -1,0 +1,102 @@
+import { defineEndpoint, Unit, UsageModelKind } from "@shared/core";
+import { zOctenBroadSearchBody } from "./schema/inputs.ts";
+
+/**
+ * POST /broad-search — multi-angle search.
+ *
+ * NATIVE usage: executed sub-queries (`meta.usage.num_search_queries`;
+ * falls back to the requested max_queries ?? 5 when the receipt is absent —
+ * the v1 rule) plus the gated full-content token tier.
+ */
+export default defineEndpoint({
+    meta: {
+        displayName: "Octen Broad Search",
+        summary: "One query, up to 30 parallel sub-query searches.",
+        description: "Multi-angle web search: decomposes one query into up " +
+            "to 30 related sub-queries (max_queries, default 5), runs them " +
+            "in parallel, and returns results grouped by sub-query (not " +
+            "de-duplicated across groups). Accepts the same per-sub-query " +
+            "search options as Web Search (domains, text filters, time " +
+            "windows, highlights, full content, news topic, safesearch) " +
+            "via search_options. Use this instead of Web Search when one " +
+            "query has several distinct angles worth searching separately.",
+        docsUrl: "https://docs.octen.ai/api-reference/broad-search",
+        categories: ["web-search"],
+    },
+    request: { method: "POST", path: "/broad-search" },
+    input: {
+        schema: {
+            // vendor-documented API default 5 (moved from the mirror —
+            // D25: mirrors carry optionality only).
+            body: zOctenBroadSearchBody.extend({
+                max_queries: zOctenBroadSearchBody.shape.max_queries
+                    .unwrap().default(5),
+            }),
+        },
+    },
+    usage: {
+        /** Receipt queries AND gated full-content tokens (AND = COMPOSITE).
+         *  Component ids spelled like octen's response fields (design D19).
+         *  TWO metered components ⇒ the compiler requires this doc to own
+         *  both fns (the generic keying can't choose between them). */
+        model: {
+            kind: UsageModelKind.COMPOSITE,
+            components: {
+                receipt_queries: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.RESULT,
+                    label: "queries",
+                    description: "executed sub-query searches",
+                    // 1 credit per executed sub-query — v1 makeOctenCredit(1)
+                    consumes: { credit: "default", amount: 1 },
+                },
+                full_content_tokens: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.TOKEN,
+                    label: "content tokens",
+                    // $0.001 per 1k tokens, LINEAR (reconcile 2026-09-16):
+                    // v1 billed fractionally (amount x units / per) — the
+                    // every:1000 block fold overcharged short pages by up
+                    // to one whole block
+                    consumes: { credit: "default", amount: 0.001 },
+                    description:
+                        "full-content extraction tokens (only charged " +
+                        "when search_options.full_content.enable is set)",
+                },
+            },
+        },
+        /** Queries = the requested max_queries (binding default 5 — the v1
+         *  fallback rule, applied at parse time). Full-content tokens
+         *  depend on PAGE CONTENT — not deducible from the input, so that
+         *  key is promised at the deducible floor 0 (design D24); settle
+         *  trues it up from `meta.usage.full_content_tokens`. */
+        estimate: ({ data }) => ({
+            counts: {
+                "receipt_queries": data.input.body.max_queries,
+                "full_content_tokens": 0,
+            },
+        }),
+        evidence: ({ data, utils }) => {
+            const queries = utils.json.optionalNum(
+                data.output,
+                "$.meta.usage.num_search_queries",
+            ) ??
+                utils.json.optionalNum(
+                    data.input.body ?? {},
+                    "$.max_queries",
+                ) ?? 5;
+            const tokens = utils.json.optionalNum(
+                data.output,
+                "$.meta.usage.full_content_tokens",
+            );
+            return {
+                counts: {
+                    "receipt_queries": queries,
+                    ...(tokens !== undefined
+                        ? { "full_content_tokens": tokens }
+                        : {}),
+                },
+            };
+        },
+    },
+});

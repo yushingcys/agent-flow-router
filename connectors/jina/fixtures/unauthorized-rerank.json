@@ -1,0 +1,20 @@
+{
+    "name": "unauthorized-rerank",
+    "description": "Recorded 2026-10-23: POST https://api.jina.ai/v1/rerank without a key. api.jina.ai answers {detail, request_id, code}.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.jina.ai/v1/rerank"
+            },
+            "res": {
+                "status": 401,
+                "body": {
+                    "detail": "Authentication required. Provide your API key via the Authorization header: 'Authorization: Bearer <api-key>'. Get your API key at https://jina.ai/api-dashboard/key-manager.",
+                    "request_id": "8dabd588a51888c671499447aac2968f",
+                    "code": "AUTH_MISSING_API_KEY"
+                }
+            }
+        }
+    ]
+}

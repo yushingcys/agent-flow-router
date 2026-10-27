@@ -1,0 +1,22 @@
+{
+    "name": "synthetic-map-ok",
+    "description": "SYNTHETIC chain for tavily#map, from the documented 200 example (docs.tavily.com api-reference/endpoint/map, 2026-10-23): base_url, results[] of URL strings, response_time, request_id.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "base_url": "docs.tavily.com",
+                    "results": [
+                        "https://docs.tavily.com/welcome",
+                        "https://docs.tavily.com/documentation/api-credits",
+                        "https://docs.tavily.com/documentation/about"
+                    ],
+                    "response_time": 1.23,
+                    "request_id": "00000000-0000-4000-8000-000000000004"
+                }
+            }
+        }
+    ]
+}

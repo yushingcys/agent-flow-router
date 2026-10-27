@@ -1,0 +1,33 @@
+{
+    "name": "synthetic-search-auto-advanced",
+    "description": "SYNTHETIC chain for tavily#search with auto_parameters: Tavily echoes the chosen auto_parameters (documented example shape) and picked search_depth 'advanced', billed 2 credits.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "query": "latest solid-state battery research",
+                    "answer": null,
+                    "images": [],
+                    "results": [
+                        {
+                            "title": "Solid-state batteries reach 500 Wh/kg",
+                            "url": "https://example.com/solid-state-2026",
+                            "content": "Researchers report a sulfide electrolyte cell at 500 Wh/kg.",
+                            "score": 0.9,
+                            "raw_content": null
+                        }
+                    ],
+                    "response_time": 2.4,
+                    "auto_parameters": {
+                        "topic": "general",
+                        "search_depth": "advanced"
+                    },
+                    "usage": { "credits": 2 },
+                    "request_id": "00000000-0000-4000-8000-000000000002"
+                }
+            }
+        }
+    ]
+}

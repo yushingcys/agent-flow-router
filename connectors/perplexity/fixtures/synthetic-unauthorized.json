@@ -1,0 +1,22 @@
+{
+    "name": "perplexity unauthorized (synthetic)",
+    "description": "Synthetic Perplexity 401 with the documented error body ({ error: { message, type, code } }).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 401,
+                "body": {
+                    "error": {
+                        "message": "Invalid API key provided.",
+                        "type": "invalid_api_key",
+                        "code": 401
+                    }
+                }
+            }
+        }
+    ]
+}
