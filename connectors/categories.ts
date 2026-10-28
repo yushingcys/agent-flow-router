@@ -247,6 +247,20 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Generate images, including text-to-image, editing, and more.",
     },
     {
+        id: "image-enhancement",
+        displayName: "Image Enhancement",
+        description:
+            "Improve existing images: upscaling, denoise, sharpening, " +
+            "restoration, relighting, and background removal.",
+    },
+    {
+        id: "video-enhancement",
+        displayName: "Video Enhancement",
+        description:
+            "Improve existing video: upscaling, denoise, deinterlacing, " +
+            "frame interpolation, colorization, and SDR to HDR.",
+    },
+    {
         id: "music-generation",
         displayName: "Music Generation",
         description:

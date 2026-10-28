@@ -1,0 +1,406 @@
+{
+    "image/upscale": {
+        "source_url": "https://example.test/photo.jpg",
+        "output_width": 8000,
+        "output_height": 6000
+    },
+    "image/upscale-generative": {
+        "source_url": "https://example.test/photo.jpg",
+        "output_width": 8000,
+        "output_height": 6000
+    },
+    "image/upscale-creative": {
+        "source_url": "https://example.test/photo.jpg",
+        "output_width": 8000,
+        "output_height": 6000
+    },
+    "image/upscale-transparent": {
+        "source_url": "https://example.test/logo.png",
+        "output_width": 8000,
+        "output_height": 6000
+    },
+    "image/sharpen": {
+        "source_url": "https://example.test/photo.jpg"
+    },
+    "image/sharpen-generative": {
+        "source_url": "https://example.test/photo.jpg"
+    },
+    "image/denoise": {
+        "source_url": "https://example.test/photo.jpg"
+    },
+    "image/denoise-generative": {
+        "source_url": "https://example.test/photo.jpg"
+    },
+    "image/restore": {
+        "source_url": "https://example.test/photo.jpg"
+    },
+    "image/lighting": {
+        "source_url": "https://example.test/photo.jpg"
+    },
+    "image/remove-background": {
+        "source_url": "https://example.test/photo.jpg"
+    },
+    "video/upscale": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "prob-4"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/fix-artifacts": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "ahq-12"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/deinterlace": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "dtv-4",
+                "videoType": "Interlaced"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/upscale-animation": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "ganim-1"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/recover-faces": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "iris-3"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/denoise": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "nyx-3"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/deblur": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "thm-2"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/colorize": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "color-1"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/sdr-to-hdr": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "hyp-2.5"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/frame-interpolation": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "apo-8",
+                "slowmo": 2
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/upscale-generative": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "slp-2.6"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    },
+    "video/upscale-creative": {
+        "source": {
+            "container": "mp4",
+            "size": 24000000,
+            "duration": 10,
+            "frameCount": 300,
+            "frameRate": 30,
+            "resolution": {
+                "width": 1280,
+                "height": 720
+            },
+            "external": {
+                "provider": "s3",
+                "presignedUrl": "https://example.test/clip.mp4"
+            }
+        },
+        "filters": [
+            {
+                "model": "ast-2",
+                "prompt": "crisp film look"
+            }
+        ],
+        "output": {
+            "resolution": {
+                "width": 1920,
+                "height": 1080
+            },
+            "frameRate": 30,
+            "audioTransfer": "None"
+        }
+    }
+}

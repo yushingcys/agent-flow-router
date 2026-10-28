@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-image-submit-rejected",
+    "description": "SYNTHETIC: the image submit is refused with 402 (out of credits) before any job exists. DATA: the vendor status and body, zero usage.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 402,
+                "body": {
+                    "code": 402,
+                    "message": "Insufficient credits"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "name": "synthetic-video-poll-failed",
+    "description": "SYNTHETIC: the request is accepted, then OUR status GET answers 503. The video is still processing and billing upstream, so the poll throws (retriable) instead of settling.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "requestId": "5d6e7f80-91a2-4b3c-8d4e-5f60718293a4",
+                    "estimates": {
+                        "cost": [
+                            4,
+                            6
+                        ],
+                        "time": [
+                            60,
+                            120
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "PATCH",
+                "url": "{{request.origin}}/video/5d6e7f80-91a2-4b3c-8d4e-5f60718293a4/accept"
+            },
+            "res": {
+                "status": 202,
+                "body": {
+                    "message": "Request accepted; the source will be fetched from external storage."
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/video/5d6e7f80-91a2-4b3c-8d4e-5f60718293a4/status"
+            },
+            "res": {
+                "status": 503,
+                "body": {
+                    "message": "Service unavailable"
+                }
+            }
+        }
+    ]
+}
