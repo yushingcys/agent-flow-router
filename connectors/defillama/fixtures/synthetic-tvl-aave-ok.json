@@ -1,0 +1,13 @@
+{
+    "name": "synthetic-tvl-aave-ok",
+    "description": "SYNTHETIC chain for defillama#api/tvl/{protocol} with protocol `aave`: the documented response is a bare number (current TVL in USD).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://pro-api.llama.fi/test-key/api/tvl/aave"
+            },
+            "res": { "status": 200, "body": 31234567890.12 }
+        }
+    ]
+}

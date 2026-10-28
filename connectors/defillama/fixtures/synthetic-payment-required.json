@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-payment-required",
+    "description": "SYNTHETIC 402 chain for defillama#api/hacks: DefiLlama answers a key without an active API plan with 402 and a plain-text body.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://pro-api.llama.fi/test-key/api/hacks"
+            },
+            "res": {
+                "status": 402,
+                "body": "This endpoint requires an active API plan."
+            }
+        }
+    ]
+}
