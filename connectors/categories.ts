@@ -24,6 +24,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         description: "Fetch and extract clean content from known URLs.",
     },
     {
+        id: "browser-automation",
+        displayName: "Browser Automation",
+        description:
+            "Hosted headless browsers an agent drives to navigate and act on sites.",
+    },
+    {
         id: "news-search",
         displayName: "News Search",
         description: "Search and monitor news coverage.",
