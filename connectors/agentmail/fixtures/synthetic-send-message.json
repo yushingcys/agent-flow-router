@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-send-message",
+    "description": "SYNTHETIC send-messages chain from inbox agent@agentmail.to, returning the documented SendMessageResponse.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.agentmail.to/v0/inboxes/agent%40agentmail.to/messages/send"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "message_id": "<m2@agentmail.to>",
+                    "thread_id": "th-1"
+                }
+            }
+        }
+    ]
+}

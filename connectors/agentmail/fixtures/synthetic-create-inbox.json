@@ -1,0 +1,21 @@
+{
+    "name": "synthetic-create-inbox",
+    "description": "SYNTHETIC create-inboxes chain from the documented Inbox shape: one POST /v0/inboxes returning the new inbox (pod_id is pooled-org plumbing the provider strips).",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "pod_id": "pod-1",
+                    "inbox_id": "agent@agentmail.to",
+                    "email": "agent@agentmail.to",
+                    "display_name": "Agent",
+                    "client_id": "run-1",
+                    "updated_at": "2026-10-27T00:00:00Z",
+                    "created_at": "2026-10-27T00:00:00Z"
+                }
+            }
+        }
+    ]
+}

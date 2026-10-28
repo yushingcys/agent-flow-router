@@ -1,0 +1,30 @@
+{
+    "name": "synthetic-create-domain",
+    "description": "SYNTHETIC create-domains chain from the documented Domain shape: the new domain, NOT_STARTED, with the DNS records to create.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "pod_id": "pod-1",
+                    "domain_id": "dom-1",
+                    "domain": "example.com",
+                    "status": "NOT_STARTED",
+                    "feedback_enabled": true,
+                    "records": [
+                        {
+                            "type": "MX",
+                            "name": "example.com",
+                            "value": "inbound-smtp.us-east-1.amazonaws.com",
+                            "status": "MISSING",
+                            "priority": 10
+                        }
+                    ],
+                    "updated_at": "2026-10-27T00:00:00Z",
+                    "created_at": "2026-10-27T00:00:00Z"
+                }
+            }
+        }
+    ]
+}

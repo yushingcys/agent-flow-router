@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-release-domain",
+    "description": "SYNTHETIC release-domains chain: DELETE of domain dom-1 answering 200 with an empty body.",
+    "calls": [
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "https://api.agentmail.to/v0/domains/dom-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {}
+            }
+        }
+    ]
+}

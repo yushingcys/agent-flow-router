@@ -301,6 +301,13 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         description: "Send and receive SMS from owned phone numbers.",
     },
     {
+        id: "agentic-email",
+        displayName: "Agentic Email",
+        description:
+            "Email inboxes owned by AI agents - send, receive, reply, " +
+            "threads, drafts, and custom sending domains.",
+    },
+    {
         id: "token-prices",
         displayName: "Token Prices",
         description:
