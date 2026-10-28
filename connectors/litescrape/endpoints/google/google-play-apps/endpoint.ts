@@ -28,6 +28,8 @@ export default defineEndpoint({
             "`age` requires `apps_category` 'FAMILY'.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google-play/apps",
     request: { method: "GET", path: "/google/play/apps" },
     input: {
         schema: {

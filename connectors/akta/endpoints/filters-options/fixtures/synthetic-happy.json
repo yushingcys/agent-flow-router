@@ -1,0 +1,37 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Filter Options reference (agent-docs.akta.pro, 2026-10-27).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.akta.pro/api/v1/filters/options/",
+                "body": {
+                    "dropdowns": [
+                        {
+                            "dropdown_type": "firmographic.company_type"
+                        }
+                    ]
+                }
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "firmographic.company_type": [
+                            {
+                                "value": "private",
+                                "label": "Private"
+                            },
+                            {
+                                "value": "public",
+                                "label": "Public"
+                            }
+                        ]
+                    },
+                    "credits_consumed": 0.0
+                }
+            }
+        }
+    ]
+}

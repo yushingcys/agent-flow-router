@@ -1,0 +1,42 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Headcount Trends reference (agent-docs.akta.pro, 2026-10-27), trimmed.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/headcount-trends/?company=canva.com"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "uuid": "00000l1",
+                        "linkedin_username": "canva",
+                        "linkedin_official_name": "Canva",
+                        "total_employees": 5400,
+                        "date": "2026-10-01",
+                        "growth_periods": [
+                            "6m",
+                            "12m",
+                            "24m"
+                        ],
+                        "headcount_growth": [
+                            {
+                                "period": "12m",
+                                "growth": 0.12
+                            }
+                        ],
+                        "headcount_by_function": [
+                            {
+                                "function": "Engineering",
+                                "headcount": 1800
+                            }
+                        ]
+                    },
+                    "credits_consumed": 2.5
+                }
+            }
+        }
+    ]
+}

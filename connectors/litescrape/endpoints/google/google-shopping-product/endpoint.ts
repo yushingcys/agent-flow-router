@@ -24,6 +24,8 @@ export default defineEndpoint({
             "Pass at most one of `location` or `uule`; the vendor answers 400 to both.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google/shopping-product",
     request: { method: "GET", path: "/google/shopping/product" },
     input: {
         schema: {

@@ -297,13 +297,20 @@ export function replayFetch(
             // a recorded 3xx replays WITH its allowlisted headers — the
             // engine's transport is `redirect: "manual"`, so a Response
             // carrying a `location` is exactly what the live exchange was
-            new Response(replayBody(call.res), {
-                status: call.res.status,
-                headers: {
-                    "content-type": "application/json",
-                    ...call.res.headers,
+            // a null-body status (204, 304) must replay WITHOUT a body:
+            // `Response` throws on one, so a recorded 204 could not replay
+            new Response(
+                [101, 204, 205, 304].includes(call.res.status)
+                    ? null
+                    : replayBody(call.res),
+                {
+                    status: call.res.status,
+                    headers: {
+                        "content-type": "application/json",
+                        ...call.res.headers,
+                    },
                 },
-            }),
+            ),
         );
     };
 }

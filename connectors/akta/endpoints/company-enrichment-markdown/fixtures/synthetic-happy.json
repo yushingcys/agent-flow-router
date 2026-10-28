@@ -1,0 +1,24 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Company Data Markdown quickstart (agent-docs.akta.pro, 2026-10-27): two sections at 2 credits each.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/enrichment/markdown/?company=https%3A%2F%2Fcanva.com&sections=firmographic%2Cbusiness_model"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": "# Canva\n\n## Firmographic\n- Founded: 2012\n\n## Business Model\n- GTM: product-led growth\n",
+                    "uuid": "00000l1",
+                    "sections_included": [
+                        "firmographic",
+                        "business_model"
+                    ],
+                    "credits_consumed": 4
+                }
+            }
+        }
+    ]
+}

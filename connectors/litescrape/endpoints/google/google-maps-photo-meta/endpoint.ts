@@ -19,6 +19,8 @@ export default defineEndpoint({
             "The upstream answers `user`, `location`, and `date` (its docs once said `photo`); the billing check keys off `user` and `location`.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google/maps-photo",
     request: { method: "GET", path: "/google/maps/photo-meta" },
     input: {
         schema: {

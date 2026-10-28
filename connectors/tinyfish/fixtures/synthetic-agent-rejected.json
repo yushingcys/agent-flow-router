@@ -1,0 +1,22 @@
+{
+    "name": "synthetic-agent-rejected",
+    "description": "run-async refuses the request up front (synthetic 402, wallet empty): data, zero usage, nothing to poll.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 402,
+                "body": {
+                    "error": {
+                        "code": "INSUFFICIENT_CREDITS",
+                        "message": "Wallet balance is too low"
+                    },
+                    "request_id": "req-1"
+                }
+            }
+        }
+    ]
+}

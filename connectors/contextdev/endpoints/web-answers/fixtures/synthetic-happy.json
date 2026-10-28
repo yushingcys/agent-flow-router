@@ -1,0 +1,30 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Answer a research task response schema (docs.context.dev/api-reference/web-extraction/answers, 2026-10-27), a fast-mode answer, credits_consumed 10; the balance is a placeholder.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.context.dev/v1/web/answers"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "json_content": {
+                        "company": "Stripe",
+                        "headquarters_city": "South San Francisco"
+                    },
+                    "sources": [
+                        "https://stripe.com/about",
+                        "https://en.wikipedia.org/wiki/Stripe,_Inc."
+                    ],
+                    "key_metadata": {
+                        "credits_consumed": 10,
+                        "credits_remaining": 9990
+                    },
+                    "request_id": "REQ1"
+                }
+            }
+        }
+    ]
+}

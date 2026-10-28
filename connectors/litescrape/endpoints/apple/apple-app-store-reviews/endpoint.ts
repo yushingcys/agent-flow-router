@@ -23,6 +23,8 @@ export default defineEndpoint({
             "A page past the end answers 200 with `reviews: []`; that run records 0 credits here although the vendor deducts one.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/app-store/reviews",
     request: { method: "GET", path: "/apple/app-store/reviews" },
     input: {
         schema: {

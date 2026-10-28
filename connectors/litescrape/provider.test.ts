@@ -39,10 +39,34 @@ const inputFor = (id: string): RunInput => {
     return input;
 };
 
+/** The fifteen ids that take the hosted catalog's spelling (the doc's
+ *  `endpoint`) over the vendor's wire path, which the fixtures and the
+ *  compiled request URL keep. Literals on purpose: a moved wire path must
+ *  fail here. */
+const WIRE_PATH: Record<string, string> = {
+    "litescrape#app-store/product": "apple/app-store/product",
+    "litescrape#app-store/reviews": "apple/app-store/reviews",
+    "litescrape#app-store/search": "apple/app-store/search",
+    "litescrape#apple-maps/places": "apple/maps/places",
+    "litescrape#apple-maps/reviews": "apple/maps/reviews",
+    "litescrape#google-play/apps": "google/play/apps",
+    "litescrape#google-play/books": "google/play/books",
+    "litescrape#google-play/games": "google/play/games",
+    "litescrape#google-play/movies": "google/play/movies",
+    "litescrape#google-play/product": "google/play/product",
+    "litescrape#google-play/reviews": "google/play/reviews",
+    "litescrape#google/maps-photo": "google/maps/photo-meta",
+    "litescrape#google/maps-popular-times": "google/maps/popular-times",
+    "litescrape#google/maps-posts": "google/maps/posts",
+    "litescrape#google/shopping-product": "google/shopping/product",
+};
+
+const wirePath = (id: string) => WIRE_PATH[id] ?? id.split("#")[1];
+
 /** Fixture dir: `endpoints/<family>/<wire path, slashes as dashes>/fixtures/`
  *  (design D1 — the loader wants leaf names unique across groups). */
 const fixtureFor = (id: string, name: string) => {
-    const path = id.split("#")[1];
+    const path = wirePath(id);
     const family = path.split("/")[0];
     return loadFixture(
         `${HERE}endpoints/${family}/${
@@ -85,34 +109,34 @@ const rejects = (id: string, queryParams: Record<string, Json>) =>
  * state its row here.
  */
 const RATE: Record<string, number> = {
-    "litescrape#apple/app-store/product": 1,
-    "litescrape#apple/app-store/reviews": 1,
-    "litescrape#apple/app-store/search": 1,
-    "litescrape#apple/maps/places": 1,
-    "litescrape#apple/maps/reviews": 1,
+    "litescrape#app-store/product": 1,
+    "litescrape#app-store/reviews": 1,
+    "litescrape#app-store/search": 1,
+    "litescrape#apple-maps/places": 1,
+    "litescrape#apple-maps/reviews": 1,
     "litescrape#bing/maps": 1,
     "litescrape#bing/search": 1,
     "litescrape#duckduckgo/maps": 1,
     "litescrape#duckduckgo/search": 1,
+    "litescrape#google-play/apps": 1,
+    "litescrape#google-play/books": 1,
+    "litescrape#google-play/games": 1,
+    "litescrape#google-play/movies": 1,
+    "litescrape#google-play/product": 1,
+    "litescrape#google-play/reviews": 1,
     "litescrape#google/ads": 1,
     "litescrape#google/ai-mode": 1,
     "litescrape#google/ai-overview": 1,
     "litescrape#google/contributor-reviews": 1,
     "litescrape#google/local": 1,
     "litescrape#google/maps": 1,
-    "litescrape#google/maps/photo-meta": 1,
-    "litescrape#google/maps/popular-times": 1,
-    "litescrape#google/maps/posts": 1,
-    "litescrape#google/play/apps": 1,
-    "litescrape#google/play/books": 1,
-    "litescrape#google/play/games": 1,
-    "litescrape#google/play/movies": 1,
-    "litescrape#google/play/product": 1,
-    "litescrape#google/play/reviews": 1,
+    "litescrape#google/maps-photo": 1,
+    "litescrape#google/maps-popular-times": 1,
+    "litescrape#google/maps-posts": 1,
     "litescrape#google/reviews": 1,
     "litescrape#google/search": 1,
     "litescrape#google/shopping": 1,
-    "litescrape#google/shopping/product": 1,
+    "litescrape#google/shopping-product": 1,
     "litescrape#tripadvisor/place": 1,
     "litescrape#tripadvisor/reviews": 1,
     "litescrape#tripadvisor/search": 1,
@@ -125,7 +149,7 @@ const RATE: Record<string, number> = {
  *  per endpoint by the happy run). */
 const FAMILY_REPRESENTATIVES = [
     "litescrape#google/search",
-    "litescrape#apple/maps/places",
+    "litescrape#apple-maps/places",
     "litescrape#bing/search",
     "litescrape#duckduckgo/search",
     "litescrape#yelp/search",
@@ -137,10 +161,10 @@ const FAMILY_REPRESENTATIVES = [
 const EMPTY_CASES = [
     "litescrape#google/search",
     "litescrape#google/maps",
-    "litescrape#google/maps/popular-times",
-    "litescrape#google/maps/posts",
+    "litescrape#google/maps-popular-times",
+    "litescrape#google/maps-posts",
     "litescrape#google/reviews",
-    "litescrape#apple/app-store/reviews",
+    "litescrape#app-store/reviews",
     "litescrape#bing/maps",
     "litescrape#duckduckgo/search",
     "litescrape#yelp/reviews",
@@ -220,10 +244,10 @@ Deno.test("litescrape docs: one auth, one CSV join, one error digest, one estima
         assertEquals(doc.lifecycle, undefined, id);
         assertEquals(doc.timeouts, { requestMs: 120_000, runMs: 120_000 }, id);
         // the `/api` prefix rides the base URL; the id is the vendor's
-        // `<engine>/<kind>` path (design D1)
+        // `<engine>/<kind>` path (design D1) unless WIRE_PATH says otherwise
         assertEquals(
             doc.request.url,
-            `https://api.litescrape.com/api/${id.split("#")[1]}`,
+            `https://api.litescrape.com/api/${wirePath(id)}`,
             id,
         );
         assertEquals(doc.request.method, "GET", id);
@@ -240,9 +264,9 @@ Deno.test("litescrape docs: one auth, one CSV join, one error digest, one estima
         bundle.endpoints["litescrape#yelp/reviews"].usage.evidence.$fn.key,
     );
     assertEquals(
-        bundle.endpoints["litescrape#google/play/books"].usage.evidence.$fn
+        bundle.endpoints["litescrape#google-play/books"].usage.evidence.$fn
             .key,
-        bundle.endpoints["litescrape#google/play/movies"].usage.evidence.$fn
+        bundle.endpoints["litescrape#google-play/movies"].usage.evidence.$fn
             .key,
     );
     assertEquals(evidenceKeys.size, 22);
@@ -277,7 +301,7 @@ Deno.test("litescrape meta: the verbatim-links caveat rides every doc; the vendo
         ),
     );
     assert(
-        notesOf("litescrape#google/play/apps").includes(
+        notesOf("litescrape#google-play/apps").includes(
             "at most one of `chart`",
         ),
     );
@@ -287,17 +311,17 @@ Deno.test("litescrape meta: the verbatim-links caveat rides every doc; the vendo
         notesOf(id).includes("Alpha upstream")
     );
     assertEquals(alpha, [
-        "litescrape#apple/app-store/product",
-        "litescrape#apple/app-store/reviews",
-        "litescrape#apple/app-store/search",
+        "litescrape#app-store/product",
+        "litescrape#app-store/reviews",
+        "litescrape#app-store/search",
+        "litescrape#google-play/apps",
+        "litescrape#google-play/books",
+        "litescrape#google-play/games",
+        "litescrape#google-play/movies",
+        "litescrape#google-play/product",
+        "litescrape#google-play/reviews",
         "litescrape#google/ads",
         "litescrape#google/local",
-        "litescrape#google/play/apps",
-        "litescrape#google/play/books",
-        "litescrape#google/play/games",
-        "litescrape#google/play/movies",
-        "litescrape#google/play/product",
-        "litescrape#google/play/reviews",
     ]);
     // no rule, no note beyond the provider's four
     assertEquals(
@@ -355,7 +379,7 @@ Deno.test("litescrape schemas: strict mirrors, unions without defaults, the live
     assertEquals("data_id" in reviews.anyOf[0].properties, false);
     assertEquals("place_id" in reviews.anyOf[1].properties, false);
     // the plain mirrors are strict too
-    const places = bundle.endpoints["litescrape#apple/maps/places"].input.schema
+    const places = bundle.endpoints["litescrape#apple-maps/places"].input.schema
         .queryParams as {
             additionalProperties: boolean;
             required: string[];
@@ -404,7 +428,7 @@ Deno.test("litescrape: the CSV join — Apple muid and Yelp rating / attrs array
     for (
         const [id, param, joined] of [
             [
-                "litescrape#apple/maps/places",
+                "litescrape#apple-maps/places",
                 "muid",
                 "4372355869446211302,4560078147072908047",
             ],
@@ -526,17 +550,17 @@ Deno.test("litescrape gates: the identifier alternatives and their near twins", 
     await rejects("litescrape#google/reviews", { num: 5 });
     await validates("litescrape#google/reviews", { data_id: "0x1:0x2" });
     // gpcid xor prds; the docids ride with gpcid only
-    await rejects("litescrape#google/shopping/product", {
+    await rejects("litescrape#google/shopping-product", {
         q: "coffee maker",
         prds: "token",
         gpcid: "1",
     });
-    await rejects("litescrape#google/shopping/product", {
+    await rejects("litescrape#google/shopping-product", {
         q: "coffee maker",
         prds: "token",
         image_docid: "1",
     });
-    await validates("litescrape#google/shopping/product", {
+    await validates("litescrape#google/shopping-product", {
         q: "coffee maker",
         prds: "token",
     });
@@ -562,16 +586,16 @@ Deno.test("litescrape gates: the identifier alternatives and their near twins", 
 
 Deno.test("litescrape gates: the single-field patterns and bounds", async () => {
     // muid: an unsigned 64-bit decimal — the boundary both ways
-    await validates("litescrape#apple/maps/reviews", {
+    await validates("litescrape#apple-maps/reviews", {
         muid: "18446744073709551615",
     });
-    await rejects("litescrape#apple/maps/reviews", {
+    await rejects("litescrape#apple-maps/reviews", {
         muid: "18446744073709551616",
     });
-    await rejects("litescrape#apple/maps/reviews", {
+    await rejects("litescrape#apple-maps/reviews", {
         muid: "4372355869446211302x",
     });
-    await rejects("litescrape#apple/maps/places", {
+    await rejects("litescrape#apple-maps/places", {
         muid: ["4372355869446211302", "18446744073709551616"],
     });
     // the Maps viewport and feature id formats
@@ -585,7 +609,7 @@ Deno.test("litescrape gates: the single-field patterns and bounds", async () => 
         type: "search",
         ll: "@30.2672,-97.7431,14z",
     });
-    await rejects("litescrape#google/maps/posts", { data_id: "ChIJnotahex" });
+    await rejects("litescrape#google/maps-posts", { data_id: "ChIJnotahex" });
     await rejects("litescrape#google/contributor-reviews", {
         contributor_id: "123456789",
     });
@@ -614,8 +638,8 @@ Deno.test("litescrape gates: the single-field patterns and bounds", async () => 
         find_loc: "Austin",
         yelp_domain: "www.yelp.co.uk",
     });
-    await rejects("litescrape#apple/app-store/search", { term: "x", num: 201 });
-    await rejects("litescrape#apple/app-store/product", {
+    await rejects("litescrape#app-store/search", { term: "x", num: 201 });
+    await rejects("litescrape#app-store/product", {
         product_id: "0570060128",
     });
     await rejects("litescrape#tripadvisor/place", {
@@ -627,7 +651,7 @@ Deno.test("litescrape gates: the single-field patterns and bounds", async () => 
         q: "x",
         df: "2026-01-01..2026-02-01",
     });
-    await rejects("litescrape#google/play/product", {
+    await rejects("litescrape#google-play/product", {
         product_id: "com.example.one",
         store: "games",
     });

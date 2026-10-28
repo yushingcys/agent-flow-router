@@ -25,6 +25,8 @@ export default defineEndpoint({
             "Alpha upstream (litescrape.com/docs, 2026-09-20): result groups and field availability may change.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/app-store/product",
     request: { method: "GET", path: "/apple/app-store/product" },
     input: {
         schema: {

@@ -20,6 +20,8 @@ export default defineEndpoint({
             "A listing without posts answers 200 without a `posts` group; that run records 0 credits here although the vendor deducts one.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google/maps-posts",
     request: { method: "GET", path: "/google/maps/posts" },
     input: {
         schema: {

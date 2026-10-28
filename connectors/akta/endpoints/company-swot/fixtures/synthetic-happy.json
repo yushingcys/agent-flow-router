@@ -1,0 +1,33 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Company swot reference (agent-docs.akta.pro, 2026-10-27), trimmed; ids and URLs are placeholders.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/enrichment/swot/canva.com"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "uuid": "00000l1",
+                        "strengths": [
+                            {
+                                "headline": "Freemium reach",
+                                "details": "Large free user base.",
+                                "source": [
+                                    "https://example.com/a"
+                                ]
+                            }
+                        ],
+                        "weakness": [],
+                        "key_risks": [],
+                        "key_highlights": []
+                    },
+                    "credits_consumed": 0.5
+                }
+            }
+        }
+    ]
+}

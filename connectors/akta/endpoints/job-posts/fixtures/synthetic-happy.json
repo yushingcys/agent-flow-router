@@ -1,0 +1,180 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Job Posts reference (agent-docs.akta.pro, 2026-10-27), trimmed to 12 listings for a limit=12 call; a 2-block call bills 2 x 4 credits.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/jobs/?company=canva.com&limit=12"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "status": "success",
+                    "data": [
+                        {
+                            "id": "J0",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/0",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J1",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/1",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J2",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/2",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J3",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/3",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J4",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/4",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J5",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/5",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J6",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/6",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J7",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/7",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J8",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/8",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J9",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/9",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J10",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/10",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        },
+                        {
+                            "id": "J11",
+                            "title": "Software Engineer",
+                            "location": "Sydney",
+                            "url": "https://example.com/jobs/11",
+                            "remote": false,
+                            "salary_min_usd": null,
+                            "salary_max_usd": null,
+                            "experience_level": "2-5",
+                            "key_skills": [
+                                "TypeScript"
+                            ]
+                        }
+                    ],
+                    "count": 274,
+                    "limit": 12,
+                    "offset": 0,
+                    "credits_consumed": 8
+                }
+            }
+        }
+    ]
+}

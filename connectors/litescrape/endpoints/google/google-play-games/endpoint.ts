@@ -24,6 +24,8 @@ export default defineEndpoint({
             "An explicit `store_device` cannot be combined with `q` or the category; a `chart` needs the phone storefront (omit `store_device` or set 'phone').",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google-play/games",
     request: { method: "GET", path: "/google/play/games" },
     input: {
         schema: {

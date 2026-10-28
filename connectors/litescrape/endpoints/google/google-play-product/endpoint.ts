@@ -27,6 +27,8 @@ export default defineEndpoint({
             "`season_id` requires `store` 'tv'; the vendor answers 400 otherwise.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google-play/product",
     request: { method: "GET", path: "/google/play/product" },
     input: {
         schema: {

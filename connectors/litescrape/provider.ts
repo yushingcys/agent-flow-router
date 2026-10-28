@@ -66,7 +66,14 @@ export default defineProvider({
             "(pagination.next, litescrape_pagination.*, reviews_link, " +
             "photo_meta_link, litescrape_*_link). They are relayed " +
             "verbatim: <path> is this connector's endpoint id " +
-            "(litescrape#<path>) and the query string is its queryParams.",
+            "(litescrape#<path>) and the query string is its queryParams, " +
+            "except where the id takes the hosted catalog's spelling: " +
+            "apple/app-store/* is app-store/*, apple/maps/* is " +
+            "apple-maps/*, google/play/* is google-play/*, " +
+            "google/maps/photo-meta is google/maps-photo, " +
+            "google/maps/popular-times and google/maps/posts are " +
+            "google/maps-popular-times and google/maps-posts, and " +
+            "google/shopping/product is google/shopping-product.",
 
             "search_metadata.json_endpoint echoes the request; " +
             "search_metadata.raw_file / prettify_file / raw_html_file / " +
@@ -88,7 +95,10 @@ export default defineProvider({
     auth: { inject: presets.auth.bearer() },
     // The `/api` prefix rides the base URL: endpoint paths are the
     // `/<engine>/<kind>` the vendor's docs are keyed by, so the compiled id
-    // is `litescrape#google/search` (design D1).
+    // is `litescrape#google/search` (design D1). Fifteen defs declare
+    // `endpoint` with the hosted catalog's spelling instead (Apple, Google
+    // Play, three Maps extras, Shopping product), so their ids match the
+    // pricing join while the wire path stays the vendor's.
     request: { baseUrl: "https://api.litescrape.com/api" },
     timeouts: { requestMs: 120_000, runMs: 120_000 },
     input: {

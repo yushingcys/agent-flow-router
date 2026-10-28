@@ -24,6 +24,8 @@ export default defineEndpoint({
             "`age` requires `books_category` 'coll_1689'; `price` requires `q`.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google-play/books",
     request: { method: "GET", path: "/google/play/books" },
     input: {
         schema: {

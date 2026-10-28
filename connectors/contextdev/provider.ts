@@ -3,7 +3,7 @@ import { defineProvider, presets } from "@shared/core";
 /**
  * Context.dev (context.dev) — the web-context API, ported from
  * the hosted gateway `adaptors/contextdev` (v1 slug `context.dev`; a provider
- * name here cannot carry a dot — design D1). Nineteen synchronous JSON
+ * name here cannot carry a dot - design D1). Twenty-five synchronous JSON
  * endpoints on ONE wire surface, `https://api.context.dev/v1/<path>`,
  * Bearer auth: GETs carry their input as scalar query params, POSTs as a
  * JSON body. Results come back inline; nothing polls.
@@ -30,14 +30,17 @@ export default defineProvider({
         displayName: "Context.dev",
         summary:
             "Web context: scrape, crawl, search, extract, and brand intelligence.",
-        description: "The unified web context API for agents — scrape any " +
-            "URL to clean Markdown or rendered HTML, crawl a whole site for " +
-            "RAG, search the web with inline page content, extract " +
-            "schema-shaped JSON, enumerate sitemaps and page images, capture " +
-            "screenshots, search company news, enrich people from identity " +
-            "clues, and resolve brand, industry (NAICS/SIC), product, and " +
-            "design-system intelligence for any company — one key, no " +
-            "crawlers, browsers, or proxies to run.",
+        description: "The unified web context API for agents - scrape any " +
+            "URL to clean Markdown, HTML, JSON, or prebuilt-parser records " +
+            "(Google Maps, app stores, Instagram, TikTok, G2), map and " +
+            "crawl a whole site for RAG, search the web with inline page " +
+            "content, research sourced answers, extract schema-shaped JSON, " +
+            "capture screenshots, search company news, find companies and " +
+            "people in plain words, enrich people from identity clues, " +
+            "identify merchants behind card descriptors, and resolve brand, " +
+            "industry (NAICS/SIC), product, and design-system intelligence " +
+            "for any company - one key, no crawlers, browsers, or proxies " +
+            "to run.",
         homepageUrl: "https://context.dev",
         docsUrl: "https://docs.context.dev",
         categories: ["web-extraction", "web-search", "company-enrichment"],

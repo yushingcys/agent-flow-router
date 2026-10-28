@@ -1,0 +1,41 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the News Detail quickstart (agent-docs.akta.pro, 2026-10-27), trimmed to two articles.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/news/by-id/?news_ids=34144849%2C34186756"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "count": 2,
+                    "data": [
+                        {
+                            "id": 34186756,
+                            "title": "Canva ships Visual Suite updates",
+                            "url": "https://example.com/news/1",
+                            "publisher": "Example",
+                            "published_date": "2026-09-08T17:25:02",
+                            "sentiment": "Positive",
+                            "ai_summary": "Summary.",
+                            "full_text": "Text."
+                        },
+                        {
+                            "id": 34144849,
+                            "title": "Canva expands",
+                            "url": "https://example.com/news/2",
+                            "publisher": "Example",
+                            "published_date": "2026-09-07T10:00:00",
+                            "sentiment": "Neutral",
+                            "ai_summary": "Summary.",
+                            "full_text": "Text."
+                        }
+                    ],
+                    "credits_consumed": 0.12
+                }
+            }
+        }
+    ]
+}

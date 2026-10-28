@@ -9,7 +9,7 @@ import { zTinyfishSearchQueryParams } from "./schema/inputs.ts";
  * The search product lives on its own host: `request.baseUrl` here overrides
  * the (absent) provider default.
  */
-export default defineEndpoint({
+export const searchDef = {
     meta: {
         displayName: "TinyFish Web Search",
         summary: "Search the live web, news, or research papers — free.",
@@ -44,4 +44,6 @@ export default defineEndpoint({
     input: { schema: { queryParams: zTinyfishSearchQueryParams } },
     // Docs: 1-3s typical, 10s suggested client timeout.
     timeouts: { requestMs: 15_000, runMs: 20_000 },
-});
+} satisfies Parameters<typeof defineEndpoint>[0];
+
+export default defineEndpoint(searchDef);

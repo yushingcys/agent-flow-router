@@ -1,0 +1,32 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Company peers reference (agent-docs.akta.pro, 2026-10-27), trimmed; ids and URLs are placeholders.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/enrichment/peers/canva.com"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "uuid": "00000l1",
+                        "peers": [
+                            {
+                                "name": "Adobe",
+                                "uuid": "0000001",
+                                "type": {
+                                    "code": "direct_peer",
+                                    "label": "Direct Peer"
+                                },
+                                "description": "Creative software suite."
+                            }
+                        ]
+                    },
+                    "credits_consumed": 0.5
+                }
+            }
+        }
+    ]
+}
