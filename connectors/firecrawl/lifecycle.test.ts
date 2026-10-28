@@ -1,9 +1,10 @@
 import { assert, assertEquals } from "@std/assert";
 import { fromFileUrl } from "@std/path";
-import type { RunInput } from "@shared/core";
+import { type RunInput, RunKind, StopKind } from "@shared/core";
 import {
     estimateEndpoint,
     liveSkip,
+    loadEndpoint,
     loadFixture,
     runEndpoint,
     testBundle,
@@ -181,6 +182,53 @@ for (const id of PAGE_JOBS) {
         assertEquals(result.httpStatus, 402);
         assertEquals(result.isProviderError, true);
         assertEquals(result.usage, { credits: {}, evidence: {} });
+    });
+}
+
+/** Start a job, then stop it against `chain` (design D34). */
+async function startThenStop(id: string, chain: string) {
+    const loaded = await loadEndpoint({
+        unit: await testSealedUnit(id),
+        input: INPUTS[id],
+        mode: "replay",
+        fixture: await loadFixture(`${chains}${chain}.json`),
+    });
+    const run = { runId: "test-run" };
+    const started = await loaded.start(INPUTS[id], run);
+    assert(started.kind === RunKind.RUNNING, "submit parks RUNNING");
+    return await loaded.stop(INPUTS[id], started.state, run);
+}
+
+/** The agent meters CREDIT; the page jobs meter pages. */
+const evidenceOf = (id: string, n: number): Record<string, number> =>
+    id === "firecrawl#agent" ? { CREDIT: n } : { page: n };
+
+for (const id of Object.keys(INPUTS)) {
+    Deno.test(`${id} stop mid-run: settles the pages Firecrawl already billed`, async () => {
+        const stopped = await startThenStop(id, "job-stop-settled");
+        // a cancelled job is not free upstream, so it is not free here: the
+        // stop reads the final meter and settles on the vendor's own count
+        assert(stopped.kind === RunKind.COMPLETED, "stop settles");
+        assertEquals(stopped.httpStatus, 200);
+        assertEquals(stopped.usage.credits, { default: 1 });
+        assertEquals(stopped.usage.evidence, evidenceOf(id, 1));
+        assertEquals((stopped.output as Record<string, unknown>).id, "JOB1");
+    });
+
+    Deno.test(`${id} stop with an unreadable meter is UNRESOLVED, never free`, async () => {
+        const stopped = await startThenStop(id, "job-stop-status-unreadable");
+        assertEquals(stopped.kind, StopKind.UNRESOLVED);
+        assert(stopped.kind === StopKind.UNRESOLVED);
+        assertEquals(stopped.reason, "job status read answered HTTP 503");
+        assertEquals(stopped.state.externalRunId, "JOB1");
+    });
+
+    Deno.test(`${id} stop on an already-finished job settles the whole job`, async () => {
+        const stopped = await startThenStop(id, "job-stop-already-finished");
+        // the DELETE 404s (nothing left to cancel); the meter still settles
+        assert(stopped.kind === RunKind.COMPLETED, "stop settles");
+        assertEquals(stopped.usage.credits, { default: 2 });
+        assertEquals(stopped.usage.evidence, evidenceOf(id, 2));
     });
 }
 

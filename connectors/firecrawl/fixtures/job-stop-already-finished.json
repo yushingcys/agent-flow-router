@@ -1,0 +1,69 @@
+{
+    "name": "job-stop-already-finished",
+    "description": "Stop races a job that already finished: the DELETE answers 404 (nothing left to cancel) and the status read reports completed=2 with creditsUsed=2. Stop settles the whole job.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "id": "JOB1",
+                    "url": "{{request.url}}/JOB1"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "{{request.url}}/JOB1"
+            },
+            "res": {
+                "status": 404,
+                "body": {
+                    "success": false,
+                    "error": "Job not found or already finished"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}/JOB1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "status": "completed",
+                    "completed": 2,
+                    "total": 2,
+                    "creditsUsed": 2,
+                    "data": [
+                        {
+                            "markdown": "# Example Domain",
+                            "metadata": {
+                                "title": "Example Domain",
+                                "sourceURL": "https://example.com/",
+                                "url": "https://example.com/",
+                                "statusCode": 200
+                            }
+                        },
+                        {
+                            "markdown": "# Example Domain",
+                            "metadata": {
+                                "title": "Example Domain",
+                                "sourceURL": "https://example.com/",
+                                "url": "https://example.com/",
+                                "statusCode": 200
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

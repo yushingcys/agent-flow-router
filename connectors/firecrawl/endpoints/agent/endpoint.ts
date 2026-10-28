@@ -172,18 +172,59 @@ export default defineEndpoint({
                     { retriable: false },
                 );
             }
-            const res = await utils.http({
-                method: "DELETE",
-                url: data.request.url + "/" + encodeURIComponent(jobId),
-            });
+            const jobUrl = data.request.url + "/" + encodeURIComponent(jobId);
+            const res = await utils.http({ method: "DELETE", url: jobUrl });
             if (res.status < 200 || res.status >= 300) {
-                // best-effort teardown: an already-finished job answers
-                // non-2xx and there is nothing left to stop
+                // an already-finished job answers non-2xx and there is
+                // nothing left to stop - its meter is still read below
                 logger.warn("firecrawl job cancel failed (ignored)", {
                     jobId,
                     status: res.status,
                 });
             }
+            // SETTLE what already ran (design D34): crawl and batch pages
+            // bill as they complete and the agent draws credits as it works,
+            // so a cancelled job is NOT free: Firecrawl has charged us for
+            // it. Read the job's final meter and settle on the vendor's own
+            // `completed` / `creditsUsed`, in the same envelope the poll
+            // would have returned. Every terminal status settles, `failed`
+            // included: the caller asked for the stop, and the meter is what
+            // the vendor billed regardless of how the job ended. A cancel
+            // that has not landed yet gets a few bounded re-reads.
+            let reason = "";
+            for (let attempt = 0; attempt < 3; attempt++) {
+                if (attempt > 0) await utils.sleep(2_000);
+                let read;
+                try {
+                    read = await utils.http({ method: "GET", url: jobUrl });
+                } catch (error) {
+                    reason = "job status read failed: " + String(error);
+                    break;
+                }
+                if (read.status < 200 || read.status >= 300) {
+                    reason = "job status read answered HTTP " + read.status;
+                    break;
+                }
+                const status = utils.json.optionalGet(read.body, "$.status");
+                if (
+                    status === "completed" || status === "cancelled" ||
+                    status === "failed"
+                ) {
+                    return {
+                        kind: "COMPLETED",
+                        httpStatus: 200,
+                        output: utils.json.merge(read.body, { id: jobId }),
+                    };
+                }
+                reason = "job still " + String(status) + " after cancel";
+            }
+            // NOT silently free: the job may have billed pages we could not
+            // count, so the host reconciles before money settles
+            logger.warn("firecrawl stop could not read the final meter", {
+                jobId,
+                reason,
+            });
+            return { kind: "UNRESOLVED", reason };
         },
     },
     usage: {

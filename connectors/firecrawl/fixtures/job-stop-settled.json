@@ -1,0 +1,60 @@
+{
+    "name": "job-stop-settled",
+    "description": "A job stopped mid-run: submit parks RUNNING, the DELETE lands, and the status read reports the job cancelled after completed=1 of 2 with the vendor's creditsUsed=1. Stop settles 1 credit on the vendor's own meter.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "id": "JOB1",
+                    "url": "{{request.url}}/JOB1"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "{{request.url}}/JOB1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "status": "cancelled"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}/JOB1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "status": "cancelled",
+                    "completed": 1,
+                    "total": 2,
+                    "creditsUsed": 1,
+                    "data": [
+                        {
+                            "markdown": "# Example Domain",
+                            "metadata": {
+                                "title": "Example Domain",
+                                "sourceURL": "https://example.com/",
+                                "url": "https://example.com/",
+                                "statusCode": 200
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
