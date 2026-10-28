@@ -35,9 +35,9 @@ import { type Json, zJson } from "@shared/core";
  * written.
  */
 export const RECORDED_RES_HEADERS = [
-    // kept only when NOT JSON (recordingFetch drops it otherwise): replay
-    // needs it to serve a text body raw and a binary body (stored base64)
-    // as bytes
+    // kept only for a BINARY body (pickRecordedHeaders drops it otherwise):
+    // replay needs it to serve the stored base64 as bytes; a text body
+    // replays the same without it
     "content-type",
     "location",
     "retry-after",
@@ -94,7 +94,9 @@ export function pickRecordedHeaders(
         // allowlist is meant to grow, and an entry added as `Retry-After`
         // would otherwise be written verbatim and never match a fn reading
         // `res.headers["retry-after"]`
-        if (value !== null) out[name.toLowerCase()] = value;
+        if (value === null) continue;
+        if (name === "content-type" && !isBinaryContentType(value)) continue;
+        out[name.toLowerCase()] = value;
     }
     return Object.keys(out).length > 0 ? out : undefined;
 }
@@ -337,12 +339,6 @@ export function recordingFetch(
             : undefined;
         const text = bytes ? bytes.toBase64() : await response.text();
         const headers = pickRecordedHeaders(response.headers);
-        if (headers && /json/i.test(contentType ?? "")) {
-            delete headers["content-type"];
-        }
-        const kept = headers && Object.keys(headers).length > 0
-            ? headers
-            : undefined;
         sink.push({
             req: {
                 method,
@@ -351,7 +347,7 @@ export function recordingFetch(
             },
             res: {
                 status: response.status,
-                ...(kept !== undefined ? { headers: kept } : {}),
+                ...(headers !== undefined ? { headers } : {}),
                 body: binary ? text : parseMaybeJson(text) ?? text,
             },
         });
