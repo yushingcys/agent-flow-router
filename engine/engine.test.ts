@@ -21,7 +21,9 @@ import {
     EngineErrorCode,
     envCredentialsPresent,
     envParamsResolver,
+    isBinaryContentType,
     resolveCredentialEnv,
+    sniffDecode,
     type Transport,
 } from "@agent-flow/connector-engine";
 
@@ -2612,4 +2614,63 @@ Deno.test("MISSING_CREDENTIAL names the variables THIS doc's shape asks for, not
         !error.message.includes("DEMO_API_KEY"),
         `no bare alias for a named field, got: ${error.message}`,
     );
+});
+
+Deno.test("bytes: multipart bodies egress as FormData; binary responses decode to {contentType, base64}", async () => {
+    let sent: FormData | undefined;
+    let contentType: string | undefined;
+    const transport = directTransport({
+        params: () => Promise.resolve({}),
+        fetch: (_url, init) => {
+            sent = (init as RequestInit | undefined)?.body as FormData;
+            contentType = ((init as RequestInit | undefined)?.headers as Record<
+                string,
+                string
+            >)[
+                "content-type"
+            ];
+            return Promise.resolve(
+                new Response(new Uint8Array([0xff, 0xfb, 0x90, 0x00]), {
+                    headers: { "content-type": "audio/mpeg" },
+                }),
+            );
+        },
+    });
+    const response = await transport.execute({
+        method: "POST",
+        url: "https://api.example.com/upload",
+        headers: {},
+        query: {},
+        body: {
+            model_id: "scribe_v1",
+            diarize: true,
+            file: {
+                base64: "SUQz",
+                contentType: "audio/mpeg",
+                filename: "a.mp3",
+            },
+        },
+        bodyEncoding: "multipart",
+        provider: "example",
+        timeouts: { requestMs: 1000 },
+    });
+    assertEquals(contentType, undefined, "fetch writes the boundary itself");
+    assert(sent instanceof FormData);
+    assertEquals(sent.get("model_id"), "scribe_v1");
+    assertEquals(sent.get("diarize"), "true");
+    const file = sent.get("file") as File;
+    assertEquals(file.name, "a.mp3");
+    assertEquals(file.type, "audio/mpeg");
+    assertEquals(
+        new Uint8Array(await file.arrayBuffer()),
+        new Uint8Array([0x49, 0x44, 0x33]),
+    );
+    assertEquals(sniffDecode(response), {
+        contentType: "audio/mpeg",
+        base64: "//uQAA==",
+    });
+    assertEquals(isBinaryContentType("application/json; charset=utf-8"), false);
+    assertEquals(isBinaryContentType("text/event-stream"), false);
+    assertEquals(isBinaryContentType("application/octet-stream"), true);
+    assertEquals(isBinaryContentType(undefined), false);
 });

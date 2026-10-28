@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isBinaryContentType } from "@agent-flow/connector-engine";
 import { type Json, zJson } from "@shared/core";
 
 /**
@@ -34,6 +35,10 @@ import { type Json, zJson } from "@shared/core";
  * written.
  */
 export const RECORDED_RES_HEADERS = [
+    // kept only when NOT JSON (recordingFetch drops it otherwise): replay
+    // needs it to serve a text body raw and a binary body (stored base64)
+    // as bytes
+    "content-type",
     "location",
     "retry-after",
     "x-api-units-cost-total-actual",
@@ -290,7 +295,7 @@ export function replayFetch(
             // a recorded 3xx replays WITH its allowlisted headers — the
             // engine's transport is `redirect: "manual"`, so a Response
             // carrying a `location` is exactly what the live exchange was
-            new Response(JSON.stringify(call.res.body), {
+            new Response(replayBody(call.res), {
                 status: call.res.status,
                 headers: {
                     "content-type": "application/json",
@@ -325,8 +330,19 @@ export function recordingFetch(
             ? parseMaybeJson(init.body)
             : undefined;
         const response = await realFetch(input, init);
-        const text = await response.text();
+        const contentType = response.headers.get("content-type") ?? undefined;
+        const binary = isBinaryContentType(contentType);
+        const bytes = binary
+            ? new Uint8Array(await response.arrayBuffer())
+            : undefined;
+        const text = bytes ? bytes.toBase64() : await response.text();
         const headers = pickRecordedHeaders(response.headers);
+        if (headers && /json/i.test(contentType ?? "")) {
+            delete headers["content-type"];
+        }
+        const kept = headers && Object.keys(headers).length > 0
+            ? headers
+            : undefined;
         sink.push({
             req: {
                 method,
@@ -335,11 +351,11 @@ export function recordingFetch(
             },
             res: {
                 status: response.status,
-                ...(headers !== undefined ? { headers } : {}),
-                body: parseMaybeJson(text) ?? text,
+                ...(kept !== undefined ? { headers: kept } : {}),
+                body: binary ? text : parseMaybeJson(text) ?? text,
             },
         });
-        return new Response(text, {
+        return new Response(bytes ?? text, {
             status: response.status,
             headers: {
                 "content-type": response.headers.get("content-type") ??
@@ -348,6 +364,19 @@ export function recordingFetch(
             },
         });
     };
+}
+
+/** A recorded body as the wire carried it: JSON unless the fixture's
+ *  `content-type` says otherwise, then the string raw (text) or decoded
+ *  from base64 (binary — how the recorder stores bytes). */
+function replayBody(res: RecordedCall["res"]): BodyInit {
+    const contentType = res.headers?.["content-type"];
+    if (contentType === undefined || typeof res.body !== "string") {
+        return JSON.stringify(res.body);
+    }
+    return isBinaryContentType(contentType)
+        ? Uint8Array.fromBase64(res.body)
+        : res.body;
 }
 
 function parseMaybeJson(text: string): Json | undefined {

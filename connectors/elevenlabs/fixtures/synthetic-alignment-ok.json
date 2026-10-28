@@ -1,0 +1,39 @@
+{
+    "name": "synthetic-alignment-ok",
+    "description": "SYNTHETIC 200 for /v1/forced-alignment from ForcedAlignmentResponseModel (api.elevenlabs.io/openapi.json, 2026-10-27): characters, words, loss. Last word ends at 2.4 s.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "characters": [
+                        {
+                            "text": "H",
+                            "start": 0,
+                            "end": 0.1
+                        }
+                    ],
+                    "words": [
+                        {
+                            "text": "Hello",
+                            "start": 0,
+                            "end": 0.9,
+                            "loss": 0.1
+                        },
+                        {
+                            "text": "there",
+                            "start": 1.2,
+                            "end": 2.4,
+                            "loss": 0.2
+                        }
+                    ],
+                    "loss": 0.15
+                }
+            }
+        }
+    ]
+}

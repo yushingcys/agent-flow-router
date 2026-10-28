@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-tts-ok",
+    "description": "SYNTHETIC binary 200 for /v1/tts: 64 bytes of audio/mpeg, stored base64 (the recorder's spelling for a binary content-type).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "headers": {
+                    "content-type": "audio/mpeg"
+                },
+                "body": "//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+            }
+        }
+    ]
+}

@@ -9,12 +9,35 @@ import type {
 } from "./interfaces/mod.ts";
 
 /**
+ * Does this content type carry BYTES rather than text? Text is `text/*` plus
+ * the textual `application/*` families (JSON, XML, JavaScript, form data,
+ * SSE); an absent type is read as text (the pre-binary behavior). Everything
+ * else (audio, image, video, octet-stream, pdf, zip, msgpack) is binary.
+ */
+export function isBinaryContentType(contentType: string | undefined): boolean {
+    if (contentType === undefined) return false;
+    const type = contentType.split(";")[0].trim().toLowerCase();
+    if (type === "" || type.startsWith("text/")) return false;
+    return !/json|xml|javascript|x-www-form-urlencoded|event-stream/.test(
+        type,
+    );
+}
+
+/**
  * Sniffing decode — the universal body rule (no per-endpoint flag): JSON if
  * it parses, else the COMPLETE raw body as a faithful string (a string IS
- * Json). Shared by the pipeline and utils.http; vendor error pages are
- * already flagged by the HTTP status (isProviderError / the fn's choice).
+ * Json). Bytes (a base64 transport body) decode to `{contentType, base64}`,
+ * the BinaryPart spelling a multipart request takes back. Shared by the
+ * pipeline and utils.http; vendor error pages are already flagged by the
+ * HTTP status (isProviderError / the fn's choice).
  */
 export function sniffDecode(response: TransportResponse): Json {
+    if (response.bodyEncoding === "base64") {
+        return {
+            contentType: response.contentType ?? "application/octet-stream",
+            base64: response.body,
+        };
+    }
     const text = response.body;
     if (text.trim() === "") return null;
     try {
@@ -22,6 +45,36 @@ export function sniffDecode(response: TransportResponse): Json {
     } catch {
         return text;
     }
+}
+
+/** A multipart body (zMultipartBody, validated where fns hand it over) as
+ *  FormData: arrays repeat the field, `{base64}` objects become file parts. */
+function toFormData(body: Json | undefined): FormData {
+    const form = new FormData();
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+        return form;
+    }
+    for (const [key, value] of Object.entries(body)) {
+        for (const part of Array.isArray(value) ? value : [value]) {
+            if (part !== null && typeof part === "object" && "base64" in part) {
+                const file = part as {
+                    base64: string;
+                    contentType?: string;
+                    filename?: string;
+                };
+                form.append(
+                    key,
+                    new Blob([Uint8Array.fromBase64(file.base64)], {
+                        type: file.contentType ?? "application/octet-stream",
+                    }),
+                    file.filename ?? key,
+                );
+            } else {
+                form.append(key, String(part));
+            }
+        }
+    }
+    return form;
 }
 
 /**
@@ -133,24 +186,35 @@ export function directTransport(opts: {
                 req.timeouts.requestMs,
             );
             try {
+                const multipart = req.bodyEncoding === "multipart";
                 const response = await doFetch(url.toString(), {
                     method: req.method,
+                    // multipart: fetch writes the content-type itself, so
+                    // the boundary in it matches the encoded body
                     headers: {
-                        ...(authed.body !== undefined
+                        ...(authed.body !== undefined && !multipart
                             ? { "content-type": "application/json" }
                             : {}),
                         ...authed.headers,
                     },
-                    body: authed.body !== undefined
-                        ? JSON.stringify(authed.body)
-                        : undefined,
+                    body: authed.body === undefined
+                        ? undefined
+                        : multipart
+                        ? toFormData(authed.body)
+                        : JSON.stringify(authed.body),
                     signal: controller.signal,
                     redirect: "manual",
                 });
-                const body = await response.text();
+                const binary = isBinaryContentType(
+                    response.headers.get("content-type") ?? undefined,
+                );
+                const body = binary
+                    ? new Uint8Array(await response.arrayBuffer()).toBase64()
+                    : await response.text();
                 return {
                     status: response.status,
                     body,
+                    ...(binary ? { bodyEncoding: "base64" as const } : {}),
                     // `redirect: "manual"` above means a 3xx arrives WITH its
                     // Location intact and an empty body — the header IS the
                     // payload for presigned-URL endpoints. Header keys are

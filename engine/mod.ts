@@ -40,6 +40,7 @@ export {
     directTransport,
     envCredentialsPresent,
     envParamsResolver,
+    isBinaryContentType,
     relayTransport,
     resolveCredentialEnv,
     sniffDecode,

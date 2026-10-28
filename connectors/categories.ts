@@ -259,6 +259,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Work with voice, including text-to-speech, transcription, dialogue, and more.",
     },
     {
+        id: "audio",
+        displayName: "Audio Tools",
+        description:
+            "Generate and process audio, including sound effects, noise removal, and more.",
+    },
+    {
         // The first RESOURCE-backed leaves (add-resource-lifecycle-saperly):
         // real phone numbers owned by the workspace, with AI personas
         // answering and placing calls.
