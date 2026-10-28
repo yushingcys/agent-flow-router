@@ -1,0 +1,49 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Search People response schema and example (docs.context.dev/api-reference/people/search, 2026-10-27), one placeholder person, credits_consumed 10; the balance is a placeholder.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.context.dev/v1/people/search"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "results": [
+                        {
+                            "name": "Alex Morgan",
+                            "description": "Sales leader helping solar companies grow.",
+                            "profiles": ["https://alexmorgan.example"],
+                            "location": {
+                                "country_code": "US",
+                                "region": "California",
+                                "city": "San Francisco"
+                            },
+                            "role": {
+                                "title": "VP of Sales",
+                                "seniority": "executive",
+                                "functions": ["sales"],
+                                "started_on": "2023-06-01",
+                                "company": {
+                                    "name": "Solstice",
+                                    "domain": "solstice.example"
+                                }
+                            },
+                            "years_of_experience": 12,
+                            "is_founder": false,
+                            "skills": ["Enterprise Sales"],
+                            "schools": ["University of California, Berkeley"]
+                        }
+                    ],
+                    "next_cursor": null,
+                    "key_metadata": {
+                        "credits_consumed": 10,
+                        "credits_remaining": 9990
+                    },
+                    "request_id": "REQ1"
+                }
+            }
+        }
+    ]
+}

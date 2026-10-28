@@ -1,0 +1,40 @@
+{
+    "name": "synthetic-douyin-webcast-ids",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/douyin/web/get_all_webcast_id (Douyin). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "b6d3d94d-0c33-480e-9a02-8475e611493c",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/b6d3d94d-0c33-480e-9a02-8475e611493c?sign=synthetic",
+                    "router": "/api/v1/douyin/web/get_all_webcast_id",
+                    "params": {},
+                    "data": [
+                        {
+                            "url": "https://live.douyin.com/775841227732",
+                            "webcast_id": "775841227732"
+                        },
+                        {
+                            "url": "https://live.douyin.com/123456789012",
+                            "webcast_id": "123456789012"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

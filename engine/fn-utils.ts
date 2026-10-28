@@ -1,4 +1,5 @@
 import {
+    type BodyEncoding,
     type Currency,
     type EndpointDoc,
     type FnEntry,
@@ -315,6 +316,7 @@ export function makeLifecycleUtils(opts: {
          *  `toWireQuery` output, never a raw record. */
         query: Record<string, string[]>;
         body?: Json;
+        bodyEncoding?: BodyEncoding;
         requestMs?: number;
     }): Promise<HttpResult> => {
         // D16 — same-origin credential rule: auth travels only when the
@@ -326,6 +328,9 @@ export function makeLifecycleUtils(opts: {
             headers: { ...parts.headers },
             query: parts.query,
             body: parts.body,
+            ...(parts.bodyEncoding === "multipart"
+                ? { bodyEncoding: parts.bodyEncoding }
+                : {}),
             ...(sameOrigin
                 ? {
                     auth: {
@@ -373,6 +378,7 @@ export function makeLifecycleUtils(opts: {
                 // and the declarative pipeline spell lists identically
                 query: toWireQuery(doc.id, c.queryParams ?? {}),
                 body: c.body,
+                bodyEncoding: c.bodyEncoding,
                 requestMs: c.requestMs,
             });
         },
@@ -402,6 +408,7 @@ export function makeLifecycleUtils(opts: {
                 // null IS valid JSON — `{body: null}` must override with
                 // null, never fall back to the caller input (PR #2 finding)
                 body: "body" in o && o.body !== undefined ? o.body : input.body,
+                bodyEncoding: o.bodyEncoding,
                 requestMs: o.requestMs,
             });
         },
@@ -558,6 +565,9 @@ export function makeResourceOpUtils(opts: {
                 headers: { ...c.headers },
                 query: toWireQuery(doc.id, c.queryParams ?? {}),
                 body: c.body,
+                ...(c.bodyEncoding === "multipart"
+                    ? { bodyEncoding: c.bodyEncoding }
+                    : {}),
                 ...(sameOrigin ? { auth: opts.auth } : {}),
                 provider: doc.provider,
                 timeouts: {

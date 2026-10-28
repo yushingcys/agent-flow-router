@@ -1,0 +1,52 @@
+{
+    "name": "synthetic-resource-ops",
+    "description": "SYNTHETIC op sequence on one loaded inbox: verify (alive), refresh (new display name), then release answering 404 because /release-inboxes already deleted it upstream (idempotent success).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v0/inboxes/agent%40agentmail.to"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "pod_id": "pod-1",
+                    "inbox_id": "agent@agentmail.to",
+                    "email": "agent@agentmail.to",
+                    "updated_at": "2026-10-27T00:00:00Z",
+                    "created_at": "2026-10-27T00:00:00Z"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v0/inboxes/agent%40agentmail.to"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "pod_id": "pod-1",
+                    "inbox_id": "agent@agentmail.to",
+                    "email": "agent@agentmail.to",
+                    "display_name": "Sales Agent",
+                    "updated_at": "2026-10-27T00:00:00Z",
+                    "created_at": "2026-10-27T00:00:00Z"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "{{request.origin}}/v0/inboxes/agent%40agentmail.to"
+            },
+            "res": {
+                "status": 404,
+                "body": {
+                    "name": "NotFoundError",
+                    "message": "Inbox not found"
+                }
+            }
+        }
+    ]
+}

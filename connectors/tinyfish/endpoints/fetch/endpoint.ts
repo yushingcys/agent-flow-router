@@ -9,7 +9,7 @@ import { zTinyfishFetchBody } from "./schema/inputs.ts";
  * provider's perCall. Per-URL failures arrive in `errors[]` alongside a 200
  * (exactly the provider-errors-are-data model).
  */
-export default defineEndpoint({
+export const fetchDef = {
     meta: {
         displayName: "TinyFish Fetch",
         summary: "Fetch up to 10 URLs as clean Markdown/HTML/JSON — free.",
@@ -55,4 +55,6 @@ export default defineEndpoint({
     input: { schema: { body: zTinyfishFetchBody } },
     // 110s per-URL backend ceiling, 120s CDN ceiling, 150s suggested client.
     timeouts: { requestMs: 150_000, runMs: 165_000 },
-});
+} satisfies Parameters<typeof defineEndpoint>[0];
+
+export default defineEndpoint(fetchDef);

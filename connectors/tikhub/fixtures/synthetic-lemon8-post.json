@@ -1,0 +1,46 @@
+{
+    "name": "synthetic-lemon8-post",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/lemon8/app/fetch_post_detail (Lemon8). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?item_id=7361926875709129222"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "d844ce7e-2d1d-4716-8d95-e62449b976c4",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/d844ce7e-2d1d-4716-8d95-e62449b976c4?sign=synthetic",
+                    "router": "/api/v1/lemon8/app/fetch_post_detail",
+                    "params": {
+                        "item_id": "7361926875709129222"
+                    },
+                    "data": {
+                        "item_id": "7361926875709129222",
+                        "title": "My weekend brunch spots",
+                        "author": {
+                            "user_id": "7123456789012345678",
+                            "nickname": "brunch.club"
+                        },
+                        "digg_count": 3400,
+                        "comment_count": 120,
+                        "hashtags": [
+                            "brunch",
+                            "foodie"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

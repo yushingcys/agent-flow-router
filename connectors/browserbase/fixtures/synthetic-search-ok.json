@@ -1,0 +1,28 @@
+{
+    "name": "synthetic-search-ok",
+    "description": "SYNTHETIC chain for browserbase#search: documented 200 shape (docs.browserbase.com reference/api/web-search, 2026-10-27).",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "requestId": "00000000-0000-4000-8000-000000000002",
+                    "query": "browserbase",
+                    "results": [
+                        {
+                            "id": "r1",
+                            "url": "https://www.browserbase.com",
+                            "title": "Browserbase: a web browser for AI agents"
+                        },
+                        {
+                            "id": "r2",
+                            "url": "https://docs.browserbase.com",
+                            "title": "Browserbase Docs"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

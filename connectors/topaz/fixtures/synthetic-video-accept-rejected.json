@@ -1,0 +1,40 @@
+{
+    "name": "synthetic-video-accept-rejected",
+    "description": "SYNTHETIC: the free create succeeds, then accept is refused with 402 (out of credits). Nothing was reserved, so the refusal settles as DATA with zero usage rather than throwing (a retried start would create a second request).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "requestId": "5d6e7f80-91a2-4b3c-8d4e-5f60718293a4",
+                    "estimates": {
+                        "cost": [
+                            4,
+                            6
+                        ],
+                        "time": [
+                            60,
+                            120
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "PATCH",
+                "url": "{{request.origin}}/video/5d6e7f80-91a2-4b3c-8d4e-5f60718293a4/accept"
+            },
+            "res": {
+                "status": 402,
+                "body": {
+                    "message": "Insufficient credits"
+                }
+            }
+        }
+    ]
+}

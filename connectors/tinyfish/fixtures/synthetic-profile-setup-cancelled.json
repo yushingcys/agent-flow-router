@@ -1,0 +1,21 @@
+{
+    "name": "synthetic-profile-setup-cancelled",
+    "description": "POST /v1/profiles/{profileId}/setup-session/cancel (synthetic).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://agent.tinyfish.ai/v1/profiles/prof_1/setup-session/cancel",
+                "body": {
+                    "session_id": "br-setup-1"
+                }
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "cancelled": true
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-release-inbox",
+    "description": "SYNTHETIC release-inboxes chain: DELETE of inbox agent@agentmail.to answering 200 with an empty body.",
+    "calls": [
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "https://api.agentmail.to/v0/inboxes/agent%40agentmail.to"
+            },
+            "res": {
+                "status": 200,
+                "body": {}
+            }
+        }
+    ]
+}

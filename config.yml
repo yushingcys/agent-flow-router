@@ -56,7 +56,13 @@ schema:
     # (0.2.0 ALSO grew the lifecycle ctx additively in the same release:
     # `data.run.runId`, `utils.sleep`, `utils.resources`, and the stop
     # outcome voice — add-resource-lifecycle-saperly.)
-    async_since: "0.2.0" # engine release of the lifecycle (async) hook family; stamped as lifecycle fn entries' `api`
+    # 0.6.0: BYTES through utils.http / utils.request (add-connector-
+    # elevenlabs-fishaudio) — a call may send `bodyEncoding: "multipart"`
+    # (file parts as {base64, contentType?, filename?}) and a non-text
+    # response decodes to {contentType, base64} instead of mangled text.
+    # Both are lifecycle-only capabilities, so the floor rides here like
+    # the 0.2.0 response headers did.
+    async_since: "0.6.0" # engine release of the lifecycle (async) hook family; stamped as lifecycle fn entries' `api`
     # 0.5.0: the RESOURCE family ships (add-resource-lifecycle-saperly,
     # refined by refine-resource-model) — resource docs (usage rate card,
     # lifecycle verify/release/refresh, views), purpose-keyed endpoint

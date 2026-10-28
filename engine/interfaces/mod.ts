@@ -1,4 +1,5 @@
 import type {
+    BodyEncoding,
     EndpointDoc,
     FnEntry,
     FnRef,
@@ -45,6 +46,9 @@ export interface PreparedRequest {
      *  vendor (akta, comma) arrives as the single element `["a,b"]`. */
     query: Record<string, string[]>;
     body?: Json;
+    /** `"multipart"` ⇒ the transport sends `body` as multipart/form-data
+     *  (see zMultipartBody); absent ⇒ JSON. */
+    bodyEncoding?: BodyEncoding;
     /** ABSENT ⇒ the request egresses BARE (no credential injection) — the
      *  same-origin credential rule (design D16): lifecycle fns targeting a
      *  different origin than the doc's request never carry the provider's
@@ -60,7 +64,10 @@ export interface PreparedRequest {
 
 export interface TransportResponse {
     status: number;
+    /** The response text, or the base64 of its bytes when `bodyEncoding`
+     *  says so (a non-text content type — see isBinaryContentType). */
     body: string;
+    bodyEncoding?: "base64";
     /** The vendor's response headers, keys LOWERCASED (multi-valued
      *  comma-joined per the fetch spec). OPTIONAL so a transport that
      *  does not surface them stays source-compatible; the engine

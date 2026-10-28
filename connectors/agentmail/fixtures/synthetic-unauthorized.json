@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC 403 on a send from inbox agent@agentmail.to, using the documented ErrorResponse envelope {name, message}.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.agentmail.to/v0/inboxes/agent%40agentmail.to/messages/send"
+            },
+            "res": {
+                "status": 403,
+                "body": {
+                    "name": "ForbiddenError",
+                    "message": "Sending to this recipient is blocked."
+                }
+            }
+        }
+    ]
+}

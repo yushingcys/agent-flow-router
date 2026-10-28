@@ -1,0 +1,42 @@
+{
+    "name": "synthetic-instagram-user",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/instagram/v2/fetch_user_info (Instagram). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?username=instagram"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "e2da8912-65ff-41b6-92f5-cba8b3340c2c",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/e2da8912-65ff-41b6-92f5-cba8b3340c2c?sign=synthetic",
+                    "router": "/api/v1/instagram/v2/fetch_user_info",
+                    "params": {
+                        "username": "instagram"
+                    },
+                    "data": {
+                        "id": "25025320",
+                        "username": "instagram",
+                        "full_name": "Instagram",
+                        "biography": "Discover what's new on Instagram.",
+                        "is_verified": true,
+                        "follower_count": 690000000,
+                        "following_count": 180,
+                        "media_count": 8000
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "name": "synthetic-bilibili-video",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/bilibili/web/fetch_one_video (Bilibili). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?bv_id=BV1M1421t7hT"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "e5946d9e-0964-4c06-afe6-5cfa271e6f69",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/e5946d9e-0964-4c06-afe6-5cfa271e6f69?sign=synthetic",
+                    "router": "/api/v1/bilibili/web/fetch_one_video",
+                    "params": {
+                        "bv_id": "BV1M1421t7hT"
+                    },
+                    "data": {
+                        "code": 0,
+                        "message": "0",
+                        "data": {
+                            "bvid": "BV1M1421t7hT",
+                            "aid": 1955432123,
+                            "title": "示例视频标题",
+                            "owner": {
+                                "mid": 16015678,
+                                "name": "示例UP主"
+                            },
+                            "stat": {
+                                "view": 254000,
+                                "danmaku": 1820,
+                                "reply": 960,
+                                "favorite": 7400,
+                                "coin": 5100,
+                                "like": 21000
+                            },
+                            "duration": 615
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

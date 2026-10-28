@@ -1,0 +1,73 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the List Generation reference (agent-docs.akta.pro, 2026-10-27), trimmed to 3 companies; credits follow the pricing formula 1.5 + 0.2 x 3 (the doc's own example shows a stale 14).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.akta.pro/api/v1/list/generate/companies/",
+                "body": {
+                    "filters": {
+                        "location.hq.country": [
+                            "USA"
+                        ],
+                        "business_model.offering_type": [
+                            "software"
+                        ]
+                    },
+                    "limit": 3
+                }
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": [
+                        {
+                            "uuid": "000000x",
+                            "name": "Company 0",
+                            "website": "company0.example.com",
+                            "product_category": "Software",
+                            "company_type": {
+                                "code": "Private",
+                                "label": "Private"
+                            }
+                        },
+                        {
+                            "uuid": "000001x",
+                            "name": "Company 1",
+                            "website": "company1.example.com",
+                            "product_category": "Software",
+                            "company_type": {
+                                "code": "Private",
+                                "label": "Private"
+                            }
+                        },
+                        {
+                            "uuid": "000002x",
+                            "name": "Company 2",
+                            "website": "company2.example.com",
+                            "product_category": "Software",
+                            "company_type": {
+                                "code": "Private",
+                                "label": "Private"
+                            }
+                        }
+                    ],
+                    "filters": {
+                        "location.hq.country": [
+                            "USA"
+                        ],
+                        "business_model.offering_type": [
+                            "software"
+                        ]
+                    },
+                    "warnings": [],
+                    "count": 3,
+                    "total_count": 500,
+                    "offset": 0,
+                    "credits_consumed": 2.1
+                }
+            }
+        }
+    ]
+}

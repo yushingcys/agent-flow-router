@@ -8,6 +8,15 @@ export const zCompany = z.string().min(1).describe(
         "is NOT accepted here — resolve it via company-search first.",
 );
 
+// The single-section enrichment routes take the company as a PATH segment, so
+// the vendor's examples drop the scheme ('canva.com', not 'https://...').
+export const zCompanyPathParams = z.object({
+    company: z.string().min(1).describe(
+        "Company website domain (e.g. 'canva.com') or the company uuid " +
+            "returned by the Akta Company Search endpoint.",
+    ),
+}).strict();
+
 // z.iso.date() compiles to a calendar-aware pattern (month/day bounds, leap
 // years) — real validation survives into the compiled doc, unlike a .refine.
 export const zDate = z.iso.date().describe(

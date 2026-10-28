@@ -24,6 +24,8 @@ export default defineEndpoint({
             "`age` requires `movies_category` 'FAMILY'.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google-play/movies",
     request: { method: "GET", path: "/google/play/movies" },
     input: {
         schema: {

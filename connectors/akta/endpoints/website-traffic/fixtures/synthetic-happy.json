@@ -1,0 +1,32 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Website Traffic reference (agent-docs.akta.pro, 2026-10-27), trimmed.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/website-traffic/?company=canva.com"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "uuid": "00000l1",
+                        "engagements": {
+                            "bounce_rate": 0.38,
+                            "pages_per_visit": 6.2
+                        },
+                        "estimated_monthly_visits": {
+                            "2026-09-01": 512000000
+                        },
+                        "traffic_sources": {
+                            "direct": 0.61,
+                            "search": 0.29
+                        }
+                    },
+                    "credits_consumed": 1.5
+                }
+            }
+        }
+    ]
+}

@@ -22,7 +22,7 @@ export default defineEndpoint({
             "and helpfulness votes, sorted by recency, helpfulness, or " +
             "rating polarity. One row per review. For a synchronous " +
             "single-page fetch billed as one Litescrape credit, use " +
-            "litescrape#apple/app-store/reviews; use this endpoint for " +
+            "litescrape#app-store/reviews; use this endpoint for " +
             "multi-app, multi-country pulls billed per review.",
         docsUrl: "https://apify.com/johnvc/apple-app-store-reviews-api",
         categories: ["app-stores", "company-reviews"],

@@ -1,0 +1,35 @@
+{
+    "name": "synthetic-profile-saved",
+    "description": "POST /v1/profiles/{profileId}/save (synthetic, documented 200 shape).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://agent.tinyfish.ai/v1/profiles/prof_1/save",
+                "body": {
+                    "session_id": "br-setup-1"
+                }
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "domains_updated": [
+                        "github.com"
+                    ],
+                    "domains_failed": [],
+                    "cookie_count": 12,
+                    "domains_skipped": {
+                        "cookies_skipped": [],
+                        "local_storage_skipped": [],
+                        "session_storage_skipped": [],
+                        "blob_too_large": []
+                    },
+                    "pages_captured": 1,
+                    "target_reads_skipped": 0,
+                    "cleanup_failed": false,
+                    "cleanup_kind": "post_save"
+                }
+            }
+        }
+    ]
+}

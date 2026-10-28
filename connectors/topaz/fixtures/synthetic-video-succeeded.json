@@ -1,0 +1,93 @@
+{
+    "name": "synthetic-video-succeeded",
+    "description": "SYNTHETIC (no Topaz key was available to record): the video happy chain shared by every topaz#video/* endpoint. The free create quotes cost [4, 6], accept answers 202 (external source: nothing to upload), one processing tick, then complete with a signed download. Topaz bills the LOWER bound of estimates.cost, so the run settles 4 credits. Shapes from the Video API OpenAPI (CreateResponse, AcceptResponse, StatusResponse), 2026-10-27; ids and urls are placeholders.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "requestId": "5d6e7f80-91a2-4b3c-8d4e-5f60718293a4",
+                    "estimates": {
+                        "cost": [
+                            4,
+                            6
+                        ],
+                        "time": [
+                            60,
+                            120
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "PATCH",
+                "url": "{{request.origin}}/video/5d6e7f80-91a2-4b3c-8d4e-5f60718293a4/accept"
+            },
+            "res": {
+                "status": 202,
+                "body": {
+                    "message": "Request accepted; the source will be fetched from external storage."
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/video/5d6e7f80-91a2-4b3c-8d4e-5f60718293a4/status"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "status": "processing",
+                    "message": "processing",
+                    "progress": 50,
+                    "estimates": {
+                        "cost": [
+                            4,
+                            6
+                        ],
+                        "time": [
+                            60,
+                            120
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/video/5d6e7f80-91a2-4b3c-8d4e-5f60718293a4/status"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "status": "complete",
+                    "message": "complete",
+                    "progress": 100,
+                    "estimates": {
+                        "cost": [
+                            4,
+                            6
+                        ],
+                        "time": [
+                            60,
+                            120
+                        ]
+                    },
+                    "download": {
+                        "url": "https://videocloud.topazlabs.test/redacted/5d6e7f80-91a2-4b3c-8d4e-5f60718293a4.mp4",
+                        "expiresIn": 604800000,
+                        "expiresAt": 1793683200000
+                    }
+                }
+            }
+        }
+    ]
+}

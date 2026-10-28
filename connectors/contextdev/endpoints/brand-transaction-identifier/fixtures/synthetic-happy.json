@@ -1,0 +1,47 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Identify From Transaction response (context.dev SDK BrandIdentifyFromTransactionResponse: status, brand, code), brand fields trimmed to a representative subset; the balance is a placeholder.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.context.dev/v1/brand/transaction_identifier?transaction_info=SQ+*BLUE+BOTTLE+COFFEE"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "status": "ok",
+                    "brand": {
+                        "domain": "bluebottlecoffee.com",
+                        "title": "Blue Bottle Coffee",
+                        "description": "Specialty coffee roaster and cafes.",
+                        "colors": [{ "hex": "#00A9E0", "name": "primary" }],
+                        "logos": [
+                            {
+                                "url": "https://cdn.example/bluebottle-logo.svg",
+                                "mode": "light",
+                                "type": "logo"
+                            }
+                        ],
+                        "socials": [
+                            {
+                                "type": "instagram",
+                                "url": "https://www.instagram.com/bluebottle"
+                            }
+                        ],
+                        "address": {
+                            "city": "Oakland",
+                            "country": "United States"
+                        }
+                    },
+                    "code": 200,
+                    "key_metadata": {
+                        "credits_consumed": 10,
+                        "credits_remaining": 9990
+                    },
+                    "request_id": "REQ1"
+                }
+            }
+        }
+    ]
+}

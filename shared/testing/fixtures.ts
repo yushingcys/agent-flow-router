@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isBinaryContentType } from "@agent-flow/connector-engine";
 import { type Json, zJson } from "@shared/core";
 
 /**
@@ -34,6 +35,10 @@ import { type Json, zJson } from "@shared/core";
  * written.
  */
 export const RECORDED_RES_HEADERS = [
+    // kept only for a BINARY body (pickRecordedHeaders drops it otherwise):
+    // replay needs it to serve the stored base64 as bytes; a text body
+    // replays the same without it
+    "content-type",
     "location",
     "retry-after",
     "x-api-units-cost-total-actual",
@@ -89,7 +94,9 @@ export function pickRecordedHeaders(
         // allowlist is meant to grow, and an entry added as `Retry-After`
         // would otherwise be written verbatim and never match a fn reading
         // `res.headers["retry-after"]`
-        if (value !== null) out[name.toLowerCase()] = value;
+        if (value === null) continue;
+        if (name === "content-type" && !isBinaryContentType(value)) continue;
+        out[name.toLowerCase()] = value;
     }
     return Object.keys(out).length > 0 ? out : undefined;
 }
@@ -290,13 +297,20 @@ export function replayFetch(
             // a recorded 3xx replays WITH its allowlisted headers — the
             // engine's transport is `redirect: "manual"`, so a Response
             // carrying a `location` is exactly what the live exchange was
-            new Response(JSON.stringify(call.res.body), {
-                status: call.res.status,
-                headers: {
-                    "content-type": "application/json",
-                    ...call.res.headers,
+            // a null-body status (204, 304) must replay WITHOUT a body:
+            // `Response` throws on one, so a recorded 204 could not replay
+            new Response(
+                [101, 204, 205, 304].includes(call.res.status)
+                    ? null
+                    : replayBody(call.res),
+                {
+                    status: call.res.status,
+                    headers: {
+                        "content-type": "application/json",
+                        ...call.res.headers,
+                    },
                 },
-            }),
+            ),
         );
     };
 }
@@ -325,7 +339,12 @@ export function recordingFetch(
             ? parseMaybeJson(init.body)
             : undefined;
         const response = await realFetch(input, init);
-        const text = await response.text();
+        const contentType = response.headers.get("content-type") ?? undefined;
+        const binary = isBinaryContentType(contentType);
+        const bytes = binary
+            ? new Uint8Array(await response.arrayBuffer())
+            : undefined;
+        const text = bytes ? bytes.toBase64() : await response.text();
         const headers = pickRecordedHeaders(response.headers);
         sink.push({
             req: {
@@ -336,10 +355,10 @@ export function recordingFetch(
             res: {
                 status: response.status,
                 ...(headers !== undefined ? { headers } : {}),
-                body: parseMaybeJson(text) ?? text,
+                body: binary ? text : parseMaybeJson(text) ?? text,
             },
         });
-        return new Response(text, {
+        return new Response(bytes ?? text, {
             status: response.status,
             headers: {
                 "content-type": response.headers.get("content-type") ??
@@ -348,6 +367,19 @@ export function recordingFetch(
             },
         });
     };
+}
+
+/** A recorded body as the wire carried it: JSON unless the fixture's
+ *  `content-type` says otherwise, then the string raw (text) or decoded
+ *  from base64 (binary — how the recorder stores bytes). */
+function replayBody(res: RecordedCall["res"]): BodyInit {
+    const contentType = res.headers?.["content-type"];
+    if (contentType === undefined || typeof res.body !== "string") {
+        return JSON.stringify(res.body);
+    }
+    return isBinaryContentType(contentType)
+        ? Uint8Array.fromBase64(res.body)
+        : res.body;
 }
 
 function parseMaybeJson(text: string): Json | undefined {

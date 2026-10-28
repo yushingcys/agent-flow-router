@@ -1,0 +1,24 @@
+{
+    "name": "synthetic-empty",
+    "description": "SYNTHETIC - not recorded. A search with no matches, which the reference prices at 0: credits_consumed 0; the balance is a placeholder.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.context.dev/v1/people/search"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "results": [],
+                    "next_cursor": null,
+                    "key_metadata": {
+                        "credits_consumed": 0,
+                        "credits_remaining": 9990
+                    },
+                    "request_id": "REQ3"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,51 @@
+{
+    "name": "synthetic-douyin-video",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/douyin/web/fetch_one_video (Douyin). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?aweme_id=7372484719365098803"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "eb35b613-e87e-4a51-ba32-571298c9faa0",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/eb35b613-e87e-4a51-ba32-571298c9faa0?sign=synthetic",
+                    "router": "/api/v1/douyin/web/fetch_one_video",
+                    "params": {
+                        "aweme_id": "7372484719365098803"
+                    },
+                    "data": {
+                        "status_code": 0,
+                        "aweme_detail": {
+                            "aweme_id": "7372484719365098803",
+                            "desc": "周末去爬山 #户外",
+                            "create_time": 1716600000,
+                            "author": {
+                                "uid": "98765432101",
+                                "sec_uid": "MS4wLjABAAAAsynthetic",
+                                "nickname": "示例用户"
+                            },
+                            "statistics": {
+                                "digg_count": 5321,
+                                "comment_count": 188,
+                                "collect_count": 402,
+                                "share_count": 77
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

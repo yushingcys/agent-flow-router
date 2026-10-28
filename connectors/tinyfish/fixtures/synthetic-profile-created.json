@@ -1,0 +1,27 @@
+{
+    "name": "synthetic-profile-created",
+    "description": "POST /v1/profiles (synthetic, documented 201 shape).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}",
+                "body": {
+                    "name": "Work Gmail"
+                }
+            },
+            "res": {
+                "status": 201,
+                "body": {
+                    "id": "prof_1",
+                    "name": "Work Gmail",
+                    "proxy_country_code": null,
+                    "is_default": false,
+                    "domain_count": 0,
+                    "created_at": "2026-10-27T10:00:00Z",
+                    "updated_at": "2026-10-27T10:00:00Z"
+                }
+            }
+        }
+    ]
+}

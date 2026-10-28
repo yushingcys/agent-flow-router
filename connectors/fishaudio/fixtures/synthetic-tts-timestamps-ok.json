@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-tts-timestamps-ok",
+    "description": "SYNTHETIC text/event-stream 200 for /v1/tts/stream/with-timestamp, from the documented TTSTimestampStreamEvent (docs.fish.audio openapi.json, 2026-10-27): three events over two text chunks; chunk 0's alignment snapshot is replaced once, and the first audio chunk carries base64 padding so the join must re-encode.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "headers": {
+                    "content-type": "text/event-stream"
+                },
+                "body": "data: {\"audio_base64\": \"//uQZAE=\", \"content\": \"Hi there.\", \"alignment\": {\"audio_duration\": 0.4, \"segments\": [{\"text\": \"Hi\", \"start\": 0, \"end\": 0.2}]}, \"chunk_seq\": 0, \"chunk_audio_offset_sec\": 0}\n\ndata: {\"audio_base64\": \"\", \"content\": \"Hi there.\", \"alignment\": {\"audio_duration\": 0.7, \"segments\": [{\"text\": \"Hi\", \"start\": 0, \"end\": 0.2}, {\"text\": \"there\", \"start\": 0.3, \"end\": 0.7}]}, \"chunk_seq\": 0, \"chunk_audio_offset_sec\": 0}\n\ndata: {\"audio_base64\": \"AgME\", \"content\": \"Bye.\", \"alignment\": {\"audio_duration\": 0.5, \"segments\": [{\"text\": \"Bye\", \"start\": 0.1, \"end\": 0.4}]}, \"chunk_seq\": 1, \"chunk_audio_offset_sec\": 0.7}\n\n"
+            }
+        }
+    ]
+}

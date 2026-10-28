@@ -1,0 +1,54 @@
+{
+    "name": "synthetic-search-ok",
+    "description": "SYNTHETIC happy chain for serpapi#google/search. Shape from the Google Search API docs (serpapi.com/search-api, read 2026-10-27); values invented. Replace via `deno task record` when SERPAPI_API_KEY exists (scrub api_key from the request URL first).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=coffee&hl=en&engine=google&api_key=test-key"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "search_metadata": {
+                        "id": "00000000000000000000000a",
+                        "status": "Success",
+                        "json_endpoint": "https://serpapi.com/searches/0/00000000000000000000000a.json",
+                        "created_at": "2026-10-27 12:00:00 UTC",
+                        "processed_at": "2026-10-27 12:00:00 UTC",
+                        "google_url": "https://www.google.com/search?q=coffee&hl=en",
+                        "total_time_taken": 1.2
+                    },
+                    "search_parameters": {
+                        "engine": "google",
+                        "q": "coffee",
+                        "google_domain": "google.com",
+                        "hl": "en",
+                        "device": "desktop"
+                    },
+                    "search_information": {
+                        "organic_results_state": "Results for exact spelling",
+                        "query_displayed": "coffee",
+                        "total_results": 2000000000
+                    },
+                    "organic_results": [
+                        {
+                            "position": 1,
+                            "title": "Coffee - Wikipedia",
+                            "link": "https://en.wikipedia.org/wiki/Coffee",
+                            "displayed_link": "https://en.wikipedia.org > wiki > Coffee",
+                            "snippet": "Coffee is a beverage brewed from roasted coffee beans."
+                        },
+                        {
+                            "position": 2,
+                            "title": "The Coffee Example",
+                            "link": "https://example.com/coffee",
+                            "displayed_link": "https://example.com > coffee",
+                            "snippet": "An invented second result."
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

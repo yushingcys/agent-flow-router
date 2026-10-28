@@ -1,0 +1,38 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Company Data Concise reference (agent-docs.akta.pro, 2026-10-27), trimmed to three sections.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/enrichment/concise/?company=https%3A%2F%2Fcanva.com"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "status": "success",
+                    "data": {
+                        "uuid": "00000l1",
+                        "firmographic": {
+                            "name": "Canva",
+                            "website": "https://www.canva.com",
+                            "founded_year": 2012,
+                            "headcount_range": "5001-10000"
+                        },
+                        "location": {
+                            "hq": {
+                                "city": "Sydney",
+                                "country": "AUS"
+                            }
+                        },
+                        "technology": {
+                            "has_api": true
+                        }
+                    },
+                    "count": 3,
+                    "credits_consumed": 3
+                }
+            }
+        }
+    ]
+}

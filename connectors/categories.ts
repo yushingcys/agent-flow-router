@@ -24,6 +24,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         description: "Fetch and extract clean content from known URLs.",
     },
     {
+        id: "browser-automation",
+        displayName: "Browser Automation",
+        description:
+            "Hosted headless browsers an agent drives to navigate and act on sites.",
+    },
+    {
         id: "news-search",
         displayName: "News Search",
         description: "Search and monitor news coverage.",
@@ -247,6 +253,20 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Generate images, including text-to-image, editing, and more.",
     },
     {
+        id: "image-enhancement",
+        displayName: "Image Enhancement",
+        description:
+            "Improve existing images: upscaling, denoise, sharpening, " +
+            "restoration, relighting, and background removal.",
+    },
+    {
+        id: "video-enhancement",
+        displayName: "Video Enhancement",
+        description:
+            "Improve existing video: upscaling, denoise, deinterlacing, " +
+            "frame interpolation, colorization, and SDR to HDR.",
+    },
+    {
         id: "music-generation",
         displayName: "Music Generation",
         description:
@@ -257,6 +277,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         displayName: "Speech",
         description:
             "Work with voice, including text-to-speech, transcription, dialogue, and more.",
+    },
+    {
+        id: "audio",
+        displayName: "Audio Tools",
+        description:
+            "Generate and process audio, including sound effects, noise removal, and more.",
     },
     {
         // The first RESOURCE-backed leaves (add-resource-lifecycle-saperly):
@@ -273,6 +299,13 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         id: "sms",
         displayName: "SMS",
         description: "Send and receive SMS from owned phone numbers.",
+    },
+    {
+        id: "agentic-email",
+        displayName: "Agentic Email",
+        description:
+            "Email inboxes owned by AI agents - send, receive, reply, " +
+            "threads, drafts, and custom sending domains.",
     },
     {
         id: "token-prices",
@@ -389,5 +422,80 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         description:
             "Tools to pull public government records, including financial " +
             "disclosures, filings, registries, and more.",
+    },
+    {
+        id: "douyin",
+        displayName: "Douyin",
+        description:
+            "Douyin data: videos, creators, comments, search, and trending lists.",
+    },
+    {
+        id: "kuaishou",
+        displayName: "Kuaishou",
+        description:
+            "Kuaishou data: videos, profiles, comments, and search results.",
+    },
+    {
+        id: "xiaohongshu",
+        displayName: "Xiaohongshu",
+        description:
+            "Xiaohongshu (RedNote) data: notes, creators, comments, and search.",
+    },
+    {
+        id: "weibo",
+        displayName: "Weibo",
+        description:
+            "Weibo data: posts, profiles, comments, and trending topics.",
+    },
+    {
+        id: "wechat",
+        displayName: "WeChat",
+        description:
+            "WeChat data: Official Account articles, Channels videos, and search.",
+    },
+    {
+        id: "bilibili",
+        displayName: "Bilibili",
+        description:
+            "Bilibili data: videos, uploaders, comments, and search results.",
+    },
+    {
+        id: "zhihu",
+        displayName: "Zhihu",
+        description:
+            "Zhihu data: questions, answers, articles, and search results.",
+    },
+    {
+        id: "toutiao",
+        displayName: "Toutiao",
+        description: "Toutiao data: articles, videos, and trending news.",
+    },
+    {
+        id: "xigua",
+        displayName: "Xigua Video",
+        description: "Xigua Video data: videos, creators, and search results.",
+    },
+    {
+        id: "pipixia",
+        displayName: "Pipixia",
+        description:
+            "Pipixia data: posts, users, comments, and search results.",
+    },
+    {
+        id: "lemon8",
+        displayName: "Lemon8",
+        description:
+            "Lemon8 data: posts, profiles, topics, and search results.",
+    },
+    {
+        id: "threads",
+        displayName: "Threads",
+        description:
+            "Threads data: posts, profiles, replies, and search results.",
+    },
+    {
+        id: "telegram",
+        displayName: "Telegram",
+        description: "Telegram data: public channels and their messages.",
     },
 ]);

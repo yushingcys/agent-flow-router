@@ -1,0 +1,63 @@
+{
+    "name": "synthetic-agent-completed",
+    "description": "The /automation/run chain (synthetic, shapes from the main OpenAPI): run-async accepts with a run_id, one RUNNING tick, then a COMPLETED run record reporting num_of_steps=7 - the step count IS the billed quantity.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "run_id": "run-1",
+                    "error": null
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://agent.tinyfish.ai/v1/runs/run-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "run_id": "run-1",
+                    "status": "RUNNING",
+                    "goal": "Extract the plan names",
+                    "num_of_steps": null,
+                    "result": null,
+                    "error": null,
+                    "streaming_url": "https://agent.tinyfish.ai/stream/run-1"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://agent.tinyfish.ai/v1/runs/run-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "run_id": "run-1",
+                    "status": "COMPLETED",
+                    "goal": "Extract the plan names",
+                    "created_at": "2026-10-27T10:00:00Z",
+                    "started_at": "2026-10-27T10:00:01Z",
+                    "finished_at": "2026-10-27T10:00:41Z",
+                    "num_of_steps": 7,
+                    "result": {
+                        "plans": [
+                            "Starter",
+                            "Pro"
+                        ]
+                    },
+                    "error": null,
+                    "steps": []
+                }
+            }
+        }
+    ]
+}

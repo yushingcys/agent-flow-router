@@ -1,0 +1,56 @@
+{
+    "name": "synthetic-dialogue-ok",
+    "description": "SYNTHETIC 200 for /v1/text-to-dialogue/with-timestamps (AudioWithTimestampsAndVoiceSegmentsResponseModel, api.elevenlabs.io/openapi.json, 2026-10-27).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "audio_base64": "//uQZAAAAAAA",
+                    "alignment": {
+                        "characters": [
+                            "H",
+                            "i",
+                            "Y",
+                            "o"
+                        ],
+                        "character_start_times_seconds": [
+                            0,
+                            0.1,
+                            0.5,
+                            0.6
+                        ],
+                        "character_end_times_seconds": [
+                            0.1,
+                            0.3,
+                            0.6,
+                            0.8
+                        ]
+                    },
+                    "voice_segments": [
+                        {
+                            "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+                            "start_time_seconds": 0,
+                            "end_time_seconds": 0.3,
+                            "character_start_index": 0,
+                            "character_end_index": 2,
+                            "dialogue_input_index": 0
+                        },
+                        {
+                            "voice_id": "Aw4FAjKCGjjNkVhN1Xmq",
+                            "start_time_seconds": 0.5,
+                            "end_time_seconds": 0.8,
+                            "character_start_index": 2,
+                            "character_end_index": 4,
+                            "dialogue_input_index": 1
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

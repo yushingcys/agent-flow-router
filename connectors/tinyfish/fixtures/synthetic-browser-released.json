@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-browser-released",
+    "description": "DELETE https://api.browser.tinyfish.ai/{sessionId} (synthetic): 204, no body.",
+    "calls": [
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "https://api.browser.tinyfish.ai/br-1"
+            },
+            "res": {
+                "status": 204,
+                "body": ""
+            }
+        }
+    ]
+}

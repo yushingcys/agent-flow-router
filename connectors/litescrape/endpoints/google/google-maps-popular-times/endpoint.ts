@@ -21,6 +21,8 @@ export default defineEndpoint({
             "A place without published busyness data answers 200 with `popular_times: null`; that run records 0 credits here although the vendor deducts one.",
         ],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/google/maps-popular-times",
     request: { method: "GET", path: "/google/maps/popular-times" },
     input: {
         schema: {

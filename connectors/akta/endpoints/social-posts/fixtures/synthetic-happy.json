@@ -1,0 +1,77 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Social Posts reference (agent-docs.akta.pro, 2026-10-27), trimmed to 3 posts for a limit=3 call (one started block of 10).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/posts/?company=canva.com&limit=3"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "count": 396,
+                    "limit": 3,
+                    "offset": 0,
+                    "data": {
+                        "uuid": "00000l1",
+                        "posts": [
+                            {
+                                "id": "P0",
+                                "content_type": "document",
+                                "url": "https://example.com/posts/0",
+                                "posted_date": "2026-08-14 11:00:19.476000+00:00",
+                                "is_paid": false,
+                                "reposted": false,
+                                "engagement_metrics": {
+                                    "total_reaction_count": 10,
+                                    "comments_count": 0,
+                                    "reposts_count": 1
+                                },
+                                "text_content": "Hello",
+                                "post_classification": "Other",
+                                "author": {},
+                                "mentions": []
+                            },
+                            {
+                                "id": "P1",
+                                "content_type": "document",
+                                "url": "https://example.com/posts/1",
+                                "posted_date": "2026-08-14 11:00:19.476000+00:00",
+                                "is_paid": false,
+                                "reposted": false,
+                                "engagement_metrics": {
+                                    "total_reaction_count": 10,
+                                    "comments_count": 0,
+                                    "reposts_count": 1
+                                },
+                                "text_content": "Hello",
+                                "post_classification": "Other",
+                                "author": {},
+                                "mentions": []
+                            },
+                            {
+                                "id": "P2",
+                                "content_type": "document",
+                                "url": "https://example.com/posts/2",
+                                "posted_date": "2026-08-14 11:00:19.476000+00:00",
+                                "is_paid": false,
+                                "reposted": false,
+                                "engagement_metrics": {
+                                    "total_reaction_count": 10,
+                                    "comments_count": 0,
+                                    "reposts_count": 1
+                                },
+                                "text_content": "Hello",
+                                "post_classification": "Other",
+                                "author": {},
+                                "mentions": []
+                            }
+                        ]
+                    },
+                    "credits_consumed": 1
+                }
+            }
+        }
+    ]
+}

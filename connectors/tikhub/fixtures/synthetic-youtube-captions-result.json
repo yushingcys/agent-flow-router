@@ -1,0 +1,38 @@
+{
+    "name": "synthetic-youtube-captions-result",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/youtube/web_v2/get_video_captions_result (YouTube). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?job_id=123e4567-e89b-12d3-a456-426614174000"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "18c363ac-7a72-46f2-8358-010481bdf4fd",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/18c363ac-7a72-46f2-8358-010481bdf4fd?sign=synthetic",
+                    "router": "/api/v1/youtube/web_v2/get_video_captions_result",
+                    "params": {
+                        "job_id": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "data": {
+                        "job_id": "123e4567-e89b-12d3-a456-426614174000",
+                        "status": "completed",
+                        "format": "srt",
+                        "captions": "1\n00:00:00,000 --> 00:00:02,000\nHello and welcome.\n"
+                    }
+                }
+            }
+        }
+    ]
+}

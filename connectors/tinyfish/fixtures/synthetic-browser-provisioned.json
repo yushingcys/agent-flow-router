@@ -1,0 +1,23 @@
+{
+    "name": "synthetic-browser-provisioned",
+    "description": "POST https://api.browser.tinyfish.ai/ (synthetic, documented 201 example): the session_id seeds the tinyfish/browser-session resource.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}",
+                "body": {
+                    "timeout_seconds": 300
+                }
+            },
+            "res": {
+                "status": 201,
+                "body": {
+                    "session_id": "br-1",
+                    "cdp_url": "wss://tetra-abc.cluster.example/cdp",
+                    "base_url": "https://tetra-abc.cluster.example"
+                }
+            }
+        }
+    ]
+}

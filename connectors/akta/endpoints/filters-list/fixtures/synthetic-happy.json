@@ -1,0 +1,35 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Filter List reference (agent-docs.akta.pro, 2026-10-27), trimmed to two filters.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/filters/list/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "count": 2,
+                    "usage": "Look up dropdown values with /filters/options/, then pass them in filters.",
+                    "filters": [
+                        {
+                            "filter": "firmographic.company_type",
+                            "value_shape": "list[string]",
+                            "description": "Public or private.",
+                            "how_to_get_values": "look up with /list/options/",
+                            "dropdown_type": "firmographic.company_type"
+                        },
+                        {
+                            "filter": "firmographic.founded_year",
+                            "value_shape": "{\"gte\": int, \"lte\": int}",
+                            "description": "Founded year range.",
+                            "how_to_get_values": "supply the value directly"
+                        }
+                    ],
+                    "credits_consumed": 0
+                }
+            }
+        }
+    ]
+}

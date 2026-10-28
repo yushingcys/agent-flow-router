@@ -1,0 +1,28 @@
+{
+    "name": "synthetic-validation-error",
+    "description": "SYNTHETIC TikHub 422: FastAPI HTTPValidationError `{detail: [{loc, msg, type}]}` (OpenAPI components.schemas.HTTPValidationError), values invented. Bound to any GET endpoint called with no query.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 422,
+                "body": {
+                    "detail": [
+                        {
+                            "loc": [
+                                "query",
+                                "bv_id"
+                            ],
+                            "msg": "Field required",
+                            "type": "missing",
+                            "input": null
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

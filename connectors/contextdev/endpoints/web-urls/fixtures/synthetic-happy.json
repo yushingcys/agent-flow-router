@@ -1,0 +1,36 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Map URLs response schema (docs.context.dev/api-reference/web-scraping/map, 2026-10-27), two URLs, credits_consumed 1; the balance is a placeholder.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.context.dev/v1/web/urls?domain=example.com&maxLinks=2"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "domain": "example.com",
+                    "urls": [
+                        {
+                            "url": "https://example.com/",
+                            "title": "Example Domain",
+                            "language": "en"
+                        },
+                        {
+                            "url": "https://example.com/pricing",
+                            "title": "Pricing",
+                            "description": "Plans and prices."
+                        }
+                    ],
+                    "key_metadata": {
+                        "credits_consumed": 1,
+                        "credits_remaining": 9999
+                    },
+                    "request_id": "REQ1"
+                }
+            }
+        }
+    ]
+}

@@ -22,6 +22,8 @@ export default defineEndpoint({
         docsUrl: "https://litescrape.com/docs/apple-maps-places",
         categories: ["maps"],
     },
+    // public id: the hosted catalog's spelling; the wire path is below
+    endpoint: "/apple-maps/places",
     request: { method: "GET", path: "/apple/maps/places" },
     input: {
         schema: {

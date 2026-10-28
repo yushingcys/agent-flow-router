@@ -1,0 +1,56 @@
+{
+    "name": "synthetic-tiktok-video",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/tiktok/app/v3/fetch_one_video (TikTok). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?aweme_id=7350810998023949599"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "fa56d4e8-68b6-4788-9ce0-3522447b6ce9",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/fa56d4e8-68b6-4788-9ce0-3522447b6ce9?sign=synthetic",
+                    "router": "/api/v1/tiktok/app/v3/fetch_one_video",
+                    "params": {
+                        "aweme_id": "7350810998023949599"
+                    },
+                    "data": {
+                        "status_code": 0,
+                        "aweme_details": [
+                            {
+                                "aweme_id": "7350810998023949599",
+                                "desc": "Morning routine #fyp",
+                                "create_time": 1711500000,
+                                "author": {
+                                    "uid": "6812345678901234567",
+                                    "unique_id": "creator.example",
+                                    "nickname": "Creator Example"
+                                },
+                                "statistics": {
+                                    "play_count": 120394,
+                                    "digg_count": 8812,
+                                    "comment_count": 213,
+                                    "share_count": 97
+                                },
+                                "video": {
+                                    "duration": 15200
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

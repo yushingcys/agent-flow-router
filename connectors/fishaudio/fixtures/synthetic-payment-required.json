@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-payment-required",
+    "description": "SYNTHETIC 402 in Fish Audio's documented {status, message} error shape.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 402,
+                "body": {
+                    "status": 402,
+                    "message": "Insufficient balance"
+                }
+            }
+        }
+    ]
+}

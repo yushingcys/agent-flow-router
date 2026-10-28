@@ -127,13 +127,63 @@ const RATE: Record<
         input: { body: { domain: "shop.example.com", maxProducts: 2 } },
         usage: { credits: { default: 10 }, evidence: { CALL: 1 } },
     },
+    "contextdev#brand/transaction_identifier": {
+        input: { queryParams: { transaction_info: "SQ *BLUE BOTTLE COFFEE" } },
+        usage: { credits: { default: 10 }, evidence: { CALL: 1 } },
+    },
+    "contextdev#company/search": {
+        input: {
+            body: {
+                query: "solar software companies",
+                filters: { countries: ["US"] },
+            },
+        },
+        usage: { credits: { default: 2 }, evidence: { CALL: 1 } },
+    },
+    "contextdev#people/search": {
+        input: { body: { query: "sales leaders at solar companies" } },
+        usage: { credits: { default: 10 }, evidence: { PAGE: 1 } },
+    },
+    "contextdev#web/answers": {
+        input: {
+            body: { task: "Where is stripe.com headquartered?", mode: "fast" },
+        },
+        usage: { credits: { default: 10 }, evidence: { fast: 1, ultra: 0 } },
+    },
+    "contextdev#web/scrape": {
+        input: {
+            body: {
+                url: "https://example.com",
+                formats: { markdown: true, highlights: true },
+                highlightsParams: { query: "what is this domain for?" },
+            },
+        },
+        usage: {
+            credits: { default: 2 },
+            evidence: {
+                actions_surcharge: 0,
+                highlights: 1,
+                json: 0,
+                product: 0,
+                scrape: 1,
+            },
+        },
+    },
+    "contextdev#web/urls": {
+        input: { queryParams: { domain: "example.com", maxLinks: 2 } },
+        usage: {
+            credits: { default: 1 },
+            evidence: { search_surcharge: 0, map: 1 },
+        },
+    },
 };
 
-/** Fixture dir: `endpoints/<wire path, slashes as dashes>/fixtures/`. */
+/** Fixture dir: `endpoints/<wire path, slashes and underscores as
+ *  dashes>/fixtures/` (folder names are kebab-case). */
 const happyFixture = (id: string) =>
     loadFixture(
         `${HERE}endpoints/${
-            id.split("#")[1].replaceAll("/", "-")
+            id.split("#")[1].replaceAll(/[/_]/g, "-")
         }/fixtures/synthetic-happy.json`,
     );
 
@@ -146,7 +196,7 @@ const contextdevIds = async (): Promise<string[]> => {
 
 Deno.test("contextdev: the literal rate table covers exactly the compiled endpoints", async () => {
     const ids = await contextdevIds();
-    assertEquals(ids.length, 19);
+    assertEquals(ids.length, 25);
     assertEquals(ids, Object.keys(RATE).sort());
 });
 
@@ -201,7 +251,7 @@ Deno.test("contextdev: a body without the envelope settles the derived fold", as
     });
 });
 
-Deno.test("contextdev: usage fn provenance — one auth, one consolidate, one fromError, four own evidence fns", async () => {
+Deno.test("contextdev: usage fn provenance - one auth, one consolidate, one fromError, metered docs own their evidence", async () => {
     const bundle = await testBundle();
     const ids = await contextdevIds();
     const first = bundle.endpoints[ids[0]];
@@ -209,7 +259,7 @@ Deno.test("contextdev: usage fn provenance — one auth, one consolidate, one fr
         const doc = bundle.endpoints[id];
         assertEquals(doc.auth.inject.$fn.key, first.auth.inject.$fn.key, id);
         // the vendor meter is a PROVIDER-wide fact (where key_metadata
-        // lives) — ONE consolidate key across all nineteen, and one
+        // lives) - ONE consolidate key across all twenty-five, and one
         // error digest
         assertEquals(
             doc.usage.consolidate?.$fn.key,
@@ -232,9 +282,13 @@ Deno.test("contextdev: usage fn provenance — one auth, one consolidate, one fr
     assertEquals(own.sort(), [
         "contextdev#news/search",
         "contextdev#people/enrich",
+        "contextdev#people/search",
+        "contextdev#web/answers",
         "contextdev#web/crawl",
+        "contextdev#web/scrape",
         "contextdev#web/scrape/sitemap",
         "contextdev#web/search",
+        "contextdev#web/urls",
     ]);
     // the one output reshaping is brand search's logo strip
     const reshaped = ids.filter((id) =>

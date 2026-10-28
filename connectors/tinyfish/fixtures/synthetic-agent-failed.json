@@ -1,0 +1,39 @@
+{
+    "name": "synthetic-agent-failed",
+    "description": "An agent run the vendor ends FAILED (synthetic): the run record arrives over a 200, so the poll synthesizes an error status and the engine zero-bills it.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "run_id": "run-1",
+                    "error": null
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://agent.tinyfish.ai/v1/runs/run-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "run_id": "run-1",
+                    "status": "FAILED",
+                    "num_of_steps": 3,
+                    "result": null,
+                    "error": {
+                        "code": "SITE_BLOCKED",
+                        "message": "The site blocked the browser",
+                        "category": "AGENT_FAILURE"
+                    }
+                }
+            }
+        }
+    ]
+}

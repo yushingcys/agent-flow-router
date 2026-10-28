@@ -1,0 +1,27 @@
+{
+    "name": "synthetic-voice-design-ok",
+    "description": "SYNTHETIC 200 for /v1/voice-design from VoiceDesignCandidate (docs.fish.audio openapi.json, 2026-10-27), audio hand-truncated.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "candidates": [
+                        {
+                            "id": "cand_0",
+                            "index": 0,
+                            "audio_base64": "//uQZAAA",
+                            "sample_rate": 44100,
+                            "duration_ms": 2100,
+                            "text": "Welcome to Fish Audio."
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

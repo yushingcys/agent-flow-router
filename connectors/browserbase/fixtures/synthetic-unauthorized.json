@@ -1,0 +1,17 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC 401 chain for any browserbase endpoint, using the documented `{statusCode, error, message}` error envelope.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 401,
+                "body": {
+                    "statusCode": 401,
+                    "error": "Unauthorized",
+                    "message": "Invalid API key"
+                }
+            }
+        }
+    ]
+}

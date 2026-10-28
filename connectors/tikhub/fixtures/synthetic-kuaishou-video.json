@@ -1,0 +1,46 @@
+{
+    "name": "synthetic-kuaishou-video",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/kuaishou/app/fetch_one_video (Kuaishou). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?photo_id=3xhpk3xcf6e4iac"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "86ba5f7b-d1b5-40a4-8b6f-597764b692aa",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/86ba5f7b-d1b5-40a4-8b6f-597764b692aa?sign=synthetic",
+                    "router": "/api/v1/kuaishou/app/fetch_one_video",
+                    "params": {
+                        "photo_id": "3xhpk3xcf6e4iac"
+                    },
+                    "data": {
+                        "result": 1,
+                        "photos": [
+                            {
+                                "photo_id": "3xhpk3xcf6e4iac",
+                                "caption": "家常菜教程",
+                                "user_name": "示例厨房",
+                                "like_count": 43210,
+                                "comment_count": 812,
+                                "view_count": 1200000,
+                                "duration": 58000
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

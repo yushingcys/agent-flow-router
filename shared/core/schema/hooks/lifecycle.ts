@@ -44,6 +44,49 @@ import {
 // ---------------------------------------------------------------------------
 
 /**
+ * Binary data as JSON — the ONE spelling for bytes on both sides of the
+ * wire. A non-text RESPONSE (audio, image, octet-stream) sniff-decodes to
+ * `{contentType, base64}` instead of a mangled string, and a multipart
+ * REQUEST part carrying a file takes the same object (plus an optional
+ * `filename`). Fns never see raw bytes, so closed terms stay JSON-only.
+ */
+export const zBinaryPart = z.strictObject({
+    base64: z.string(),
+    contentType: z.string().optional(),
+    filename: z.string().optional(),
+});
+export type BinaryPart = z.infer<typeof zBinaryPart>;
+
+const zFormValue = z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    zBinaryPart,
+]);
+
+/**
+ * `bodyEncoding: "multipart"` sends `body` as multipart/form-data: each key
+ * one field, an array a repeated field, a {@link zBinaryPart} a file part.
+ * Absent (the default) is JSON. Auth fns see the body as the same JSON
+ * object either way; the transport encodes it at egress.
+ */
+export const zMultipartBody = z.record(
+    z.string(),
+    z.union([zFormValue, z.array(zFormValue)]),
+);
+export const zBodyEncoding = z.enum(["json", "multipart"]);
+export type BodyEncoding = z.infer<typeof zBodyEncoding>;
+
+const multipartBodyValid = (
+    o: { body?: Json; bodyEncoding?: BodyEncoding },
+) => o.bodyEncoding !== "multipart" || o.body === undefined ||
+    zMultipartBody.safeParse(o.body).success;
+const MULTIPART_MESSAGE = {
+    message: "a multipart body is a record of string | number | boolean | " +
+        "{base64, contentType?, filename?} (or arrays of them)",
+};
+
+/**
  * One HTTP call issued by a lifecycle fn — ZERO defaults: every field sent
  * is a field stated here. `path` resolves against the doc request URL's
  * origin (v1 `apiPath` semantics); an absolute `url` may target any HTTPS
@@ -73,11 +116,12 @@ export const zHttpCall = z.strictObject({
         z.union([z.string(), z.array(z.string())]),
     ).optional(),
     body: zJson.optional(),
+    bodyEncoding: zBodyEncoding.optional(),
     requestMs: z.number().int().positive().optional(),
 }).refine(
     (call) => (call.url !== undefined) !== (call.path !== undefined),
     { message: "exactly one of url | path" },
-);
+).refine(multipartBodyValid, MULTIPART_MESSAGE);
 export type HttpCall = z.infer<typeof zHttpCall>;
 
 /** What utils.http returns: status + response headers + sniff-decoded body.
@@ -95,6 +139,8 @@ export interface HttpResult {
      *  are never followed, so a credential never travels to the target
      *  either (design D16). */
     headers: Record<string, string>;
+    /** Sniff-decoded: JSON if it parses, else the raw text; a non-text
+     *  content type decodes to `{contentType, base64}` ({@link zBinaryPart}). */
     body: Json;
 }
 
@@ -148,11 +194,12 @@ export const zRequestOverrides = z.strictObject({
     headers: z.record(z.string(), z.string()).optional(),
     queryParams: z.record(z.string(), zJson).optional(),
     body: zJson.optional(),
+    bodyEncoding: zBodyEncoding.optional(),
     requestMs: z.number().int().positive().optional(),
 }).refine(
     (o) => o.url === undefined || o.path === undefined,
     { message: "at most one of url | path" },
-);
+).refine(multipartBodyValid, MULTIPART_MESSAGE);
 export type RequestOverrides = z.infer<typeof zRequestOverrides>;
 
 export type LifecycleRequestFn = (

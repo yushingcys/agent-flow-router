@@ -2,7 +2,8 @@ import { defineProvider, presets, Unit, UsageModelKind } from "@shared/core";
 
 /**
  * Akta (akta.pro, by Wokelo) — company intelligence. Every endpoint is a
- * synchronous GET against `https://api.akta.pro/api/v1/...`, so both hooks
+ * synchronous call (GET, or POST with a JSON body for list generation and
+ * filter options) against `https://api.akta.pro/api/v1/...`, so both hooks
  * live HERE and every endpoint inherits them (leaf-wise fallback):
  *
  *   - `input.toRequest`: Akta renders ARRAY query params as ONE
@@ -20,13 +21,17 @@ export default defineProvider({
     name: "akta",
     meta: {
         displayName: "Akta",
-        summary: "Company intelligence: news, enrichment, and reviews.",
-        description: "Akta by Wokelo — private-markets company intelligence " +
+        summary: "Company intelligence: news, enrichment, lists, and signals.",
+        description: "Akta by Wokelo - private-markets company intelligence " +
             "for agents: enriched, entity-resolved news with topic and " +
-            "industry monitoring; 75+ field company enrichment " +
-            "(firmographics, assessment, funding, business model, and " +
-            "more); industry-code resolution; and employee & product " +
-            "reviews across 20M+ companies globally.",
+            "industry monitoring, plus full article lookup by id; 75+ " +
+            "field company enrichment (firmographics, assessment, funding, " +
+            "business model, and more) as JSON, Markdown, or a flat-priced " +
+            "concise profile, and single-call peers, SWOT, partnerships, " +
+            "and logos; filter-built company lists; alternative signals " +
+            "(headcount trends, website traffic, job posts, social posts); " +
+            "industry-code resolution; and employee & product reviews " +
+            "across 20M+ companies globally.",
         homepageUrl: "https://akta.pro",
         docsUrl: "https://docs.akta.pro",
         categories: ["company-enrichment"],
@@ -34,7 +39,9 @@ export default defineProvider({
     auth: { inject: presets.auth.header("x-api-key") },
     // Endpoint paths carry a TRAILING SLASH: akta 307-redirects the bare
     // form to it, and the engine's transport is redirect: "manual" (auth
-    // headers must never silently travel across redirects).
+    // headers must never silently travel across redirects). The
+    // `.../{company}` path-param routes are the exception: akta serves
+    // them bare (no redirect), as its docs write them.
     request: { baseUrl: "https://api.akta.pro/api" },
     // v1 parity (reconcile 2026-09-16): endpointExecution/config.yml gave
     // akta a 60 s request budget (single sync GET) — without this the

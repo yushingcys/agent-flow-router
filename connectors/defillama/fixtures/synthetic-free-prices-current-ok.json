@@ -1,0 +1,32 @@
+{
+    "name": "synthetic-free-prices-current-ok",
+    "description": "SYNTHETIC chain for defillama#free/prices/current/{coins} on the keyless coins.llama.fi host, from the documented `{coins: {<id>: {price, symbol, timestamp, confidence}}}` shape. The path param is URL-encoded and no key is spliced in.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://coins.llama.fi/prices/current/coingecko%3Aethereum%2Cethereum%3A0xdac17f958d2ee523a2206206994597c13d831ec7"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "coins": {
+                        "coingecko:ethereum": {
+                            "price": 3512.4,
+                            "symbol": "ETH",
+                            "timestamp": 1792540800,
+                            "confidence": 0.99
+                        },
+                        "ethereum:0xdac17f958d2ee523a2206206994597c13d831ec7": {
+                            "decimals": 6,
+                            "price": 1.0,
+                            "symbol": "USDT",
+                            "timestamp": 1792540800,
+                            "confidence": 0.99
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

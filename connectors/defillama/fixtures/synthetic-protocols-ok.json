@@ -1,0 +1,40 @@
+{
+    "name": "synthetic-protocols-ok",
+    "description": "SYNTHETIC chain for defillama#api/protocols, trimmed from the documented response shape (api-docs.defillama.com, 2026-10-27): an array of protocols with id, name, slug, category, chains, tvl and chainTvls. The Pro key rides in the path; the test transport's key is `test-key`.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://pro-api.llama.fi/test-key/api/protocols"
+            },
+            "res": {
+                "status": 200,
+                "body": [
+                    {
+                        "id": "111",
+                        "name": "Aave V3",
+                        "slug": "aave-v3",
+                        "category": "Lending",
+                        "chains": ["Ethereum", "Arbitrum"],
+                        "tvl": 24500000000,
+                        "chainTvls": {
+                            "Ethereum": 19000000000,
+                            "Arbitrum": 5500000000
+                        },
+                        "change_1d": 0.4
+                    },
+                    {
+                        "id": "182",
+                        "name": "Lido",
+                        "slug": "lido",
+                        "category": "Liquid Staking",
+                        "chains": ["Ethereum"],
+                        "tvl": 22100000000,
+                        "chainTvls": { "Ethereum": 22100000000 },
+                        "change_1d": -0.2
+                    }
+                ]
+            }
+        }
+    ]
+}

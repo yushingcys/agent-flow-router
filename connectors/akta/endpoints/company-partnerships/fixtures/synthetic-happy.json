@@ -1,0 +1,41 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC - not recorded. Shape from the Company partnerships reference (agent-docs.akta.pro, 2026-10-27), trimmed; ids and URLs are placeholders.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.akta.pro/api/v1/company/enrichment/partnerships/canva.com"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "uuid": "00000l1",
+                        "partnership": [
+                            {
+                                "name": "Google",
+                                "uuid": "0000003",
+                                "type": {
+                                    "code": "technology_integration",
+                                    "label": "Technology Integration"
+                                },
+                                "strategic_tier": "Core",
+                                "description": "Workspace integration.",
+                                "announced_on": {
+                                    "day": 1,
+                                    "month": 3,
+                                    "year": 2025
+                                },
+                                "source": [
+                                    "https://example.com/b"
+                                ]
+                            }
+                        ]
+                    },
+                    "credits_consumed": 0.5
+                }
+            }
+        }
+    ]
+}
