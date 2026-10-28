@@ -1,0 +1,28 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC TikHub 401: FastAPI `{detail: {code, message, ...}}` error body for a bad token, values invented. Bound to any GET endpoint called with `bv_id=BV1M1421t7hT`.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?bv_id=BV1M1421t7hT"
+            },
+            "res": {
+                "status": 401,
+                "body": {
+                    "detail": {
+                        "code": 401,
+                        "message": "Invalid API token. Please check your Authorization header.",
+                        "message_zh": "无效的API令牌，请检查您的Authorization请求头。",
+                        "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                        "time": "2026-10-27 01:00:00",
+                        "router": "/api/v1/bilibili/web/fetch_one_video",
+                        "params": {
+                            "bv_id": "BV1M1421t7hT"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

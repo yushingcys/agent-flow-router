@@ -1,0 +1,54 @@
+{
+    "name": "synthetic-zhihu-hot-list",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/zhihu/web/fetch_hot_list (Zhihu). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?limit=2"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "f847b92d-aa28-4e4d-ba16-fb669313fb6d",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/f847b92d-aa28-4e4d-ba16-fb669313fb6d?sign=synthetic",
+                    "router": "/api/v1/zhihu/web/fetch_hot_list",
+                    "params": {
+                        "limit": "2"
+                    },
+                    "data": {
+                        "data": [
+                            {
+                                "target": {
+                                    "id": 712345678,
+                                    "title": "如何评价最新发布的开源大模型？",
+                                    "answer_count": 812,
+                                    "follower_count": 15000
+                                },
+                                "detail_text": "1520 万热度"
+                            },
+                            {
+                                "target": {
+                                    "id": 712345679,
+                                    "title": "有哪些值得推荐的冷门城市？",
+                                    "answer_count": 430,
+                                    "follower_count": 6200
+                                },
+                                "detail_text": "880 万热度"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

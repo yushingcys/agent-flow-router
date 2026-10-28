@@ -1,0 +1,38 @@
+{
+    "name": "synthetic-wechat-mp-article",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/wechat_mp/v2/fetch_article_detail (WeChat Official Accounts). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "b964e421-a9f0-43cf-a347-0eacf3ab013d",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/b964e421-a9f0-43cf-a347-0eacf3ab013d?sign=synthetic",
+                    "router": "/api/v1/wechat_mp/v2/fetch_article_detail",
+                    "params": {},
+                    "data": {
+                        "title": "示例文章标题",
+                        "author": "示例公众号",
+                        "publish_time": 1793000000,
+                        "digest": "这是一篇示例文章的摘要。",
+                        "content_text": "正文示例。",
+                        "url": "https://mp.weixin.qq.com/s/synthetic"
+                    }
+                }
+            }
+        }
+    ]
+}

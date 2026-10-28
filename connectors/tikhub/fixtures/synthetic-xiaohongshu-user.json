@@ -1,0 +1,54 @@
+{
+    "name": "synthetic-xiaohongshu-user",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/xiaohongshu/web_v3/fetch_user_info (Xiaohongshu). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?user_id=5e3a8ee700000000010070c6"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "f3258af3-344e-4f71-8e6a-32b1c86a1bd2",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/f3258af3-344e-4f71-8e6a-32b1c86a1bd2?sign=synthetic",
+                    "router": "/api/v1/xiaohongshu/web_v3/fetch_user_info",
+                    "params": {
+                        "user_id": "5e3a8ee700000000010070c6"
+                    },
+                    "data": {
+                        "basic_info": {
+                            "nickname": "示例博主",
+                            "red_id": "123456789",
+                            "desc": "分享日常穿搭",
+                            "ip_location": "上海"
+                        },
+                        "interactions": [
+                            {
+                                "type": "follows",
+                                "count": "120"
+                            },
+                            {
+                                "type": "fans",
+                                "count": "35000"
+                            },
+                            {
+                                "type": "interaction",
+                                "count": "410000"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

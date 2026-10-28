@@ -1,0 +1,49 @@
+{
+    "name": "synthetic-tiktok-shop-product",
+    "description": "SYNTHETIC happy chain for tikhub#api/v1/tiktok/shop/web/fetch_product_detail_v3 (TikTok Shop). TikHub envelope from the OpenAPI ResponseModel (api.tikhub.io/openapi.json, 2026-10-27); `data` shape modeled on the platform's documented response, values invented. Replace via `deno task record` when TIKHUB_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?product_id=1732108663255959373&region=US"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "code": 200,
+                    "request_id": "59682d8e-ec7e-4ab1-bfa1-acf4ff22d66e",
+                    "message": "Request successful. This request will incur a charge.",
+                    "message_zh": "请求成功，本次请求将被计费。",
+                    "support": "Discord: https://discord.gg/aMEAS8Xsvz",
+                    "time": "2026-10-27 01:00:00",
+                    "time_stamp": 1793091600,
+                    "time_zone": "America/Los_Angeles",
+                    "docs": "https://api.tikhub.io/docs",
+                    "cache_message": "This response is cached and accessible via the URL below for 24 hours at no extra cost.",
+                    "cache_url": "https://cache.tikhub.io/api/v1/cache/public/59682d8e-ec7e-4ab1-bfa1-acf4ff22d66e?sign=synthetic",
+                    "router": "/api/v1/tiktok/shop/web/fetch_product_detail_v3",
+                    "params": {
+                        "product_id": "1732108663255959373",
+                        "region": "US"
+                    },
+                    "data": {
+                        "product_id": "1732108663255959373",
+                        "title": "Stainless Steel Water Bottle 32oz",
+                        "price": {
+                            "currency": "USD",
+                            "sale_price": "18.99",
+                            "original_price": "24.99"
+                        },
+                        "sold_count": 15230,
+                        "rating": 4.7,
+                        "review_count": 2104,
+                        "seller": {
+                            "seller_id": "7495123456789012345",
+                            "name": "Example Home Store"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
