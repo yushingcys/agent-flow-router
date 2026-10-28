@@ -1,0 +1,56 @@
+{
+    "name": "synthetic-crawl-ok",
+    "description": "SYNTHETIC happy chain for serpapi#extract/crawl. Shape from the Extract API crawl-mode docs (serpapi.com/extract-crawl-mode, read 2026-10-27); values invented. Three pages visited, one failed: two credits.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?url=https%3A%2F%2Fbooks.toscrape.com%2F&max_pages=3&max_depth=1&engine=extract&mode=crawl&api_key=test-key"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "search_metadata": {
+                        "id": "00000000000000000000000b",
+                        "status": "Success",
+                        "credits_consumed": 2
+                    },
+                    "search_information": {
+                        "organic_results_state": "Crawl complete"
+                    },
+                    "pages": [
+                        {
+                            "position": 1,
+                            "url": "https://books.toscrape.com/",
+                            "depth": 0,
+                            "page_information": {
+                                "title": "All products | Books to Scrape - Sandbox"
+                            },
+                            "headings": [
+                                {
+                                    "position": 1,
+                                    "level": 1,
+                                    "title": "All products"
+                                }
+                            ]
+                        },
+                        {
+                            "position": 2,
+                            "url": "https://books.toscrape.com/catalogue/category/books_1/index.html",
+                            "depth": 1,
+                            "page_information": {
+                                "title": "Books | Books to Scrape - Sandbox"
+                            }
+                        },
+                        {
+                            "position": 3,
+                            "url": "https://books.toscrape.com/missing.html",
+                            "depth": 1,
+                            "error": "HTTP 404"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

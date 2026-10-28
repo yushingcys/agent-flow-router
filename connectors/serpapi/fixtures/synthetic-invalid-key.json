@@ -1,0 +1,18 @@
+{
+    "name": "synthetic-invalid-key",
+    "description": "SYNTHETIC provider error for serpapi#google/search: a bad api_key answered with SerpApi's documented error envelope (serpapi.com/api-status-and-error-codes). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=anything&engine=google&api_key=test-key"
+            },
+            "res": {
+                "status": 401,
+                "body": {
+                    "error": "Invalid API key. Your API key should be here: https://serpapi.com/manage-api-key"
+                }
+            }
+        }
+    ]
+}
