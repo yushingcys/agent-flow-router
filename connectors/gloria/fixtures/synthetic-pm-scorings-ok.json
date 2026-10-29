@@ -1,0 +1,36 @@
+{
+    "name": "synthetic-pm-scorings-ok",
+    "description": "SYNTHETIC happy chain for gloria#pm-scorings (REST GET /pm/scorings). Shape from ScoringsListResponse / ScoringOut in ai-hub.cryptobriefing.com/openapi.json (read 2026-10-29); values invented.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?limit=1&tier=TRADE"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "scorings": [
+                        {
+                            "id": "sc-1",
+                            "headline_id": "hl-1",
+                            "headline": "Example asset manager files for a spot Bitcoin ETF",
+                            "source_url": "https://example.com/filing",
+                            "event_id": "ev-1",
+                            "market_id": "mk-1",
+                            "direction": "up",
+                            "confidence": 0.82,
+                            "magnitude_pts": 6,
+                            "tier": "TRADE",
+                            "current_price": 0.41,
+                            "reason": "Invented: a filing raises the odds of approval.",
+                            "model_version": "example-1",
+                            "created_at": "2026-10-29T06:00:00Z",
+                            "partial_context": false
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
