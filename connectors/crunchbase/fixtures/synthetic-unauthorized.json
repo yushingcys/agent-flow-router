@@ -1,0 +1,22 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC 401 chain from the live Crunchbase error list `[{status, code, message}]`: zero-billed, digested.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v4/data/entities/organizations/stripe"
+            },
+            "res": {
+                "status": 401,
+                "body": [
+                    {
+                        "status": 401,
+                        "code": "LA401",
+                        "message": "Unauthorized user_key"
+                    }
+                ]
+            }
+        }
+    ]
+}
