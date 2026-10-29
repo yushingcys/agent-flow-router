@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-download-bytes",
+    "description": "SYNTHETIC: the Files API download answers 200 with the MP4 bytes (an ftyp box, base64), decoded to {contentType, base64}.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1beta/files/omnivid123:download?alt=media"
+            },
+            "res": {
+                "status": 200,
+                "headers": {
+                    "content-type": "video/mp4"
+                },
+                "body": "AAAAIGZ0eXBpc29t"
+            }
+        }
+    ]
+}
