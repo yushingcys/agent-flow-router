@@ -1,0 +1,141 @@
+{
+    "name": "synthetic-stop-in-call",
+    "description": "SYNTHETIC stop of a bot in the call: create 201, stop reads it (recording), leave_call 200, then the read shows done after 10 minutes of bot time.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 201,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": "2026-10-30T10:00:00Z",
+                    "status_changes": [],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": "2026-10-30T10:00:00Z",
+                    "status_changes": [
+                        {
+                            "code": "joining_call",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:00Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "in_call_recording",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:30Z",
+                            "sub_code": null
+                        }
+                    ],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/leave_call/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": "2026-10-30T10:00:00Z",
+                    "status_changes": [
+                        {
+                            "code": "joining_call",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:00Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "in_call_recording",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:30Z",
+                            "sub_code": null
+                        }
+                    ],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": "2026-10-30T10:00:00Z",
+                    "status_changes": [
+                        {
+                            "code": "joining_call",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:00Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "in_call_recording",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:30Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "call_ended",
+                            "message": null,
+                            "created_at": "2026-10-29T10:10:00Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "done",
+                            "message": null,
+                            "created_at": "2026-10-29T10:10:00Z",
+                            "sub_code": null
+                        }
+                    ],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        }
+    ]
+}

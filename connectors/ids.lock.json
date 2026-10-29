@@ -857,6 +857,7 @@
         "ploid#v1/linkedin/search",
         "ploid#v1/search",
         "ploid#v1/socials",
+        "recall#meetings/record",
         "saperly#call-recordings",
         "saperly#call-transcripts",
         "saperly#get-calls",
