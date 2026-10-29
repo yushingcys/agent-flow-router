@@ -30,6 +30,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Hosted headless browsers an agent drives to navigate and act on sites.",
     },
     {
+        id: "virtual-machines",
+        displayName: "Virtual Machines",
+        description:
+            "Persistent Linux machines and sandboxes an agent runs commands and code in.",
+    },
+    {
         id: "news-search",
         displayName: "News Search",
         description: "Search and monitor news coverage.",

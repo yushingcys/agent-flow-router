@@ -968,6 +968,18 @@
         "serpapi#youtube/transcript",
         "serpapi#youtube/video",
         "serpapi#zillow/search",
+        "smolmachine#list-machines",
+        "smolmachine#machines",
+        "smolmachine#machines/{id}/code",
+        "smolmachine#machines/{id}/delete",
+        "smolmachine#machines/{id}/events",
+        "smolmachine#machines/{id}/exec",
+        "smolmachine#machines/{id}/exec/async",
+        "smolmachine#machines/{id}/files/download",
+        "smolmachine#machines/{id}/files/upload",
+        "smolmachine#machines/{id}/start",
+        "smolmachine#machines/{id}/stop",
+        "smolmachine#machines/{id}/usage",
         "surf#dex/token/price",
         "surf#exchange/candles",
         "surf#exchange/coverage",
@@ -2028,6 +2040,7 @@
         "agentmail/domain",
         "agentmail/inbox",
         "saperly/phone-number",
+        "smolmachine/machine",
         "tinyfish/browser-session"
     ]
 }
