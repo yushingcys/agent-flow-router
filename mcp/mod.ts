@@ -18,10 +18,15 @@ export function createToolServer(host: {
     version: string;
     tools: Tool[];
     call: (name: string, args: Record<string, unknown>) => Promise<unknown>;
+    /** Sent to the agent at connect: when to reach for these tools. */
+    instructions?: string;
 }): Server {
     const server = new Server(
         { name: host.name, version: host.version },
-        { capabilities: { tools: {} } },
+        {
+            capabilities: { tools: {} },
+            ...(host.instructions ? { instructions: host.instructions } : {}),
+        },
     );
     server.setRequestHandler(
         ListToolsRequestSchema,
@@ -157,7 +162,11 @@ const TOOLS: Tool[] = [
     {
         name: "discover",
         description:
-            "Find executable connector endpoints by task. Uses this router's installed catalog.",
+            "Find a connector endpoint for a job your built-in tools cannot do " +
+            "or do poorly: platform data, company or people data, SEO, market " +
+            "data, media generation. For ordinary web search or reading a " +
+            "page, use your built-in tools instead. Searches this router's " +
+            "installed catalog.",
         inputSchema: {
             type: "object",
             properties: {
@@ -197,6 +206,26 @@ const TOOLS: Tool[] = [
     },
 ];
 
+/** What a BYOK agent is told at connect about when to use the router. */
+export const ROUTER_INSTRUCTIONS = [
+    "Agent Flow Router runs ready-made API endpoints (web data, social " +
+    "platforms, company and people data, SEO, finance and crypto, legal, " +
+    "media generation) with the user's own provider keys, through " +
+    "discover, inspect and run.",
+    "Use your built-in tools first for ordinary web search, reading a " +
+    "public page, or general questions. Prefer a dedicated tool or MCP " +
+    "server the user already has for a service.",
+    "Use this router when built-in tools cannot do the job or do it " +
+    "poorly: platform data (TikTok, Instagram, LinkedIn, YouTube, " +
+    "Xiaohongshu...), company or people enrichment, SEO metrics, market " +
+    "data, statutes, structured or bulk results, generating images, video " +
+    "or audio, long crawls, or when a built-in fetch was blocked. Also " +
+    "when the user asks for it.",
+    "Runs bill the user's own provider accounts. Check an endpoint with " +
+    "inspect before run, keep result limits small (5 to 10), send one " +
+    "query per call, and ask the user before large or repeated runs.",
+].join("\n\n");
+
 /** Standalone BYOK host. No persistent credential store, account, or billing. */
 export function createRouterServer(
     bundle: Bundle,
@@ -220,6 +249,7 @@ export function createRouterServer(
         name: "agent-flow-router",
         version: "0.1.0",
         tools: TOOLS,
+        instructions: ROUTER_INSTRUCTIONS,
         async call(name, args) {
             if (name === "discover") {
                 const { query, limit } = z.object({
