@@ -1,0 +1,29 @@
+{
+    "name": "synthetic-email-patterns",
+    "description": "SYNTHETIC chain for the-companies-api#find_company_email_patterns from the documented EmailPattern[] shape: a bare array, no meter.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v2/companies/apple.com/email-patterns"
+            },
+            "res": {
+                "status": 200,
+                "body": [
+                    {
+                        "id": 1,
+                        "pattern": "{first}.{last}",
+                        "usagePercentage": 72,
+                        "emailsCount": null
+                    },
+                    {
+                        "id": 2,
+                        "pattern": "{f}{last}",
+                        "usagePercentage": 18,
+                        "emailsCount": null
+                    }
+                ]
+            }
+        }
+    ]
+}
