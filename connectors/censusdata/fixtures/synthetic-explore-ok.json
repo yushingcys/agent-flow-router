@@ -1,0 +1,33 @@
+{
+    "name": "synthetic-explore-ok",
+    "description": "SYNTHETIC happy chain for censusdata#explore-variables, trimmed from a live unauthenticated response for keyword=veterans (2026-10-29).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?keyword=veterans"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "keyword": "veterans",
+                    "total_found": 2,
+                    "variables": [
+                        {
+                            "id": "DP02_0070E",
+                            "name": "Civilian population 18 years and over - Civilian veterans (Veteran Status) [Raw Count]",
+                            "description": "Civilian population 18 years and over - Civilian veterans (Veteran Status) [Raw Count] (Official Concept: Selected Social Characteristics in the United States)",
+                            "suggested_query": "What is the Civilian population 18 years and over - Civilian veterans (Veteran Status) [Raw Count] in Austin, TX in 2024?"
+                        },
+                        {
+                            "id": "DP02_0070PE",
+                            "name": "Civilian population 18 years and over - Civilian veterans (Veteran Status) [% Rate]",
+                            "description": "Civilian population 18 years and over - Civilian veterans (Veteran Status) [% Rate] (Official Concept: Selected Social Characteristics in the United States)",
+                            "suggested_query": "What is the Civilian population 18 years and over - Civilian veterans (Veteran Status) [% Rate] in Austin, TX in 2024?"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
