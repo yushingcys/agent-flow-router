@@ -1,0 +1,51 @@
+{
+    "name": "synthetic-provision-no-funds",
+    "description": "SYNTHETIC provision chain where the number buy is refused (402): the just-created persona is deleted so nothing is orphaned, and the refusal is data.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/agents"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "agt_1",
+                    "account_id": "acct_pooled",
+                    "name": "Front Desk",
+                    "system_prompt": "You book tables.",
+                    "initial_greeting": "Hi, Front Desk here.",
+                    "voice_id": "female-1",
+                    "voicemail_message": null,
+                    "transfer_number": null,
+                    "owner_phone": null
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/numbers"
+            },
+            "res": {
+                "status": 402,
+                "body": {
+                    "detail": "Insufficient balance: $3.00 required"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "{{request.origin}}/v1/agents/agt_1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "deleted": true,
+                    "agent_id": "agt_1"
+                }
+            }
+        }
+    ]
+}
