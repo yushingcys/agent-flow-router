@@ -1,0 +1,103 @@
+{
+    "name": "synthetic-job-run",
+    "description": "SYNTHETIC async job chain from the documented MachineJob / MachineJobOutput shapes: POST /jobs answers 202 running, one poll still running, the next exited 0, then the stdout and stderr slices are read.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/machines/mach-1/jobs"
+            },
+            "res": {
+                "status": 202,
+                "body": {
+                    "id": "job-1",
+                    "machineId": "mach-1",
+                    "command": [
+                        "sh",
+                        "-c",
+                        "make test"
+                    ],
+                    "state": "running",
+                    "createdAt": "2026-10-29T10:00:00Z"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1/jobs/job-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "job-1",
+                    "machineId": "mach-1",
+                    "command": [
+                        "sh",
+                        "-c",
+                        "make test"
+                    ],
+                    "state": "running",
+                    "createdAt": "2026-10-29T10:00:00Z",
+                    "stdoutBytes": 12
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1/jobs/job-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "job-1",
+                    "machineId": "mach-1",
+                    "command": [
+                        "sh",
+                        "-c",
+                        "make test"
+                    ],
+                    "state": "exited",
+                    "exitCode": 0,
+                    "createdAt": "2026-10-29T10:00:00Z",
+                    "finishedAt": "2026-10-29T10:02:00Z",
+                    "stdoutBytes": 9,
+                    "stderrBytes": 0
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1/jobs/job-1/output?stream=stdout&limit=1048576"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "stream": "stdout",
+                    "offset": 0,
+                    "nextOffset": 9,
+                    "data": "all pass\n",
+                    "eof": true
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1/jobs/job-1/output?stream=stderr&limit=1048576"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "stream": "stderr",
+                    "offset": 0,
+                    "nextOffset": 0,
+                    "data": "",
+                    "eof": true
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC RFC 9457 problem+json error: a 403 for a key without the machine:exec scope.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/machines/mach-1/exec"
+            },
+            "res": {
+                "status": 403,
+                "body": {
+                    "type": "about:blank",
+                    "title": "Forbidden",
+                    "status": 403,
+                    "detail": "API key lacks the machine:exec scope",
+                    "code": "forbidden"
+                }
+            }
+        }
+    ]
+}
