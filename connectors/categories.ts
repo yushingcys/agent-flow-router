@@ -498,4 +498,10 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         displayName: "Telegram",
         description: "Telegram data: public channels and their messages.",
     },
+    {
+        id: "decision-models",
+        displayName: "Decision Models",
+        description:
+            "Calibrated structured judgments: classify, score, and verify.",
+    },
 ]);
