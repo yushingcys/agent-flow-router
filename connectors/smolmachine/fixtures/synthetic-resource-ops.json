@@ -1,0 +1,89 @@
+{
+    "name": "synthetic-resource-ops",
+    "description": "SYNTHETIC op sequence on one loaded machine: verify (alive), a mid-month usage reconcile summing the documented CostBreakdown lines (exec and the monthly fee are not read), then release answering 404 because /machines/{id}/delete already removed it.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "mach-1",
+                    "name": "sandbox",
+                    "source": {
+                        "type": "image",
+                        "reference": "library/alpine:3.20"
+                    },
+                    "state": "stopped",
+                    "ready": false,
+                    "resources": {
+                        "cpus": 1,
+                        "memoryMb": 512,
+                        "diskGb": 10
+                    },
+                    "network": {
+                        "mode": "open"
+                    },
+                    "env": {},
+                    "ephemeral": false,
+                    "createdBy": "acct-pooled",
+                    "createdAt": "2026-10-29T10:00:00Z",
+                    "updatedAt": "2026-10-29T10:00:00Z"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1/usage"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "machineId": "mach-1",
+                    "from": "2026-10-01T00:00:00Z",
+                    "to": "2026-10-29T12:00:00Z",
+                    "usage": {
+                        "tenantId": "t-pooled",
+                        "from": "2026-10-01T00:00:00Z",
+                        "to": "2026-10-29T12:00:00Z",
+                        "totalUptimeSeconds": 157,
+                        "cpuHours": 0.01,
+                        "memoryGbHours": 0.02,
+                        "diskGbHours": 0.5,
+                        "egressGb": 0,
+                        "machineCount": 1
+                    },
+                    "cost": {
+                        "baseMicros": 1744,
+                        "cpuMicros": 50,
+                        "memoryMicros": 17,
+                        "diskMicros": 0,
+                        "egressMicros": 0,
+                        "execMicros": 0,
+                        "monthlyFeeMicros": 20000000,
+                        "totalMicros": 1811
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "{{request.origin}}/v1/machines/mach-1"
+            },
+            "res": {
+                "status": 404,
+                "body": {
+                    "type": "about:blank",
+                    "title": "Not Found",
+                    "status": 404,
+                    "detail": "machine not found",
+                    "code": "not_found"
+                }
+            }
+        }
+    ]
+}

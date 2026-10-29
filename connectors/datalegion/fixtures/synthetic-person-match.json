@@ -1,0 +1,31 @@
+{
+    "name": "synthetic-person-match",
+    "description": "SYNTHETIC chain for every datalegion person doc (POST /person/enrich), from the documented PersonMatchesResponse shape `{matches: [{person, match_metadata}], total}`: one record returned = one credit of the doc's product.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "matches": [
+                        {
+                            "person": {
+                                "legion_id": "fdd85569-f0f0-53a9-bc60-089507193c28",
+                                "full_name": "jane doe",
+                                "job_title": "vp of engineering",
+                                "company_name": "acme corp",
+                                "company_domain": "acme.com"
+                            },
+                            "match_metadata": {
+                                "matched_on": ["email"],
+                                "match_type": "exact",
+                                "match_confidence": "high"
+                            }
+                        }
+                    ],
+                    "total": 1
+                }
+            }
+        }
+    ]
+}

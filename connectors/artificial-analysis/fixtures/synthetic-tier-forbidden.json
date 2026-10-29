@@ -1,0 +1,18 @@
+{
+    "name": "synthetic-tier-forbidden",
+    "description": "SYNTHETIC provider error for artificial-analysis#get_model_detail: a Free key calling a Pro route gets 403 with the documented ErrorResponse envelope (artificialanalysis.ai/api/v2/openapi components.responses.Forbidden). Vendor non-2xx is DATA.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/api/v2/language/models/glm-5-3"
+            },
+            "res": {
+                "status": 403,
+                "body": {
+                    "error": "Language model detail requires a Pro subscription"
+                }
+            }
+        }
+    ]
+}

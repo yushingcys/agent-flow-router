@@ -1,0 +1,29 @@
+{
+    "name": "synthetic-systemone-ok",
+    "description": "SYNTHETIC happy chain for typesafe#systemone: one noul and one choice question. Shape from the OpenAPI SystemOneResponse examples (api.typesafe.ai/openapi.json v0.2.0, read 2026-10-29); values invented. Replace via `deno task record` when TYPESAFE_API_KEY exists.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "model": "jev-1.14.0",
+                    "answers": {
+                        "billing": { "type": "noul", "noul": 0.98 },
+                        "tone": {
+                            "type": "choice",
+                            "choice": "calm",
+                            "confidence": 0.7,
+                            "probabilities": {
+                                "angry": 0.15,
+                                "calm": 0.8,
+                                "excited": 0.05
+                            }
+                        }
+                    },
+                    "usage": { "input_tokens": 120, "output_tokens": 12 }
+                }
+            }
+        }
+    ]
+}

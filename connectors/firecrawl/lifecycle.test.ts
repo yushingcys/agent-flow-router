@@ -232,6 +232,32 @@ for (const id of Object.keys(INPUTS)) {
     });
 }
 
+for (const id of PAGE_JOBS) {
+    Deno.test(`${id} stop before any page completed: bills the in-flight page Firecrawl charged, and says so`, async () => {
+        const stopped = await startThenStop(id, "job-stop-in-flight");
+        // Firecrawl's creditsUsed is its billing ledger: a page scrape in
+        // flight when the cancel lands still bills, but never reaches
+        // `completed`. We charge what the vendor charged us (D34), so the
+        // receipt has to explain "0 pages, 1 credit" rather than leave it.
+        assert(stopped.kind === RunKind.COMPLETED, "stop settles");
+        assertEquals(stopped.usage.credits, { default: 1 });
+        assertEquals(stopped.usage.evidence, { page: 0 });
+        const output = stopped.output as Record<string, unknown>;
+        assertEquals(output.completed, 0);
+        assertEquals(
+            output.note,
+            "Stopped before any page completed; Firecrawl billed 1 " +
+                "credit(s) for work in flight when the stop landed.",
+        );
+    });
+}
+
+Deno.test("firecrawl stop: a job that completed pages carries no in-flight note", async () => {
+    const stopped = await startThenStop("firecrawl#crawl", "job-stop-settled");
+    assert(stopped.kind === RunKind.COMPLETED, "stop settles");
+    assertEquals((stopped.output as Record<string, unknown>).note, undefined);
+});
+
 Deno.test("firecrawl#batch/scrape: x_routing counts DELIVERED rows, not the request list", async () => {
     const result = await runEndpoint({
         unit: await testSealedUnit("firecrawl#batch/scrape"),

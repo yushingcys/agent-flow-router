@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-download",
+    "description": "SYNTHETIC download chain: GET /files/<guest path suffix> answering application/octet-stream bytes (served from the stored base64).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1/files/workspace/out%20dir/a.bin"
+            },
+            "res": {
+                "status": 200,
+                "headers": {
+                    "content-type": "application/octet-stream"
+                },
+                "body": "AAEC"
+            }
+        }
+    ]
+}

@@ -30,6 +30,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Hosted headless browsers an agent drives to navigate and act on sites.",
     },
     {
+        id: "virtual-machines",
+        displayName: "Virtual Machines",
+        description:
+            "Persistent Linux machines and sandboxes an agent runs commands and code in.",
+    },
+    {
         id: "news-search",
         displayName: "News Search",
         description: "Search and monitor news coverage.",
@@ -350,6 +356,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Tools to pull crypto market signals, including sentiment indexes, technical indicators, project scores, and more.",
     },
     {
+        id: "model-benchmarks",
+        displayName: "Model Benchmarks",
+        description:
+            "Independent AI model benchmarks: quality, speed, price, and arena rankings.",
+    },
+    {
         id: "web-extraction",
         displayName: "Content Extraction",
         description:
@@ -544,5 +556,11 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         displayName: "Reference Data",
         description:
             "Reference lookups: postal codes, tax and duty rates, holidays, shipping, trade, and weather.",
+    },
+    {
+        id: "decision-models",
+        displayName: "Decision Models",
+        description:
+            "Calibrated structured judgments: classify, score, and verify.",
     },
 ]);

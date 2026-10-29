@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-invalid-key",
+    "description": "SYNTHETIC provider error for censusdata#query: a bad X-API-Key answered 401 with the body the live API returns (probed 2026-10-29). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=anything"
+            },
+            "res": {
+                "status": 401,
+                "body": { "detail": "Invalid API key." }
+            }
+        }
+    ]
+}
