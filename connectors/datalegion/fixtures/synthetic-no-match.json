@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-no-match",
+    "description": "SYNTHETIC no-match chain for any datalegion doc, from the documented ErrorResponse: a 404 `not_found` costs nothing.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 404,
+                "body": {
+                    "error": "not_found",
+                    "message": "No person found matching the provided parameters."
+                }
+            }
+        }
+    ]
+}
