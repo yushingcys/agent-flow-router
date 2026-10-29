@@ -1,0 +1,29 @@
+{
+    "name": "synthetic-update-number",
+    "description": "SYNTHETIC update-numbers chain: one PATCH of the number's persona through the stored agent pointer.",
+    "calls": [
+        {
+            "req": {
+                "method": "PATCH",
+                "url": "{{request.origin}}/v1/agents/agt_1",
+                "body": {
+                    "voicemail_message": "Please call us back."
+                }
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "agt_1",
+                    "account_id": "acct_pooled",
+                    "name": "Front Desk",
+                    "system_prompt": "You book tables.",
+                    "initial_greeting": "Hi, Front Desk here.",
+                    "voice_id": "female-1",
+                    "voicemail_message": "Please call us back.",
+                    "transfer_number": null,
+                    "owner_phone": null
+                }
+            }
+        }
+    ]
+}

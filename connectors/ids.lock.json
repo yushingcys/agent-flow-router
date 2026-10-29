@@ -1,5 +1,17 @@
 {
     "endpoints": [
+        "agentline#calls/{id}",
+        "agentline#calls/{id}/transcript",
+        "agentline#get-numbers/{id}",
+        "agentline#list-calls",
+        "agentline#list-conversations",
+        "agentline#list-messages",
+        "agentline#list-numbers",
+        "agentline#list-voices",
+        "agentline#place-calls",
+        "agentline#provision-numbers",
+        "agentline#release-numbers/{id}",
+        "agentline#update-numbers/{id}",
         "agentmail#create-allow-block-entries",
         "agentmail#create-domains",
         "agentmail#create-drafts",
@@ -2025,6 +2037,7 @@
         "vaquill#us/statutes/sections"
     ],
     "resources": [
+        "agentline/phone-number",
         "agentmail/domain",
         "agentmail/inbox",
         "saperly/phone-number",

@@ -1,0 +1,72 @@
+{
+    "name": "synthetic-resource-ops",
+    "description": "SYNTHETIC op sequence on one loaded number: verify (active), refresh, then release - the number release, then the persona delete.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/numbers/num_1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "num_1",
+                    "phone_number": "+14155550100",
+                    "country": "US",
+                    "number_type": "local",
+                    "status": "active",
+                    "agent_id": "agt_1",
+                    "cost": 3.0,
+                    "balance_remaining": 41.5
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/numbers/num_1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "num_1",
+                    "phone_number": "+14155550100",
+                    "country": "US",
+                    "number_type": "local",
+                    "status": "active",
+                    "agent_id": "agt_1",
+                    "cost": 3.0,
+                    "balance_remaining": 41.5
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/numbers/num_1/release"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "number_id": "num_1",
+                    "phone_number": "+14155550100",
+                    "status": "released",
+                    "released": true
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "{{request.origin}}/v1/agents/agt_1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "deleted": true,
+                    "agent_id": "agt_1"
+                }
+            }
+        }
+    ]
+}
