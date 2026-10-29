@@ -498,4 +498,51 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         displayName: "Telegram",
         description: "Telegram data: public channels and their messages.",
     },
+    {
+        id: "compliance",
+        displayName: "Compliance & KYC",
+        description:
+            "Sanctions, PEP and adverse-media screening, AML risk, KYB, and regulatory checks.",
+    },
+    {
+        id: "data-validation",
+        displayName: "Data Validation",
+        description:
+            "Validate identifiers and contact data: IBAN, VAT, LEI, email, phone, and wallet addresses.",
+    },
+    {
+        id: "data-processing",
+        displayName: "Data Processing",
+        description:
+            "Parse, clean, convert, and deduplicate structured data and files.",
+    },
+    {
+        id: "text-processing",
+        displayName: "Text Processing",
+        description:
+            "Summarize, translate, classify, extract from, and draft text.",
+    },
+    {
+        id: "developer-tools",
+        displayName: "Developer Tools",
+        description:
+            "Code, config, API, schema, and security utilities for software work.",
+    },
+    {
+        id: "domain-intelligence",
+        displayName: "Domain Intelligence",
+        description:
+            "Domain and website checks: DNS, WHOIS, SSL, uptime, redirects, and tech stack.",
+    },
+    {
+        id: "financial-data",
+        displayName: "Financial Data",
+        description: "Exchange rates, currency conversion, and stock quotes.",
+    },
+    {
+        id: "reference-data",
+        displayName: "Reference Data",
+        description:
+            "Reference lookups: postal codes, tax and duty rates, holidays, shipping, trade, and weather.",
+    },
 ]);

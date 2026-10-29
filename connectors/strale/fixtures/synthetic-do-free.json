@@ -1,0 +1,36 @@
+{
+    "name": "synthetic-do-free",
+    "description": "Free-tier capability called with a key: POST /v1/do answers price_cents 0 and the wallet balance (executeFreeTierAuthenticated in Strale's dispatch.ts). Output recorded keyless on 2026-10-29; transaction id and balance are placeholders.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "result": {
+                        "transaction_id": "00000000-0000-4000-8000-000000000002",
+                        "status": "completed",
+                        "capability_used": "iban-validate",
+                        "price_cents": 0,
+                        "latency_ms": 7,
+                        "wallet_balance_cents": 1995,
+                        "output": {
+                            "valid": true,
+                            "country_code": "DE",
+                            "check_digits": "89",
+                            "bban": "370400440532013000",
+                            "bank_code": "37040044",
+                            "branch_code": null,
+                            "expected_length": 22
+                        },
+                        "provenance": {
+                            "source": "iban-validate:algorithmic",
+                            "fetched_at": "2026-10-29T06:29:33.642Z"
+                        }
+                    },
+                    "meta": { "audit": { "execution_mode": "sync" } }
+                }
+            }
+        }
+    ]
+}

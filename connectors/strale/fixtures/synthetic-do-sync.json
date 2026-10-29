@@ -1,0 +1,41 @@
+{
+    "name": "synthetic-do-sync",
+    "description": "SYNTHETIC - no Strale key held (2026-10-29). A paid capability answered synchronously by POST /v1/do, shaped from the OpenAPI DoResponse and the executeSync source (github.com/strale-io/strale apps/api/src/lib/do/dispatch.ts); values are placeholders. Charged 5 EUR cents; wallet_balance_cents is the account balance.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "result": {
+                        "transaction_id": "00000000-0000-4000-8000-000000000001",
+                        "status": "completed",
+                        "capability_used": "whois-lookup",
+                        "price_cents": 5,
+                        "latency_ms": 412,
+                        "wallet_balance_cents": 1995,
+                        "output": {
+                            "domain": "example.com",
+                            "registrar": "RESERVED-Internet Assigned Numbers Authority",
+                            "created": "1995-08-14T04:00:00Z",
+                            "name_servers": [
+                                "a.iana-servers.net",
+                                "b.iana-servers.net"
+                            ]
+                        },
+                        "provenance": {
+                            "source": "whois-lookup:whois",
+                            "fetched_at": "2026-10-29T06:00:00.000Z"
+                        }
+                    },
+                    "meta": {
+                        "audit": {
+                            "transaction_id": "00000000-0000-4000-8000-000000000001",
+                            "execution_mode": "sync"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
