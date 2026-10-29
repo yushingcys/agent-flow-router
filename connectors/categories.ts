@@ -296,6 +296,13 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "recordings.",
     },
     {
+        id: "meetings",
+        displayName: "Meetings",
+        description:
+            "Meeting bots that join Zoom, Meet, Teams and Webex calls to " +
+            "record and transcribe them.",
+    },
+    {
         id: "sms",
         displayName: "SMS",
         description: "Send and receive SMS from owned phone numbers.",

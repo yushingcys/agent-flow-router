@@ -1,0 +1,58 @@
+{
+    "name": "synthetic-stop-scheduled",
+    "description": "SYNTHETIC stop of a scheduled bot that has not started: create 201, stop reads it (no status changes) and deletes it (204).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 201,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": "2026-10-30T10:00:00Z",
+                    "status_changes": [],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": "2026-10-30T10:00:00Z",
+                    "status_changes": [],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 204,
+                "body": null
+            }
+        }
+    ]
+}
