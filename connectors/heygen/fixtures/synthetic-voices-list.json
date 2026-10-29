@@ -1,0 +1,30 @@
+{
+    "name": "synthetic-voices-list",
+    "description": "SYNTHETIC public-voice page from the documented list-audio-voices shape: one GET with type=public pinned by toRequest.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.heygen.com/v3/models/audio/voices?type=public"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": [
+                        {
+                            "voice_id": "83548de556df48ba8c09c42a57c51d85",
+                            "mode": "instant",
+                            "name": "Nadine",
+                            "language": "en",
+                            "status": "ACTIVE",
+                            "created_at": 1791565200,
+                            "preview_audio_url": "https://files.heygen.ai/voice/preview.wav"
+                        }
+                    ],
+                    "has_more": true,
+                    "next_token": "tok-2"
+                }
+            }
+        }
+    ]
+}
