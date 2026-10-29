@@ -61,33 +61,96 @@ export function createToolServer(host: {
     return server;
 }
 
-// ponytail: keyword overlap ranking; replace when measured discovery misses
-// justify a different search implementation.
+const STOP = new Set(
+    "a an and api by for from get i in into is it me my of on or the to with"
+        .split(" "),
+);
+
+/** Lowercase words with a light suffix strip, so "prices" meets "price". */
+function tokenize(text: string): string[] {
+    return text.toLowerCase().split(/[^a-z0-9]+/).filter((word) =>
+        word && !STOP.has(word)
+    ).map((word) => {
+        for (const suffix of ["ing", "ers", "er", "ed", "es", "s", "e"]) {
+            if (
+                word.endsWith(suffix) && word.length - suffix.length >= 3
+            ) return word.slice(0, -suffix.length);
+        }
+        return word;
+    });
+}
+
+/** Words plus adjacent pairs, so "text to speech" beats "speech to text". */
+const withPairs = (words: string[]) => [
+    ...words,
+    ...words.slice(1).map((word, i) => `${words[i]} ${word}`),
+];
+
+// A word in the provider or name says more than the same word in prose.
+const PROVIDER = 4, NAME = 3, CATEGORY = 2, PATH = 1.5, SUMMARY = 1;
+
+const FIELDS = new WeakMap<object, Map<string, number>>();
+function fieldsOf(doc: Bundle["endpoints"][string]) {
+    let weights = FIELDS.get(doc);
+    if (weights) return weights;
+    weights = new Map();
+    const add = (text: string, weight: number) => {
+        for (const word of withPairs(tokenize(text))) {
+            weights!.set(word, Math.max(weights!.get(word) ?? 0, weight));
+        }
+    };
+    add(doc.meta.summary, SUMMARY);
+    add(doc.id.slice(doc.id.indexOf("#") + 1), PATH);
+    add((doc.meta.categories ?? []).join(" "), CATEGORY);
+    add(doc.meta.displayName, NAME);
+    add(doc.provider, PROVIDER);
+    FIELDS.set(doc, weights);
+    return weights;
+}
+
+// ponytail: IDF-weighted keyword fields plus per-provider diversity, measured
+// by mcp/discover.test.ts; reach for embeddings only when that eval cannot pass.
 export function rankEndpoints(
     docs: Bundle["endpoints"][string][],
     query: string,
     ready: ReadonlySet<string> = new Set(),
 ) {
-    const terms = query.toLowerCase().split(/\W+/).filter(Boolean);
-    return docs.map((doc) => {
-        const hay = [
-            doc.id,
-            doc.meta.displayName,
-            doc.meta.summary,
-            ...(doc.meta.categories ?? []),
-        ]
-            .join(" ").toLowerCase();
-        return {
-            doc,
-            score: terms.filter((term) => hay.includes(term)).length,
-        };
-    }).filter((row) => row.score > 0)
+    const terms = [...new Set(withPairs(tokenize(query)))];
+    const fields = docs.map(fieldsOf);
+    const rarity = (term: string) =>
+        Math.log(
+            1 +
+                docs.length /
+                    Math.max(1, fields.filter((f) => f.has(term)).length),
+        );
+    // A pair settles word order at half its rarer word's weight, so it never
+    // outvotes a word the endpoint lacks.
+    const idf = terms.map((term) =>
+        term.includes(" ")
+            ? Math.min(...term.split(" ").map(rarity)) / 2
+            : rarity(term)
+    );
+    const scored = docs.map((doc, i) => ({
+        doc,
+        score: terms.reduce(
+            (sum, term, t) => sum + (fields[i].get(term) ?? 0) * idf[t],
+            0,
+        ),
+    })).filter((row) => row.score > 0)
         .sort((a, b) =>
             b.score - a.score ||
             Number(ready.has(b.doc.provider)) -
-                Number(ready.has(a.doc.provider))
-        )
-        .map(({ doc }) => doc);
+                Number(ready.has(a.doc.provider)) ||
+            a.doc.meta.displayName.length - b.doc.meta.displayName.length
+        );
+    // Halve each further pick from the same provider so one provider's
+    // near-duplicates cannot fill the page.
+    const seen = new Map<string, number>();
+    return scored.map((row) => {
+        const n = seen.get(row.doc.provider) ?? 0;
+        seen.set(row.doc.provider, n + 1);
+        return { ...row, score: row.score / 2 ** n };
+    }).sort((a, b) => b.score - a.score).map(({ doc }) => doc);
 }
 
 const TOOLS: Tool[] = [

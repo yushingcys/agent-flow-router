@@ -1,0 +1,21 @@
+{
+    "name": "synthetic-recap-ok",
+    "description": "SYNTHETIC happy chain for gloria#recaps: bitcoin is a 24h category, so the endpoint fills timeframe=24h. Shape from GloriaRecap in ai-hub.cryptobriefing.com/openapi.json (read 2026-10-29); values invented.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?feed_category=bitcoin&timeframe=24h"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "feed_category": "bitcoin",
+                    "timeframe": "24h",
+                    "recap": "An invented recap: ETF inflows continued while hashrate set a new high.",
+                    "created_at": "2026-10-29T06:00:00Z"
+                }
+            }
+        }
+    ]
+}

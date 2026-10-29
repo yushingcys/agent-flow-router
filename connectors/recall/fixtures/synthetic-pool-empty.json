@@ -1,0 +1,18 @@
+{
+    "name": "synthetic-pool-empty",
+    "description": "SYNTHETIC 507 from bot create: the ad-hoc bot pool is empty, no bot was created.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 507,
+                "body": {
+                    "detail": "No bots available in the ad-hoc pool, retry in a few minutes."
+                }
+            }
+        }
+    ]
+}

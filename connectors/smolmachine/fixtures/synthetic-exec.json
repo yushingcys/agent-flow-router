@@ -1,0 +1,24 @@
+{
+    "name": "synthetic-exec",
+    "description": "SYNTHETIC buffered exec from the documented MachineExecResponse shape: a guest command that exited 42 still answers HTTP 200 (failure is data).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/machines/mach-1/exec"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "stdout": "OUT\n",
+                    "stderr": "ERR\n",
+                    "exitCode": 42,
+                    "durationMs": 19,
+                    "machineId": "mach-1",
+                    "stdoutTruncated": false,
+                    "stderrTruncated": false
+                }
+            }
+        }
+    ]
+}
