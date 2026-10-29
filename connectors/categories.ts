@@ -30,6 +30,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Hosted headless browsers an agent drives to navigate and act on sites.",
     },
     {
+        id: "virtual-machines",
+        displayName: "Virtual Machines",
+        description:
+            "Persistent Linux machines and sandboxes an agent runs commands and code in.",
+    },
+    {
         id: "news-search",
         displayName: "News Search",
         description: "Search and monitor news coverage.",
@@ -296,6 +302,13 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "recordings.",
     },
     {
+        id: "meetings",
+        displayName: "Meetings",
+        description:
+            "Meeting bots that join Zoom, Meet, Teams and Webex calls to " +
+            "record and transcribe them.",
+    },
+    {
         id: "sms",
         displayName: "SMS",
         description: "Send and receive SMS from owned phone numbers.",
@@ -348,6 +361,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         displayName: "Market Signals",
         description:
             "Tools to pull crypto market signals, including sentiment indexes, technical indicators, project scores, and more.",
+    },
+    {
+        id: "model-benchmarks",
+        displayName: "Model Benchmarks",
+        description:
+            "Independent AI model benchmarks: quality, speed, price, and arena rankings.",
     },
     {
         id: "web-extraction",
@@ -562,5 +581,11 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         id: "pinterest",
         displayName: "Pinterest",
         description: "Pinterest data: pins, boards, and search results.",
+    },
+    {
+        id: "decision-models",
+        displayName: "Decision Models",
+        description:
+            "Calibrated structured judgments: classify, score, and verify.",
     },
 ]);

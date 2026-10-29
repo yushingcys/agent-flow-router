@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-edit-source-missing",
+    "description": "SYNTHETIC 404 HTML page for an edit source URL that is not an image; the edit never reaches OpenAI.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://images.example.com/missing.png"
+            },
+            "res": {
+                "status": 404,
+                "headers": {
+                    "content-type": "text/html"
+                },
+                "body": "<h1>Not Found</h1>"
+            }
+        }
+    ]
+}

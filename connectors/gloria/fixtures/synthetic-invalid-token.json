@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-invalid-token",
+    "description": "SYNTHETIC provider error for gloria#news-ticker-summary: a bad token answered with FastAPI's `{detail}` envelope (a tokenless call returns `{\"detail\":\"Missing token\"}` live, 2026-10-29). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?ticker=SOL"
+            },
+            "res": {
+                "status": 401,
+                "body": { "detail": "Invalid token" }
+            }
+        }
+    ]
+}

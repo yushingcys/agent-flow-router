@@ -1,0 +1,28 @@
+{
+    "name": "synthetic-usage-rolled-over",
+    "description": "SYNTHETIC usage read after the month rolled over: the vendor meter now answers November, so an October window cannot be settled from it.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/machines/mach-1/usage"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "machineId": "mach-1",
+                    "from": "2026-11-01T00:00:00Z",
+                    "to": "2026-11-01T01:00:00Z",
+                    "usage": {},
+                    "cost": {
+                        "baseMicros": 10,
+                        "cpuMicros": 0,
+                        "memoryMicros": 0,
+                        "execMicros": 0,
+                        "totalMicros": 10
+                    }
+                }
+            }
+        }
+    ]
+}

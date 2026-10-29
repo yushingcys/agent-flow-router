@@ -1,0 +1,40 @@
+{
+    "name": "synthetic-image-ok",
+    "description": "SYNTHETIC 200 for /v1/images/generations and /v1/images/edits, shaped from the SDK ImagesResponse (openai-python images_response.py, 2026-10-29): one base64 PNG (truncated), echoed size/quality/background/output_format, usage with 20 text + 0 image input tokens and 1756 image output tokens.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "created": 1793232000,
+                    "background": "opaque",
+                    "output_format": "png",
+                    "quality": "high",
+                    "size": "1024x1024",
+                    "data": [
+                        {
+                            "b64_json": "iVBORw0KGgo="
+                        }
+                    ],
+                    "usage": {
+                        "input_tokens": 20,
+                        "input_tokens_details": {
+                            "image_tokens": 0,
+                            "text_tokens": 20
+                        },
+                        "output_tokens": 1756,
+                        "output_tokens_details": {
+                            "image_tokens": 1756,
+                            "text_tokens": 0
+                        },
+                        "total_tokens": 1776
+                    }
+                }
+            }
+        }
+    ]
+}

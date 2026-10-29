@@ -55,7 +55,9 @@ export default defineEndpoint({
             "`firecrawl#crawl/{id}` using the job `id` in the result, which " +
             "costs nothing. Because `delay` forces one page at a time, " +
             "`limit` times `delay` has to fit the 30-minute run budget — a " +
-            "job that outlives it is cancelled with its pages already billed.",
+            "job that outlives it is cancelled with its pages already billed. " +
+            "Stopping a crawl bills what Firecrawl already charged, " +
+            "including a page still in flight when the stop lands.",
         docsUrl: "https://docs.firecrawl.dev/api-reference/endpoint/crawl-post",
         categories: ["web-scraping"],
     },
@@ -230,10 +232,34 @@ export default defineEndpoint({
                     status === "completed" || status === "cancelled" ||
                     status === "failed"
                 ) {
+                    // `creditsUsed` is Firecrawl's billing ledger, not a
+                    // fold of `completed`: a page scrape already in flight
+                    // when the cancel lands still bills, yet never counts
+                    // as completed. We charge what the vendor charged, so
+                    // a "0 pages, N credits" receipt says why. The agent
+                    // reports no `completed` and never trips this.
+                    const completed = utils.json.optionalNum(
+                        read.body,
+                        "$.completed",
+                    );
+                    const billed = utils.json.optionalNum(
+                        read.body,
+                        "$.creditsUsed",
+                    ) ?? 0;
                     return {
                         kind: "COMPLETED",
                         httpStatus: 200,
-                        output: utils.json.merge(read.body, { id: jobId }),
+                        output: utils.json.merge(read.body, {
+                            id: jobId,
+                            ...(completed === 0 && billed > 0
+                                ? {
+                                    note: "Stopped before any page " +
+                                        "completed; Firecrawl billed " +
+                                        billed + " credit(s) for work in " +
+                                        "flight when the stop landed.",
+                                }
+                                : {}),
+                        }),
                     };
                 }
                 reason = "job still " + String(status) + " after cancel";

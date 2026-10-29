@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-not-found",
+    "description": "SYNTHETIC 404 chain from the documented error shape: zero-billed, digested.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v2/companies/nope.invalid"
+            },
+            "res": {
+                "status": 404,
+                "body": {
+                    "messages": "companyNotFound",
+                    "status": 404
+                }
+            }
+        }
+    ]
+}

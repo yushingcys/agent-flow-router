@@ -1,0 +1,21 @@
+{
+    "name": "synthetic-validation-error",
+    "description": "SYNTHETIC provider error for typesafe#systemone: a 422 HTTPValidationError as documented in the OpenAPI spec (api.typesafe.ai/openapi.json v0.2.0). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 422,
+                "body": {
+                    "detail": [
+                        {
+                            "loc": ["body", "model"],
+                            "msg": "Unknown model: jev-0.0.0",
+                            "type": "value_error"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

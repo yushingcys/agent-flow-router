@@ -1,0 +1,31 @@
+{
+    "name": "synthetic-media-ok",
+    "description": "SYNTHETIC happy chain for artificial-analysis#get_speech_image_video_models with media_type text-to-speech. Shape from the TextToSpeechFreeResponse example in artificialanalysis.ai/api/v2/openapi (read 2026-10-29).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/api/v2/media/text-to-speech/models/free"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "tier": "free",
+                    "data": [
+                        {
+                            "id": "6e0eadf0-3bf9-4424-a563-90292f2a0afd",
+                            "name": "Inworld TTS 1.5 Max",
+                            "slug": "tts-1-5-max",
+                            "model_creator": {
+                                "id": "3aab6d2e-04b0-43ee-996f-d8ef76ac3232",
+                                "name": "Inworld"
+                            },
+                            "elo": 1240,
+                            "ci_95": 22
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

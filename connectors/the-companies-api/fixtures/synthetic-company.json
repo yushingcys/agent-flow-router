@@ -1,0 +1,37 @@
+{
+    "name": "synthetic-company",
+    "description": "SYNTHETIC chain for the-companies-api#enrich_company_from_domain from the documented CompanyV2 shape: the vendor reports meta.cost (claimed) and meta.credits (our balance, stripped).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v2/companies/microsoft.com"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": 1,
+                    "domain": {
+                        "domain": "microsoft.com",
+                        "tld": "com"
+                    },
+                    "about": {
+                        "name": "Microsoft",
+                        "industries": [
+                            "computer-software"
+                        ],
+                        "totalEmployees": "over-10k",
+                        "yearFounded": 1975
+                    },
+                    "meta": {
+                        "score": 98,
+                        "syncedAt": "2026-10-01T00:00:00Z",
+                        "cost": 1,
+                        "credits": 9089,
+                        "freeRequest": false
+                    }
+                }
+            }
+        }
+    ]
+}
