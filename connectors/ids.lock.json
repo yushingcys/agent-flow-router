@@ -185,6 +185,8 @@
         "bytedance#v1/video/seedance-2.0-fast",
         "bytedance#v1/video/seedance-2.0-mini",
         "bytedance#v1/video/seedance-2.5",
+        "censusdata#explore-variables",
+        "censusdata#query",
         "clay#enrichment/company-domain",
         "clay#enrichment/company-employee-count",
         "clay#enrichment/company-industry",
