@@ -350,6 +350,12 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "Tools to pull crypto market signals, including sentiment indexes, technical indicators, project scores, and more.",
     },
     {
+        id: "model-benchmarks",
+        displayName: "Model Benchmarks",
+        description:
+            "Independent AI model benchmarks: quality, speed, price, and arena rankings.",
+    },
+    {
         id: "web-extraction",
         displayName: "Content Extraction",
         description:
