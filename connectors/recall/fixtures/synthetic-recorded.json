@@ -1,0 +1,243 @@
+{
+    "name": "synthetic-recorded",
+    "description": "SYNTHETIC bot chain from the documented Bot shape: create 201, a joining tick, done with the transcript still processing, then done with transcript and MP3 ready. joining_call 10:00:00 to done 10:30:00 = 1800 bot seconds; recording 10:01:00 to 10:29:00 = 1680 transcribed seconds.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 201,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": null,
+                    "status_changes": [],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": null,
+                    "status_changes": [
+                        {
+                            "code": "joining_call",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:00.000000Z",
+                            "sub_code": null
+                        }
+                    ],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": null,
+                    "status_changes": [
+                        {
+                            "code": "joining_call",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:00.000000Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "in_waiting_room",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:05.000000Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "in_call_recording",
+                            "message": null,
+                            "created_at": "2026-10-29T10:01:00.000000Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "call_ended",
+                            "message": null,
+                            "created_at": "2026-10-29T10:29:00.000000Z",
+                            "sub_code": "call_ended_by_host"
+                        },
+                        {
+                            "code": "done",
+                            "message": null,
+                            "created_at": "2026-10-29T10:30:00.000000Z",
+                            "sub_code": null
+                        }
+                    ],
+                    "recordings": [
+                        {
+                            "id": "rec-1",
+                            "created_at": "2026-10-29T10:01:00.000000Z",
+                            "started_at": "2026-10-29T10:01:00.000000Z",
+                            "completed_at": "2026-10-29T10:29:00.000000Z",
+                            "expires_at": "2026-11-05T10:29:00.000000Z",
+                            "status": {
+                                "code": "done",
+                                "sub_code": null,
+                                "updated_at": "2026-10-29T10:30:00Z"
+                            },
+                            "media_shortcuts": {
+                                "video_mixed": null,
+                                "participant_events": null,
+                                "meeting_metadata": null,
+                                "audio_mixed": {
+                                    "id": "am-1",
+                                    "status": {
+                                        "code": "done",
+                                        "sub_code": null,
+                                        "updated_at": "2026-10-29T10:30:00Z"
+                                    },
+                                    "format": "mp3",
+                                    "data": {
+                                        "download_url": "https://us-west-2.recall.ai/media/audio.mp3"
+                                    }
+                                },
+                                "transcript": {
+                                    "id": "tr-1",
+                                    "status": {
+                                        "code": "processing",
+                                        "sub_code": null,
+                                        "updated_at": "2026-10-29T10:30:00Z"
+                                    },
+                                    "data": {
+                                        "download_url": null,
+                                        "provider_data_download_url": null
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": null,
+                    "status_changes": [
+                        {
+                            "code": "joining_call",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:00.000000Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "in_waiting_room",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:05.000000Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "in_call_recording",
+                            "message": null,
+                            "created_at": "2026-10-29T10:01:00.000000Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "call_ended",
+                            "message": null,
+                            "created_at": "2026-10-29T10:29:00.000000Z",
+                            "sub_code": "call_ended_by_host"
+                        },
+                        {
+                            "code": "done",
+                            "message": null,
+                            "created_at": "2026-10-29T10:30:00.000000Z",
+                            "sub_code": null
+                        }
+                    ],
+                    "recordings": [
+                        {
+                            "id": "rec-1",
+                            "created_at": "2026-10-29T10:01:00.000000Z",
+                            "started_at": "2026-10-29T10:01:00.000000Z",
+                            "completed_at": "2026-10-29T10:29:00.000000Z",
+                            "expires_at": "2026-11-05T10:29:00.000000Z",
+                            "status": {
+                                "code": "done",
+                                "sub_code": null,
+                                "updated_at": "2026-10-29T10:30:00Z"
+                            },
+                            "media_shortcuts": {
+                                "video_mixed": null,
+                                "participant_events": null,
+                                "meeting_metadata": null,
+                                "audio_mixed": {
+                                    "id": "am-1",
+                                    "status": {
+                                        "code": "done",
+                                        "sub_code": null,
+                                        "updated_at": "2026-10-29T10:30:00Z"
+                                    },
+                                    "format": "mp3",
+                                    "data": {
+                                        "download_url": "https://us-west-2.recall.ai/media/audio.mp3"
+                                    }
+                                },
+                                "transcript": {
+                                    "id": "tr-1",
+                                    "status": {
+                                        "code": "done",
+                                        "sub_code": null,
+                                        "updated_at": "2026-10-29T10:30:00Z"
+                                    },
+                                    "data": {
+                                        "download_url": "https://us-west-2.recall.ai/media/transcript.json",
+                                        "provider_data_download_url": null
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "calendar_meetings": []
+                }
+            }
+        }
+    ]
+}

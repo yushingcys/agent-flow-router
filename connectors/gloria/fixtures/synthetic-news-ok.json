@@ -1,0 +1,53 @@
+{
+    "name": "synthetic-news-ok",
+    "description": "SYNTHETIC happy chain for GET /news, shared by gloria#news and gloria#news-by-keyword (both bind the REST news feed). Shape from NewsFeedOutput in ai-hub.cryptobriefing.com/openapi.json and api-integration.md (read 2026-10-29); values invented. Replace via `deno task record` when GLORIA_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?keyword=bitcoin&limit=2"
+            },
+            "res": {
+                "status": 200,
+                "body": [
+                    {
+                        "id": "00000000-0000-4000-8000-000000000001",
+                        "signal": "Example asset manager files for a spot Bitcoin ETF",
+                        "headline": "Example asset manager files for a spot Bitcoin ETF",
+                        "sentiment": "bullish",
+                        "sentiment_value": 0.9,
+                        "timestamp": 1792000000.0,
+                        "feed_categories": ["crypto", "bitcoin"],
+                        "short_context": "An invented filing that would give investors regulated Bitcoin exposure.",
+                        "long_context": "Entities: Example Asset Management, BTC.",
+                        "sources": ["https://example.com/filing"],
+                        "author": "example_news",
+                        "tokens": ["$BTC"],
+                        "tweet_url": "https://x.com/example_news/status/1",
+                        "narrative_id": null,
+                        "tickers": [],
+                        "tickers_status": "done"
+                    },
+                    {
+                        "id": "00000000-0000-4000-8000-000000000002",
+                        "signal": "Bitcoin hashrate reaches an invented new high",
+                        "headline": "Bitcoin hashrate reaches an invented new high",
+                        "sentiment": "neutral",
+                        "sentiment_value": 0.5,
+                        "timestamp": 1791990000.0,
+                        "feed_categories": ["bitcoin"],
+                        "short_context": "Network security metric at a record in this example.",
+                        "long_context": "Entities: BTC.",
+                        "sources": [],
+                        "author": "example_onchain",
+                        "tokens": ["$BTC"],
+                        "tweet_url": null,
+                        "narrative_id": null,
+                        "tickers": [],
+                        "tickers_status": "done"
+                    }
+                ]
+            }
+        }
+    ]
+}

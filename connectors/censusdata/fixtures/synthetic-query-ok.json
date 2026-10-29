@@ -1,0 +1,30 @@
+{
+    "name": "synthetic-query-ok",
+    "description": "SYNTHETIC happy chain for censusdata#query. Shape from the QueryResponse schema in https://censusdata.xyz/openapi.json (read 2026-10-29); values invented. The `quota` block is the key's daily usage and must be stripped from the output. Replace via `deno task record` when CENSUSDATA_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?q=Population+of+Boise%2C+ID+in+2022"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "error_details": null,
+                    "query": "Population of Boise, ID in 2022",
+                    "summary": "Boise city, Idaho had an estimated population of 236,000 in 2022 (ACS 1-year).",
+                    "raw_data": [
+                        {
+                            "NAME": "Boise City city, Idaho",
+                            "year": 2022,
+                            "variable": "DP05_0001E",
+                            "value": 236000
+                        }
+                    ],
+                    "quota": { "used": 3, "limit": 10 }
+                }
+            }
+        }
+    ]
+}

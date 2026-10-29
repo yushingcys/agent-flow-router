@@ -1,0 +1,57 @@
+{
+    "name": "synthetic-search",
+    "description": "SYNTHETIC chain for the-companies-api#search_companies from the documented `{companies, meta: PaginationMeta, query}` shape: 2 companies, meta.cost 2.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "companies": [
+                        {
+                            "id": 1,
+                            "domain": {
+                                "domain": "shopify.com"
+                            },
+                            "about": {
+                                "name": "Shopify"
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "domain": {
+                                "domain": "etsy.com"
+                            },
+                            "about": {
+                                "name": "Etsy"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "cost": 2,
+                        "credits": 9087,
+                        "currentPage": 1,
+                        "firstPage": 1,
+                        "freeRequest": false,
+                        "lastPage": 1,
+                        "perPage": 2,
+                        "total": 2
+                    },
+                    "query": [
+                        {
+                            "attribute": "about.industries",
+                            "operator": "or",
+                            "sign": "equals",
+                            "values": [
+                                "retail"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

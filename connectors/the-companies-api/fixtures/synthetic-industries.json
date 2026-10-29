@@ -1,0 +1,34 @@
+{
+    "name": "synthetic-industries",
+    "description": "SYNTHETIC chain for the-companies-api#search_industries from the documented `{industries, meta}` shape: free, meta.cost 0.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v2/industries?search=saas"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "industries": [
+                        {
+                            "name": "saas",
+                            "slug": "saas",
+                            "companiesCount": 120345
+                        }
+                    ],
+                    "meta": {
+                        "cost": 0,
+                        "credits": 9089,
+                        "currentPage": 1,
+                        "firstPage": 1,
+                        "freeRequest": true,
+                        "lastPage": 1,
+                        "perPage": 25,
+                        "total": 1
+                    }
+                }
+            }
+        }
+    ]
+}

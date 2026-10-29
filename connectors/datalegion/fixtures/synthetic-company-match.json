@@ -1,0 +1,32 @@
+{
+    "name": "synthetic-company-match",
+    "description": "SYNTHETIC chain for every datalegion company doc (POST /company/enrich), from the documented CompanyMatchesResponse example: one record returned = one credit of the doc's product.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "matches": [
+                        {
+                            "company": {
+                                "legion_id": "c8a1b2c3-d4e5-6f7a-8b9c-0d1e2f3a4b5c",
+                                "domain": "stripe.com",
+                                "industry": "financial services",
+                                "type": "private",
+                                "size": "5001-10000",
+                                "founded": 2010
+                            },
+                            "match_metadata": {
+                                "matched_on": ["domain"],
+                                "match_type": "exact",
+                                "match_confidence": "high"
+                            }
+                        }
+                    ],
+                    "total": 1
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+{
+    "name": "job-stop-in-flight",
+    "description": "A job stopped before any page completed (minimized from the real 2026-10-29 trial run_0mvt4508z37365631245m): the DELETE lands, and the status read reports cancelled with completed=0 and no data, yet creditsUsed=1. Firecrawl's status reads creditsUsed from its billing ledger, and a page scrape already in flight when the cancel lands still bills while staying out of `completed`. Stop settles the vendor's 1 credit and says why.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "id": "JOB1",
+                    "url": "{{request.url}}/JOB1"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "{{request.url}}/JOB1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "status": "cancelled"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}/JOB1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "success": true,
+                    "status": "cancelled",
+                    "completed": 0,
+                    "total": 2,
+                    "creditsUsed": 1,
+                    "data": []
+                }
+            }
+        }
+    ]
+}

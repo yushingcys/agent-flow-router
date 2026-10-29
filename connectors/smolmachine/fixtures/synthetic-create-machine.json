@@ -1,0 +1,38 @@
+{
+    "name": "synthetic-create-machine",
+    "description": "SYNTHETIC create chain from the documented MachineInfo shape: one POST /v1/machines answering 201 with the new stopped machine (createdBy is the pooled account id the provider strips).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 201,
+                "body": {
+                    "id": "mach-1",
+                    "name": "sandbox",
+                    "source": {
+                        "type": "image",
+                        "reference": "library/alpine:3.20"
+                    },
+                    "state": "stopped",
+                    "ready": false,
+                    "resources": {
+                        "cpus": 1,
+                        "memoryMb": 512,
+                        "diskGb": 10
+                    },
+                    "network": {
+                        "mode": "open"
+                    },
+                    "env": {},
+                    "ephemeral": false,
+                    "createdBy": "acct-pooled",
+                    "createdAt": "2026-10-29T10:00:00Z",
+                    "updatedAt": "2026-10-29T10:00:00Z"
+                }
+            }
+        }
+    ]
+}
