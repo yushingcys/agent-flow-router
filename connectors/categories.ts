@@ -498,4 +498,10 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         displayName: "Telegram",
         description: "Telegram data: public channels and their messages.",
     },
+    {
+        id: "weather",
+        displayName: "Weather & Air Quality",
+        description:
+            "Current conditions, forecasts, and air quality for places worldwide.",
+    },
 ]);

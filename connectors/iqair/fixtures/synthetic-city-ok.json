@@ -1,0 +1,46 @@
+{
+    "name": "synthetic-city-ok",
+    "description": "SYNTHETIC happy chain for iqair#get_city_air_quality. Shape from the 'Get specified city data' example in IQAir's Postman docs (api-docs.iqair.com, read 2026-10-29); values invented. Replace via `deno task record` when IQAIR_API_KEY exists (scrub key from the request URL first).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?city=Beijing&state=Beijing&country=China&key=test-key"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "status": "success",
+                    "data": {
+                        "city": "Beijing",
+                        "state": "Beijing",
+                        "country": "China",
+                        "location": {
+                            "type": "Point",
+                            "coordinates": [116.462153, 39.941674]
+                        },
+                        "current": {
+                            "pollution": {
+                                "ts": "2026-10-29T08:00:00.000Z",
+                                "aqius": 57,
+                                "mainus": "o3",
+                                "aqicn": 44,
+                                "maincn": "o3"
+                            },
+                            "weather": {
+                                "ts": "2026-10-29T08:00:00.000Z",
+                                "ic": "01d",
+                                "hu": 30,
+                                "pr": 1008,
+                                "tp": 18,
+                                "wd": 178,
+                                "ws": 4.54,
+                                "heatIndex": 18
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,88 @@
+{
+    "name": "synthetic-weather-ok",
+    "description": "SYNTHETIC happy chain for accuweather#get_weather: current conditions, then the 5-day daily forecast, for location key 349727. Shapes from developer.accuweather.com/core-weather/location-key-currentconditions and /location-key-daily (read 2026-10-29); values invented.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/currentconditions/v1/349727?language=en-us"
+            },
+            "res": {
+                "status": 200,
+                "body": [
+                    {
+                        "LocalObservationDateTime": "2026-10-29T08:00:00-04:00",
+                        "EpochTime": 1793275200,
+                        "WeatherText": "Partly sunny",
+                        "WeatherIcon": 3,
+                        "HasPrecipitation": false,
+                        "PrecipitationType": null,
+                        "IsDayTime": true,
+                        "Temperature": {
+                            "Metric": {
+                                "Value": 12.2,
+                                "Unit": "C",
+                                "UnitType": 17
+                            },
+                            "Imperial": {
+                                "Value": 54,
+                                "Unit": "F",
+                                "UnitType": 18
+                            }
+                        },
+                        "MobileLink": "http://www.accuweather.com/en/us/new-york-ny/10021/current-weather/349727",
+                        "Link": "http://www.accuweather.com/en/us/new-york-ny/10021/current-weather/349727"
+                    }
+                ]
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/forecasts/v1/daily/5day/349727?language=en-us&metric=true"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "Headline": {
+                        "EffectiveDate": "2026-10-31T07:00:00-04:00",
+                        "Severity": 4,
+                        "Text": "Rain Friday",
+                        "Category": "rain"
+                    },
+                    "DailyForecasts": [
+                        {
+                            "Date": "2026-10-29T07:00:00-04:00",
+                            "EpochDate": 1793271600,
+                            "Temperature": {
+                                "Minimum": {
+                                    "Value": 8.3,
+                                    "Unit": "C",
+                                    "UnitType": 17
+                                },
+                                "Maximum": {
+                                    "Value": 15.6,
+                                    "Unit": "C",
+                                    "UnitType": 17
+                                }
+                            },
+                            "Day": {
+                                "Icon": 3,
+                                "IconPhrase": "Partly sunny",
+                                "HasPrecipitation": false
+                            },
+                            "Night": {
+                                "Icon": 35,
+                                "IconPhrase": "Partly cloudy",
+                                "HasPrecipitation": false
+                            },
+                            "Sources": ["AccuWeather"],
+                            "MobileLink": "http://www.accuweather.com/en/us/new-york-ny/10021/daily-weather-forecast/349727?day=1",
+                            "Link": "http://www.accuweather.com/en/us/new-york-ny/10021/daily-weather-forecast/349727?day=1"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
