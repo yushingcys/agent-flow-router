@@ -1,0 +1,27 @@
+{
+    "name": "synthetic-context",
+    "description": "SYNTHETIC chain for the-companies-api#fetch_company_context from the documented `{context, meta: {cost, tokens}}` shape.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v2/companies/microsoft.com/context"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "context": {
+                        "domain": "microsoft.com",
+                        "ideated": {
+                            "businessModel": "Software and cloud subscriptions."
+                        }
+                    },
+                    "meta": {
+                        "cost": 1,
+                        "tokens": 5120
+                    }
+                }
+            }
+        }
+    ]
+}

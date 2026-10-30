@@ -1,0 +1,22 @@
+{
+    "name": "synthetic-create-rejected",
+    "description": "SYNTHETIC 400 in Google's {error: {code, message, status}} shape: the create is rejected before an interaction exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 400,
+                "body": {
+                    "error": {
+                        "code": 400,
+                        "message": "Invalid value for response_format.duration.",
+                        "status": "INVALID_ARGUMENT"
+                    }
+                }
+            }
+        }
+    ]
+}

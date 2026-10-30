@@ -302,6 +302,13 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "recordings.",
     },
     {
+        id: "meetings",
+        displayName: "Meetings",
+        description:
+            "Meeting bots that join Zoom, Meet, Teams and Webex calls to " +
+            "record and transcribe them.",
+    },
+    {
         id: "sms",
         displayName: "SMS",
         description: "Send and receive SMS from owned phone numbers.",
@@ -515,6 +522,71 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         displayName: "Weather & Air Quality",
         description:
             "Current conditions, forecasts, and air quality for places worldwide.",
+    },
+    {
+        id: "github",
+        displayName: "GitHub",
+        description:
+            "GitHub data: repositories, users, issues, and code search.",
+    },
+    {
+        id: "ebay",
+        displayName: "eBay",
+        description:
+            "eBay data: listings, sold items, sellers, and search results.",
+    },
+    {
+        id: "ads",
+        displayName: "Ad Libraries",
+        description:
+            "Advertising transparency data: active ads and creatives by advertiser.",
+    },
+    {
+        id: "real-estate",
+        displayName: "Real Estate",
+        description: "Property listings, valuations, and agent data.",
+    },
+    {
+        id: "web-traffic",
+        displayName: "Web Traffic",
+        description: "Website traffic estimates, rankings, and similar sites.",
+    },
+    {
+        id: "hackernews",
+        displayName: "Hacker News",
+        description: "Hacker News data: stories, comments, and search results.",
+    },
+    {
+        id: "software-reviews",
+        displayName: "Software Reviews",
+        description:
+            "Software product reviews and ratings from review marketplaces.",
+    },
+    {
+        id: "alibaba-com",
+        displayName: "Alibaba.com",
+        description:
+            "Alibaba.com data: wholesale product listings and suppliers.",
+    },
+    {
+        id: "truthsocial",
+        displayName: "Truth Social",
+        description: "Truth Social data: posts and profiles.",
+    },
+    {
+        id: "patents",
+        displayName: "Patents",
+        description: "Patent search: filings, grants, and their metadata.",
+    },
+    {
+        id: "substack",
+        displayName: "Substack",
+        description: "Substack data: newsletters and their posts.",
+    },
+    {
+        id: "pinterest",
+        displayName: "Pinterest",
+        description: "Pinterest data: pins, boards, and search results.",
     },
     {
         id: "decision-models",

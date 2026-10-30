@@ -1,0 +1,62 @@
+{
+    "name": "synthetic-video-20s",
+    "description": "SYNTHETIC video chain completing with duration 20 (a long clip).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.heygen.com/v3/models/videos"
+            },
+            "res": {
+                "status": 202,
+                "body": {
+                    "data": {
+                        "status": "pending",
+                        "video_id": "vid-1"
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.heygen.com/v3/models/videos/vid-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "video_id": "vid-1",
+                        "status": "processing",
+                        "model": "heygen-video-1",
+                        "created_at": 1789689600
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.heygen.com/v3/models/videos/vid-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "video_id": "vid-1",
+                        "status": "completed",
+                        "model": "heygen-video-1",
+                        "created_at": 1789689600,
+                        "video_url": "https://resource2.heygen.ai/videos/vid-1.mp4",
+                        "aspect_ratio": "16:9",
+                        "width": 1344,
+                        "height": 768,
+                        "seed": 42,
+                        "duration": 20,
+                        "input_video_duration": 0
+                    }
+                }
+            }
+        }
+    ]
+}

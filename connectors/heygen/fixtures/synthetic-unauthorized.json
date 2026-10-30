@@ -1,0 +1,23 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC 401 in HeyGen's documented error envelope.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 401,
+                "body": {
+                    "error": {
+                        "code": "unauthorized",
+                        "message": "Invalid or expired API key. Verify your x-api-key header.",
+                        "param": null,
+                        "doc_url": null
+                    }
+                }
+            }
+        }
+    ]
+}

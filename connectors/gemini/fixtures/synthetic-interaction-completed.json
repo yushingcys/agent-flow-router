@@ -1,0 +1,82 @@
+{
+    "name": "synthetic-interaction-completed",
+    "description": "SYNTHETIC (no Gemini key was available to record): background create returns the interaction id in_progress, one in_progress poll, then completed with a thought step and a model_output video block delivered by uri (Files API id omnivid123), plus usage per the SDK Usage type: 120 input tokens, 300 thought tokens, 46336 video output tokens (8 s at 720p's 5,792/s). Shapes from google-genai _gaos/types/interactions and the Omni cookbook, read 2026-10-29. {{request.url}} / {{request.origin}} bind per endpoint.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "v1_omni_abc",
+                    "status": "in_progress",
+                    "model": "gemini-omni-1.1-flash",
+                    "object": "interaction"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1beta/interactions/v1_omni_abc"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "v1_omni_abc",
+                    "status": "in_progress",
+                    "model": "gemini-omni-1.1-flash",
+                    "object": "interaction"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1beta/interactions/v1_omni_abc"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "v1_omni_abc",
+                    "status": "completed",
+                    "model": "gemini-omni-1.1-flash",
+                    "object": "interaction",
+                    "created": "2026-10-29T10:00:00Z",
+                    "updated": "2026-10-29T10:01:10Z",
+                    "steps": [
+                        {
+                            "type": "thought",
+                            "signature": "EpcwCpQw",
+                            "content": []
+                        },
+                        {
+                            "type": "model_output",
+                            "content": [
+                                {
+                                    "type": "video",
+                                    "uri": "https://generativelanguage.googleapis.com/v1beta/files/omnivid123:download?alt=media",
+                                    "mime_type": "video/mp4"
+                                }
+                            ]
+                        }
+                    ],
+                    "usage": {
+                        "total_input_tokens": 120,
+                        "input_tokens_by_modality": [
+                            { "modality": "text", "tokens": 120 }
+                        ],
+                        "total_thought_tokens": 300,
+                        "total_output_tokens": 46336,
+                        "output_tokens_by_modality": [
+                            { "modality": "video", "tokens": 46336 }
+                        ],
+                        "total_tokens": 46756
+                    }
+                }
+            }
+        }
+    ]
+}

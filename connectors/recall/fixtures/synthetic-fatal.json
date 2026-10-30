@@ -1,0 +1,61 @@
+{
+    "name": "synthetic-fatal",
+    "description": "SYNTHETIC bot that ends fatal (Recall does not bill it).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 201,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": null,
+                    "status_changes": [],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://us-west-2.recall.ai/api/v1/bot/bot-1/"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "bot-1",
+                    "meeting_url": {
+                        "platform": "zoom",
+                        "meeting_id": "123"
+                    },
+                    "bot_name": "Meeting Notetaker",
+                    "join_at": null,
+                    "status_changes": [
+                        {
+                            "code": "joining_call",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:00.000000Z",
+                            "sub_code": null
+                        },
+                        {
+                            "code": "fatal",
+                            "message": null,
+                            "created_at": "2026-10-29T10:00:30.000000Z",
+                            "sub_code": "meeting_not_found"
+                        }
+                    ],
+                    "recordings": [],
+                    "calendar_meetings": []
+                }
+            }
+        }
+    ]
+}

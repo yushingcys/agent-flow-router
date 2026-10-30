@@ -1,0 +1,26 @@
+{
+    "name": "synthetic-voice-get",
+    "description": "SYNTHETIC read of owned cloned voice vc-1 (documented get-an-audio-voice shape); the gate finds it in the ownership window, so no public-catalog read.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.heygen.com/v3/models/audio/voices/vc-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "voice_id": "vc-1",
+                        "mode": "instant",
+                        "name": "Narrator",
+                        "language": "en",
+                        "status": "ACTIVE",
+                        "created_at": 1791565200,
+                        "preview_audio_url": "https://files.heygen.ai/voice/preview.wav"
+                    }
+                }
+            }
+        }
+    ]
+}
