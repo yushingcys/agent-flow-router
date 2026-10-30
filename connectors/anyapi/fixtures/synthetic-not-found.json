@@ -1,0 +1,23 @@
+{
+    "name": "synthetic-not-found",
+    "description": "SYNTHETIC AnyAPI 200 miss: `found: false`, `data: null`, `reason: not_found`, `costUsd: 0` (a miss no source billed is free, per getanyapi.com/docs). Values invented. Bound to any SKU called with no query parameters.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "output": {
+                        "found": false,
+                        "data": null,
+                        "reason": "not_found"
+                    },
+                    "provider": "AnyAPI",
+                    "costUsd": 0,
+                    "items": 0,
+                    "resultId": "res_synthetic_04"
+                }
+            }
+        }
+    ]
+}

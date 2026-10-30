@@ -1,0 +1,32 @@
+{
+    "name": "synthetic-search",
+    "description": "SYNTHETIC chain for the crunchbase POST search docs (organizations, principals), from the documented `{count, entities: [{uuid, properties}]}` search result: one request = one call.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "count": 1,
+                    "entities": [
+                        {
+                            "uuid": "df662812-7f97-0b43-9d3e-12f64f504fbb",
+                            "properties": {
+                                "identifier": {
+                                    "uuid": "df662812-7f97-0b43-9d3e-12f64f504fbb",
+                                    "value": "Stripe",
+                                    "permalink": "stripe",
+                                    "entity_def_id": "organization"
+                                },
+                                "short_description": "Stripe is a financial infrastructure platform for businesses."
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

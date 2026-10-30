@@ -1,0 +1,57 @@
+{
+    "name": "synthetic-provision-happy",
+    "description": "SYNTHETIC provision chain from the documented AgentOut and number fields: create the persona, then buy a number assigned to it (account_id and balance_remaining are pooled-account plumbing the provider strips).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/agents",
+                "body": {
+                    "name": "Front Desk",
+                    "system_prompt": "You book tables.",
+                    "initial_greeting": "Hi, Front Desk here.",
+                    "voice_id": "female-1"
+                }
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "agt_1",
+                    "account_id": "acct_pooled",
+                    "name": "Front Desk",
+                    "system_prompt": "You book tables.",
+                    "initial_greeting": "Hi, Front Desk here.",
+                    "voice_id": "female-1",
+                    "voicemail_message": null,
+                    "transfer_number": null,
+                    "owner_phone": null
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.origin}}/v1/numbers",
+                "body": {
+                    "agent_id": "agt_1",
+                    "country": "US",
+                    "number_type": "local",
+                    "area_code": "415"
+                }
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "num_1",
+                    "phone_number": "+14155550100",
+                    "country": "US",
+                    "number_type": "local",
+                    "status": "active",
+                    "agent_id": "agt_1",
+                    "cost": 3.0,
+                    "balance_remaining": 41.5
+                }
+            }
+        }
+    ]
+}

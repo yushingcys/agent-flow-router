@@ -1,0 +1,45 @@
+{
+    "name": "synthetic-get-number",
+    "description": "SYNTHETIC get-numbers chain: the live number record, then its persona through the stored agent pointer.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/numbers/num_1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "num_1",
+                    "phone_number": "+14155550100",
+                    "country": "US",
+                    "number_type": "local",
+                    "status": "active",
+                    "agent_id": "agt_1",
+                    "cost": 3.0,
+                    "balance_remaining": 41.5
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/agents/agt_1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "agt_1",
+                    "account_id": "acct_pooled",
+                    "name": "Front Desk",
+                    "system_prompt": "You book tables.",
+                    "initial_greeting": "Hi, Front Desk here.",
+                    "voice_id": "female-1",
+                    "voicemail_message": null,
+                    "transfer_number": null,
+                    "owner_phone": null
+                }
+            }
+        }
+    ]
+}

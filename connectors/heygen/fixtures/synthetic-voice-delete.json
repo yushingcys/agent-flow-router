@@ -1,0 +1,21 @@
+{
+    "name": "synthetic-voice-delete",
+    "description": "SYNTHETIC delete of cloned voice vc-1 answering 200.",
+    "calls": [
+        {
+            "req": {
+                "method": "DELETE",
+                "url": "https://api.heygen.com/v3/models/audio/voices/vc-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "voice_id": "vc-1",
+                        "deleted": true
+                    }
+                }
+            }
+        }
+    ]
+}

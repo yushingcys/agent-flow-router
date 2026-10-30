@@ -1,0 +1,20 @@
+{
+    "name": "synthetic-voice-clone",
+    "description": "SYNTHETIC instant clone: POST /v3/models/audio/voices answering 202 with the new voice_id (documented response).",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 202,
+                "body": {
+                    "data": {
+                        "voice_id": "vc-1"
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "name": "synthetic-flat-ok",
+    "description": "SYNTHETIC AnyAPI 200 run envelope `{output: {found, data}, provider, costUsd, items, resultId}` from the documented run response (getanyapi.com/docs, api.getanyapi.com/openapi.json, 2026-10-29); values invented. Bound to any SKU called with no query parameters; the charge is the cheapest lane of a $0.0012 flat SKU.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "output": {
+                        "found": true,
+                        "data": {
+                            "posts": [
+                                {
+                                    "id": "3501234567890123456",
+                                    "shortcode": "DXsynthetic1",
+                                    "caption": "Morning routine #skincare",
+                                    "likes": 0,
+                                    "comments": 0,
+                                    "username": "example_creator",
+                                    "createdUtc": 1793260800
+                                }
+                            ],
+                            "nextCursor": "QVFEc3ludGhldGlj"
+                        }
+                    },
+                    "provider": "AnyAPI",
+                    "costUsd": 0.0012,
+                    "items": 1,
+                    "resultId": "res_synthetic_01"
+                }
+            }
+        }
+    ]
+}

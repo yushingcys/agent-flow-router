@@ -1,0 +1,21 @@
+{
+    "name": "synthetic-owned-voice-call",
+    "description": "SYNTHETIC relay for a voice the caller owns: no public-catalog read, one call to the endpoint's own request url answering the documented TTS/STS shape {data: {audio_url, duration}}.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "audio_url": "https://files.heygen.ai/generated/model-speech.wav",
+                        "duration": 12.48
+                    }
+                }
+            }
+        }
+    ]
+}

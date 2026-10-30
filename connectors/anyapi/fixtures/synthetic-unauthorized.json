@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-unauthorized",
+    "description": "SYNTHETIC AnyAPI 401 `Error` body `{error, code}` (api.getanyapi.com/openapi.json components.schemas.Error); the code matches a real keyless call to /v1/apis/web.scrape. Bound to any SKU called with no query parameters.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 401,
+                "body": {
+                    "error": "missing credential",
+                    "code": "unauthorized"
+                }
+            }
+        }
+    ]
+}

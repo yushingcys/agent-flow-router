@@ -1,0 +1,41 @@
+{
+    "name": "synthetic-entity",
+    "description": "SYNTHETIC chain for the crunchbase GET card docs (raised_funding_rounds of stripe), from the documented OrganizationEntity shape `{properties, cards}`: one request = one call.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v4/data/entities/organizations/stripe/cards/raised_funding_rounds"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "properties": {
+                        "identifier": {
+                            "uuid": "df662812-7f97-0b43-9d3e-12f64f504fbb",
+                            "value": "Stripe",
+                            "permalink": "stripe",
+                            "entity_def_id": "organization"
+                        },
+                        "short_description": "Stripe is a financial infrastructure platform for businesses."
+                    },
+                    "cards": {
+                        "raised_funding_rounds": [
+                            {
+                                "identifier": {
+                                    "value": "Series I - Stripe",
+                                    "permalink": "stripe-series-i"
+                                },
+                                "investment_type": "series_i",
+                                "announced_on": "2023-03-15",
+                                "money_raised": {
+                                    "value_usd": 6500000000
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

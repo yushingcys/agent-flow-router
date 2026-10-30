@@ -22,6 +22,7 @@
         "webhook": "deno run --unstable-kv --allow-read --allow-write --allow-env --allow-net --allow-run=git,cloudflared,tailscale scripts/webhook.ts",
         "apify:scaffold": "deno run --allow-read --allow-write --allow-env --allow-net=api.apify.com scripts/apify-scaffold.ts",
         "defillama:scaffold": "deno run --allow-read --allow-write --allow-env --allow-net=api-docs.defillama.com,api.monid.ai scripts/defillama-scaffold.ts",
+        "anyapi:scaffold": "deno run --allow-read --allow-write --allow-env --allow-run=deno --allow-net=api.getanyapi.com,api.monid.ai scripts/anyapi-scaffold.ts",
         "tikhub:scaffold": "deno run --allow-read --allow-write --allow-env --allow-run=deno,git --allow-net=api.tikhub.io,api.monid.ai scripts/tikhub-scaffold.ts",
         "strale:scaffold": "deno run --allow-read --allow-write --allow-env --allow-run=deno --allow-net=api.strale.io,api.monid.ai scripts/strale-scaffold.ts",
         "engine:estimate": "deno run --allow-read --allow-write --allow-env scripts/estimate.ts",
