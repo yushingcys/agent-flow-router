@@ -1,0 +1,34 @@
+{
+    "name": "synthetic-forecast-unauthorized",
+    "description": "SYNTHETIC failure chain for accuweather#get_weather: current conditions succeed, then the forecast call answers 403 (the key's plan lacks it). AccuWeather's problem JSON per developer.accuweather.com/documentation/authentication. The run returns the 403 as data and bills nothing.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/currentconditions/v1/349727"
+            },
+            "res": {
+                "status": 200,
+                "body": [{ "WeatherText": "Cloudy", "WeatherIcon": 7 }]
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/forecasts/v1/daily/5day/349727"
+            },
+            "res": {
+                "status": 403,
+                "body": {
+                    "type": "https://httpproblems.com/http-status/403",
+                    "title": "Forbidden",
+                    "status": 403,
+                    "instance": "/forecasts/v1/daily/5day/349727",
+                    "Code": "Forbidden",
+                    "Message": "Api Authorization failed",
+                    "Reference": "/forecasts/v1/daily/5day/349727"
+                }
+            }
+        }
+    ]
+}
