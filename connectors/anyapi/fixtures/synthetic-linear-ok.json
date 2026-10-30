@@ -1,0 +1,28 @@
+{
+    "name": "synthetic-linear-ok",
+    "description": "SYNTHETIC AnyAPI 200 for a linear (base + per result) SKU returning 3 rows; `costUsd` = 0.0055 + 3 x 0.00088 (capterra.reviews' published offer, api.getanyapi.com/catalog 2026-10-29). Values invented. Bound to any SKU called with no query parameters.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "output": {
+                        "found": true,
+                        "data": {
+                            "reviews": [
+                                { "id": "r1", "rating": 5, "title": "Great" },
+                                { "id": "r2", "rating": 4, "title": "Good" },
+                                { "id": "r3", "rating": 3, "title": "Fine" }
+                            ]
+                        }
+                    },
+                    "provider": "AnyAPI",
+                    "costUsd": 0.00814,
+                    "items": 3,
+                    "resultId": "res_synthetic_03"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-failover-ok",
+    "description": "SYNTHETIC AnyAPI 200 for a call the cheapest lane failed and a dearer lane served: `costUsd` (0.0024) is above the SKU's $0.0012 list price. Values invented. Bound to any SKU called with no query parameters.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "output": { "found": true, "data": { "posts": [] } },
+                    "provider": "AnyAPI",
+                    "costUsd": 0.0024,
+                    "items": 0,
+                    "resultId": "res_synthetic_02"
+                }
+            }
+        }
+    ]
+}
