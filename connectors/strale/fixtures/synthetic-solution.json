@@ -1,0 +1,35 @@
+{
+    "name": "synthetic-solution",
+    "description": "SYNTHETIC - no Strale key held (2026-10-29). POST /v1/solutions/{slug}/execute success, shaped from Strale's apps/api/src/routes/solution-execute.ts: per-step outputs, the charge in result.price_cents and meta.price_cents, the wallet balance in both. Values are placeholders.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "result": {
+                        "transaction_id": "00000000-0000-4000-8000-000000000005",
+                        "solution_slug": "website-health",
+                        "status": "completed",
+                        "steps": {
+                            "ssl-certificate-chain": { "valid": true },
+                            "email-deliverability-check": { "score": 95 },
+                            "page-speed-test": { "performance_score": 92 }
+                        },
+                        "step_count": 3,
+                        "latency_ms": 9120,
+                        "price_cents": 40,
+                        "wallet_balance_cents": 1955
+                    },
+                    "meta": {
+                        "solution_used": "website-health",
+                        "price_cents": 40,
+                        "latency_ms": 9120,
+                        "wallet_balance_cents": 1955,
+                        "audit": { "execution_mode": "sync" }
+                    }
+                }
+            }
+        }
+    ]
+}

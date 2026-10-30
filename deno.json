@@ -24,6 +24,7 @@
         "defillama:scaffold": "deno run --allow-read --allow-write --allow-env --allow-net=api-docs.defillama.com,api.monid.ai scripts/defillama-scaffold.ts",
         "anyapi:scaffold": "deno run --allow-read --allow-write --allow-env --allow-run=deno --allow-net=api.getanyapi.com,api.monid.ai scripts/anyapi-scaffold.ts",
         "tikhub:scaffold": "deno run --allow-read --allow-write --allow-env --allow-run=deno,git --allow-net=api.tikhub.io,api.monid.ai scripts/tikhub-scaffold.ts",
+        "strale:scaffold": "deno run --allow-read --allow-write --allow-env --allow-run=deno --allow-net=api.strale.io,api.monid.ai scripts/strale-scaffold.ts",
         "engine:estimate": "deno run --allow-read --allow-write --allow-env scripts/estimate.ts",
         "build": "deno run --allow-read --allow-write --allow-env --allow-run=git scripts/compile.ts --force",
         "drift": "deno run --allow-read --allow-write --allow-env --allow-net=api.apify.com --allow-run=deno,git scripts/drift.ts",

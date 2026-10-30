@@ -1,0 +1,71 @@
+{
+    "name": "synthetic-do-async",
+    "description": "SYNTHETIC - no Strale key held (2026-10-29). A slow paid capability routed to Strale's async lane: POST /v1/do answers 202 with the transaction id (executeAsync in dispatch.ts), then GET /v1/transactions/{id} reads pending, then completed with the charge (OpenAPI transaction detail). Values are placeholders.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 202,
+                "body": {
+                    "result": {
+                        "transaction_id": "00000000-0000-4000-8000-000000000003",
+                        "status": "executing",
+                        "capability_used": "page-speed-test",
+                        "price_cents": 5,
+                        "wallet_balance_cents": 1990
+                    },
+                    "meta": {
+                        "audit": {
+                            "status": "pending",
+                            "poll_url": "/v1/transactions/00000000-0000-4000-8000-000000000003"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/transactions/00000000-0000-4000-8000-000000000003"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "00000000-0000-4000-8000-000000000003",
+                    "status": "pending",
+                    "capability_slug": "page-speed-test",
+                    "output": null,
+                    "error": null,
+                    "price_cents": 5
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/transactions/00000000-0000-4000-8000-000000000003"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "00000000-0000-4000-8000-000000000003",
+                    "status": "completed",
+                    "capability_slug": "page-speed-test",
+                    "output": {
+                        "url": "https://example.com",
+                        "performance_score": 92
+                    },
+                    "error": null,
+                    "price_cents": 5,
+                    "latency_ms": 18210,
+                    "provenance": {
+                        "source": "page-speed-test:pagespeed-insights",
+                        "fetched_at": "2026-10-29T06:00:18.000Z"
+                    },
+                    "created_at": "2026-10-29T06:00:00.000Z",
+                    "completed_at": "2026-10-29T06:00:18.210Z"
+                }
+            }
+        }
+    ]
+}

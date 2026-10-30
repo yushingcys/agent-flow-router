@@ -1,0 +1,38 @@
+{
+    "name": "synthetic-do-async-failed",
+    "description": "SYNTHETIC - no Strale key held (2026-10-29). An async run that fails upstream: Strale refunds the upfront debit and the transaction reads status failed with an error (dispatch.ts executeInBackground). Values are placeholders.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 202,
+                "body": {
+                    "result": {
+                        "transaction_id": "00000000-0000-4000-8000-000000000004",
+                        "status": "executing",
+                        "capability_used": "page-speed-test",
+                        "price_cents": 5,
+                        "wallet_balance_cents": 1990
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/transactions/00000000-0000-4000-8000-000000000004"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "00000000-0000-4000-8000-000000000004",
+                    "status": "failed",
+                    "capability_slug": "page-speed-test",
+                    "output": null,
+                    "error": "Upstream PageSpeed Insights timed out",
+                    "price_cents": 5
+                }
+            }
+        }
+    ]
+}
