@@ -1,0 +1,30 @@
+{
+    "name": "synthetic-public-voice-miss",
+    "description": "SYNTHETIC gate miss: the public catalog does not list the voice, so the gate answers 404 without calling upstream again.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.heygen.com/v3/models/audio/voices?type=public&limit=100"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": [
+                        {
+                            "voice_id": "83548de556df48ba8c09c42a57c51d85",
+                            "mode": "instant",
+                            "name": "Nadine",
+                            "language": "en",
+                            "status": "ACTIVE",
+                            "created_at": 1791565200,
+                            "preview_audio_url": "https://files.heygen.ai/voice/preview.wav"
+                        }
+                    ],
+                    "has_more": false,
+                    "next_token": null
+                }
+            }
+        }
+    ]
+}

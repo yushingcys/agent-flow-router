@@ -1,0 +1,57 @@
+{
+    "name": "synthetic-video-failed",
+    "description": "SYNTHETIC video chain ending failed with failure_code generation_failed.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "https://api.heygen.com/v3/models/videos"
+            },
+            "res": {
+                "status": 202,
+                "body": {
+                    "data": {
+                        "status": "pending",
+                        "video_id": "vid-1"
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.heygen.com/v3/models/videos/vid-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "video_id": "vid-1",
+                        "status": "processing",
+                        "model": "heygen-video-1",
+                        "created_at": 1789689600
+                    }
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.heygen.com/v3/models/videos/vid-1"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "data": {
+                        "video_id": "vid-1",
+                        "status": "failed",
+                        "model": "heygen-video-1",
+                        "created_at": 1789689600,
+                        "failure_code": "generation_failed",
+                        "failure_message": "Generation failed."
+                    }
+                }
+            }
+        }
+    ]
+}
