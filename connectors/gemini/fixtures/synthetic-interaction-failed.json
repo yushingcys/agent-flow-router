@@ -1,0 +1,40 @@
+{
+    "name": "synthetic-interaction-failed",
+    "description": "SYNTHETIC: background create accepted, then the interaction settles failed (a safety-filter rejection) with an errors list; zero-billed.",
+    "calls": [
+        {
+            "req": {
+                "method": "POST",
+                "url": "{{request.url}}"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "v1_omni_bad",
+                    "status": "in_progress",
+                    "object": "interaction"
+                }
+            }
+        },
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1beta/interactions/v1_omni_bad"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "id": "v1_omni_bad",
+                    "status": "failed",
+                    "object": "interaction",
+                    "errors": [
+                        {
+                            "code": 400,
+                            "message": "The request was blocked by the safety filter."
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

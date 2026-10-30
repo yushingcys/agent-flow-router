@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-download-redirect",
+    "description": "SYNTHETIC: the Files API download answers with a 302 to a signed storage URL (placeholder), which the reader returns as {url}.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1beta/files/omnivid123:download?alt=media"
+            },
+            "res": {
+                "status": 302,
+                "headers": {
+                    "location": "https://storage.example.com/omnivid123.mp4?sig=placeholder"
+                },
+                "body": ""
+            }
+        }
+    ]
+}
