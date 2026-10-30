@@ -3,7 +3,11 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { directTransport } from "@agent-flow/connector-engine";
 import { compileToOutput } from "../scripts/lib.ts";
-import { createRouterServer, createToolServer } from "./mod.ts";
+import {
+    createRouterServer,
+    createToolServer,
+    ROUTER_INSTRUCTIONS,
+} from "./mod.ts";
 
 const { bundle } = await compileToOutput();
 
@@ -81,6 +85,27 @@ Deno.test("standalone router discovers, inspects and executes using caller-suppl
         assert(unsupported.isError);
         assertMatch(unsupported.content[0].text, /resource ownership/);
         assertEquals(calls, 1);
+    } finally {
+        await client.close();
+        await server.close();
+    }
+});
+
+Deno.test("the standalone router tells the agent when to use it", async () => {
+    const server = createRouterServer(
+        {
+            endpoints: {},
+            fnTable: {},
+        } as unknown as Parameters<typeof createRouterServer>[0],
+    );
+    const client = new Client({ name: "test", version: "0" });
+    const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
+    await server.connect(serverSide);
+    await client.connect(clientSide);
+    try {
+        const text = client.getInstructions() ?? "";
+        assertEquals(text, ROUTER_INSTRUCTIONS);
+        assertMatch(text, /built-in tools first for ordinary web search/);
     } finally {
         await client.close();
         await server.close();
