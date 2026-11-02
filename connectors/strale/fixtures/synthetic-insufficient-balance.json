@@ -1,0 +1,21 @@
+{
+    "name": "synthetic-insufficient-balance",
+    "description": "SYNTHETIC - no Strale key held (2026-10-29). The flat error envelope for an empty wallet (apiError in dispatch.ts): 402 insufficient_balance with the account balance in details. Values are placeholders.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 402,
+                "body": {
+                    "error_code": "insufficient_balance",
+                    "message": "Insufficient balance. This capability costs €0.05 but your wallet has €0.01.",
+                    "details": {
+                        "wallet_balance_cents": 1,
+                        "required_cents": 5,
+                        "topup_url": "/v1/wallet/topup"
+                    }
+                }
+            }
+        }
+    ]
+}

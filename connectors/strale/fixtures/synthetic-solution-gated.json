@@ -1,0 +1,36 @@
+{
+    "name": "synthetic-solution-gated",
+    "description": "SYNTHETIC - no Strale key held (2026-10-29). A solution whose precondition gate stopped the run: 200, status completed, price_cents 0 and gated.charged false (solution-execute.ts refunds it). Values are placeholders.",
+    "calls": [
+        {
+            "req": { "method": "POST", "url": "{{request.url}}" },
+            "res": {
+                "status": 200,
+                "body": {
+                    "result": {
+                        "transaction_id": "00000000-0000-4000-8000-000000000006",
+                        "solution_slug": "lead-email-verify",
+                        "status": "completed",
+                        "steps": { "email-validate": { "valid": false } },
+                        "step_count": 3,
+                        "latency_ms": 120,
+                        "price_cents": 0,
+                        "wallet_balance_cents": 1995,
+                        "gated": {
+                            "stopped_at": "email-validate",
+                            "field": "valid",
+                            "observed": false,
+                            "reason": "Email syntax is invalid",
+                            "charged": false
+                        }
+                    },
+                    "meta": {
+                        "solution_used": "lead-email-verify",
+                        "price_cents": 0,
+                        "wallet_balance_cents": 1995
+                    }
+                }
+            }
+        }
+    ]
+}
