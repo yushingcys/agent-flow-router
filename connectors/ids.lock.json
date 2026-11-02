@@ -1,5 +1,8 @@
 {
     "endpoints": [
+        "accuweather#get_weather",
+        "accuweather#list_cities",
+        "accuweather#search_locations",
         "agentline#calls/{id}",
         "agentline#calls/{id}/transcript",
         "agentline#get-numbers/{id}",
@@ -972,6 +975,8 @@
         "hunterio#multi-domain-search",
         "hunterio#multi-domain-search/reveal",
         "hunterio#people/find",
+        "iqair#get_city_air_quality",
+        "iqair#get_live_city_ranking",
         "jina#read",
         "jina#search",
         "jina#v1/rerank",

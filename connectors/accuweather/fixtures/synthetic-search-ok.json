@@ -1,0 +1,100 @@
+{
+    "name": "synthetic-search-ok",
+    "description": "SYNTHETIC happy chain for accuweather#search_locations. Shape from the Location search docs (developer.accuweather.com/core-weather/text-search, read 2026-10-29); values invented. Replace via `deno task record` when ACCUWEATHER_API_KEY exists.",
+    "calls": [
+        {
+            "req": { "method": "GET", "url": "{{request.url}}?q=London" },
+            "res": {
+                "status": 200,
+                "body": [
+                    {
+                        "Version": 1,
+                        "Key": "328328",
+                        "Type": "City",
+                        "Rank": 10,
+                        "LocalizedName": "London",
+                        "EnglishName": "London",
+                        "PrimaryPostalCode": "EC4A 2",
+                        "Region": {
+                            "ID": "EUR",
+                            "LocalizedName": "Europe",
+                            "EnglishName": "Europe"
+                        },
+                        "Country": {
+                            "ID": "GB",
+                            "LocalizedName": "United Kingdom",
+                            "EnglishName": "United Kingdom"
+                        },
+                        "AdministrativeArea": {
+                            "ID": "LND",
+                            "LocalizedName": "London",
+                            "EnglishName": "London",
+                            "Level": 1,
+                            "LocalizedType": "Province",
+                            "EnglishType": "Province",
+                            "CountryID": "GB"
+                        },
+                        "TimeZone": {
+                            "Code": "GMT",
+                            "Name": "Europe/London",
+                            "GmtOffset": 0,
+                            "IsDaylightSaving": false
+                        },
+                        "GeoPosition": {
+                            "Latitude": 51.507,
+                            "Longitude": -0.127
+                        },
+                        "IsAlias": false,
+                        "SupplementalAdminAreas": [],
+                        "DataSets": [
+                            "AirQualityCurrentConditions",
+                            "Alerts",
+                            "MinuteCast"
+                        ]
+                    },
+                    {
+                        "Version": 1,
+                        "Key": "56186",
+                        "Type": "City",
+                        "Rank": 45,
+                        "LocalizedName": "London",
+                        "EnglishName": "London",
+                        "PrimaryPostalCode": "N6A",
+                        "Region": {
+                            "ID": "NAM",
+                            "LocalizedName": "North America",
+                            "EnglishName": "North America"
+                        },
+                        "Country": {
+                            "ID": "CA",
+                            "LocalizedName": "Canada",
+                            "EnglishName": "Canada"
+                        },
+                        "AdministrativeArea": {
+                            "ID": "ON",
+                            "LocalizedName": "Ontario",
+                            "EnglishName": "Ontario",
+                            "Level": 1,
+                            "LocalizedType": "Province",
+                            "EnglishType": "Province",
+                            "CountryID": "CA"
+                        },
+                        "TimeZone": {
+                            "Code": "EDT",
+                            "Name": "America/Toronto",
+                            "GmtOffset": -4,
+                            "IsDaylightSaving": true
+                        },
+                        "GeoPosition": {
+                            "Latitude": 42.983,
+                            "Longitude": -81.25
+                        },
+                        "IsAlias": false,
+                        "SupplementalAdminAreas": [],
+                        "DataSets": ["Alerts"]
+                    }
+                ]
+            }
+        }
+    ]
+}

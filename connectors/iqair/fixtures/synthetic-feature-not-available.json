@@ -1,0 +1,16 @@
+{
+    "name": "synthetic-feature-not-available",
+    "description": "SYNTHETIC provider error for iqair#get_live_city_ranking: a non-Enterprise key answered with AirVisual's documented fail envelope (feature_not_available, api-docs.iqair.com return codes). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": { "method": "GET", "url": "{{request.url}}?key=test-key" },
+            "res": {
+                "status": 403,
+                "body": {
+                    "status": "fail",
+                    "data": { "message": "feature_not_available" }
+                }
+            }
+        }
+    ]
+}
