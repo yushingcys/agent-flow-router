@@ -1,6 +1,6 @@
 {
     "name": "synthetic-envelope-error",
-    "description": "THE MiniMax failure mode this connector exists to handle: HTTP 200 carrying base_resp.status_code 1008 (insufficient balance). The provider's lifecycle.start must synthesize a 502 so the engine zero-bills it — without that, a flat PER_CALL doc like music would be charged in full for a failed call. Synthetic.",
+    "description": "THE MiniMax failure mode this connector exists to handle: HTTP 200 carrying base_resp.status_code 1008 (insufficient balance). The provider's lifecycle.start must synthesize an error status (402 here: our balance, not the caller's request) so the engine zero-bills it. Without that, a flat PER_CALL doc like music would be charged in full for a failed call. Synthetic.",
     "calls": [
         {
             "req": {

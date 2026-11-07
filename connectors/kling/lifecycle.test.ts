@@ -377,10 +377,52 @@ Deno.test("kling: a 2xx submit with a non-zero envelope code → synthesized 502
         fixture,
     });
     assertEquals(result.isProviderError, true);
-    assertEquals(result.httpStatus, 502); // OURS — the envelope said error
+    // OURS: 1102 is our account's resource pack, so 402, not 502
+    assertEquals(result.httpStatus, 402);
     assertEquals(result.providerHttpStatus, 200); // THEIRS — a 200
     assertEquals(result.usage, { credits: {}, evidence: {} });
     assertEquals((result.output as Record<string, unknown>).code, 1102);
+});
+
+Deno.test("kling: account codes on a 429 settle as 402; a real rate limit stays 429", async () => {
+    // Kling answers an exhausted or overdue account with HTTP 429, the
+    // same status as its rate limits; only the envelope code tells them
+    // apart. The account ones must not read as the caller's rate limit.
+    const id = "kling#text-to-video/kling-2.5-turbo";
+    const unit = await testSealedUnit(id);
+    const cases: [number, number, number][] = [
+        [429, 1100, 402],
+        [429, 1101, 402],
+        [429, 1102, 402],
+        [429, 1302, 429],
+        [429, 1303, 429],
+        [400, 1201, 400],
+    ];
+    for (const [status, code, want] of cases) {
+        const result = await runEndpoint({
+            unit,
+            input: inputFor(id),
+            mode: "replay",
+            fixture: {
+                name: `submit-${status}-${code}`,
+                description: `submit answers ${status} with code ${code}`,
+                calls: [{
+                    req: { method: "POST", url: unit.doc.request.url },
+                    res: {
+                        status,
+                        body: { code, message: "x", request_id: "r" },
+                    },
+                }],
+            },
+        });
+        assertEquals(result.httpStatus, want, `${status} ${code}`);
+        assertEquals(result.isProviderError, true);
+        assertEquals(result.usage, { credits: {}, evidence: {} });
+        assertEquals(
+            result.providerHttpStatus,
+            want === status ? undefined : status,
+        );
+    }
 });
 
 Deno.test("kling: a failing poll THROWS rather than abandoning a paid generation", async () => {
