@@ -12,7 +12,9 @@ import { defineProvider, presets } from "@shared/core";
  * status alone and `output.fromResponse` has no status channel (it runs
  * after zero-usage forcing, by design) — so an envelope error would bill a
  * flat model in full. v1 solved it inside `makeBlockingStart` by
- * synthesizing a 502; the same mechanism lives here as `lifecycle.start`,
+ * synthesizing a 502; the same mechanism lives here as `lifecycle.start`
+ * (auth and balance codes settle as 401/402 instead, so hosts see an
+ * account problem),
  * declared ONCE at provider level and inherited by the three blocking
  * endpoints (music, image, text-to-speech). The five video endpoints
  * override `start` and add `poll` — `poll` is deliberately NOT provider
@@ -103,14 +105,23 @@ export default defineProvider({
                 "$.base_resp.status_code",
             );
             if (statusCode !== 0) {
-                logger.warn("minimax envelope error — synthesizing 502", {
-                    statusCode: statusCode ?? null,
-                });
+                logger.warn(
+                    "minimax envelope error, synthesizing an error status",
+                    {
+                        statusCode: statusCode ?? null,
+                    },
+                );
                 return {
                     kind: "COMPLETED",
                     // OURS synthesized (the REQUEST failed) / THEIRS was a
                     // 200 (the exchange itself succeeded) — design D12
-                    httpStatus: 502,
+                    // auth (1004, 2049) and balance (1008) are our
+                    // account's, so they settle as 401/402, not as a fault
+                    httpStatus: statusCode === 1004 || statusCode === 2049
+                        ? 401
+                        : statusCode === 1008
+                        ? 402
+                        : 502,
                     providerHttpStatus: res.status,
                     output: res.body,
                 };

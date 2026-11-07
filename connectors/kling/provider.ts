@@ -81,13 +81,21 @@ export default defineProvider({
             // request, body from the caller input — the body IS Kling's
             // wire shape (design D2), nothing to assemble
             const res = await utils.request();
+            const code = utils.json.optionalNum(res.body, "$.code");
+            // 1100-1102 (account abnormal, in arrears, resource pack
+            // exhausted) are our account's, but Kling sends them as HTTP 429
+            // like its rate limits. Settle them as 402 so hosts treat them
+            // as an account problem, not the caller's rate limit.
+            const account = code !== undefined && code >= 1100 &&
+                code <= 1102;
             if (res.status < 200 || res.status >= 300) {
                 // Kling API error (validation 1201, quota 1102, rate limit
                 // 1303, ...) — no task was created, nothing will be billed:
                 // DATA. Kling documents every error code as a non-2xx.
                 return {
                     kind: "COMPLETED",
-                    httpStatus: res.status,
+                    httpStatus: account ? 402 : res.status,
+                    providerHttpStatus: res.status,
                     output: res.body,
                 };
             }
@@ -95,17 +103,16 @@ export default defineProvider({
             // non-zero code is an upstream error dressed as success; an
             // absent or unreadable code is a malformed 200, not a good one
             // (the minimax D3 strictness — v1 was permissive here).
-            const code = utils.json.optionalNum(res.body, "$.code");
             if (code !== 0) {
                 logger.warn(
-                    "kling submit answered 2xx with a non-zero code — synthesizing 502",
+                    "kling submit answered 2xx with a non-zero code, synthesizing an error status",
                     { code: code ?? null },
                 );
                 return {
                     kind: "COMPLETED",
                     // OURS synthesized (the REQUEST failed) / THEIRS was a
                     // 2xx (the exchange itself succeeded) — design D12
-                    httpStatus: 502,
+                    httpStatus: account ? 402 : 502,
                     providerHttpStatus: res.status,
                     output: res.body,
                 };

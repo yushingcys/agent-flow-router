@@ -102,12 +102,21 @@ export default defineEndpoint({
                 "$.base_resp.status_code",
             );
             if (statusCode !== 0) {
-                logger.warn("hailuo submit envelope error — synthesizing 502", {
-                    statusCode: statusCode ?? null,
-                });
+                logger.warn(
+                    "hailuo submit envelope error, synthesizing an error status",
+                    {
+                        statusCode: statusCode ?? null,
+                    },
+                );
                 return {
                     kind: "COMPLETED",
-                    httpStatus: 502,
+                    // auth (1004, 2049) and balance (1008) are our
+                    // account's, so they settle as 401/402, not as a fault
+                    httpStatus: statusCode === 1004 || statusCode === 2049
+                        ? 401
+                        : statusCode === 1008
+                        ? 402
+                        : 502,
                     providerHttpStatus: res.status,
                     output: res.body,
                 };

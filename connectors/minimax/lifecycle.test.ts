@@ -172,15 +172,60 @@ Deno.test("minimax blocking: a clean envelope settles 200 and strips the interna
     assertEquals(extra.audio_length, 12000);
 });
 
-Deno.test("minimax blocking: HTTP 200 + base_resp error becomes a 502 and bills NOTHING", async () => {
+Deno.test("minimax blocking: HTTP 200 + a balance error becomes a 402 and bills NOTHING", async () => {
     for (const id of BLOCKING) {
         const result = await run(id, "synthetic-envelope-error");
-        assertEquals(result.httpStatus, 502, id);
+        // 1008 is our account's balance, not the caller's request
+        assertEquals(result.httpStatus, 402, id);
         // theirs was a 200 — ours is synthesized (design D12)
         assertEquals(result.providerHttpStatus, 200, id);
         assertEquals(result.isProviderError, true, id);
         // the whole point: a flat PER_CALL doc must NOT append its CALL 1
         assertEquals(result.usage, { credits: {}, evidence: {} }, id);
+    }
+});
+
+/** A one-call chain: the submit answers HTTP 200 with this envelope code. */
+const envelope = async (id: string, statusCode: number) => {
+    const unit = await testSealedUnit(id);
+    return await runEndpoint({
+        unit,
+        input: { body: INPUTS[id] },
+        mode: "replay",
+        fixture: {
+            name: `envelope-${statusCode}`,
+            description: `a 200 carrying base_resp.status_code ${statusCode}`,
+            calls: [{
+                req: { method: "POST", url: unit.doc.request.url },
+                res: {
+                    status: 200,
+                    body: {
+                        base_resp: { status_code: statusCode, status_msg: "x" },
+                    },
+                },
+            }],
+        },
+    });
+};
+
+Deno.test("minimax: account envelope codes map to 401/402, others to 502", async () => {
+    // auth (1004, 2049) and balance (1008) are our account's problem and
+    // must read as such downstream; moderation and validation stay 502.
+    const cases: [number, number][] = [
+        [1004, 401],
+        [2049, 401],
+        [1008, 402],
+        [1026, 502],
+        [2013, 502],
+    ];
+    for (const id of [...BLOCKING, "minimax#v1/video/minimax-hailuo-2.3"]) {
+        for (const [code, want] of cases) {
+            const result = await envelope(id, code);
+            assertEquals(result.httpStatus, want, `${id} ${code}`);
+            assertEquals(result.providerHttpStatus, 200, `${id} ${code}`);
+            assertEquals(result.isProviderError, true, `${id} ${code}`);
+            assertEquals(result.usage, { credits: {}, evidence: {} });
+        }
     }
 });
 
