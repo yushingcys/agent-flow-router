@@ -12,9 +12,23 @@ jobs:
             - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
-            - uses: denoland/setup-deno@v2
-              with:
-                  deno-version: v2.x
+            # Deno's own CDN with retries: setup-deno downloads from GitHub
+            # release assets, which returned 504 for a while on 2026-11-08.
+            - name: Install Deno
+              run: |
+                  set -euo pipefail
+                  get() { curl -fsSL --retry 5 --retry-all-errors "$@"; }
+                  v=$(get https://dl.deno.land/release-latest.txt)
+                  case "$v" in
+                      v2.*) ;;
+                      *) echo "Deno $v is out; pin a 2.x release here" >&2; exit 1 ;;
+                  esac
+                  get -o "$RUNNER_TEMP/deno.zip" \
+                      "https://dl.deno.land/release/$v/deno-x86_64-unknown-linux-gnu.zip"
+                  mkdir -p "$HOME/.deno/bin"
+                  unzip -oq "$RUNNER_TEMP/deno.zip" -d "$HOME/.deno/bin"
+                  echo "$HOME/.deno/bin" >> "$GITHUB_PATH"
+                  "$HOME/.deno/bin/deno" --version
             - run: deno task boundary:check
             - run: deno fmt --check
             - run: deno task lint
