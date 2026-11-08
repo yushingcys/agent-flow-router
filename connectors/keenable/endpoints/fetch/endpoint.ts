@@ -4,8 +4,8 @@ import { zKeenableFetchQueryParams } from "./schema/inputs.ts";
 /**
  * GET /v1/fetch — clean markdown for a known URL.
  *
- * Usage falls back to the provider's PER_CALL 1 credit; estimate and
- * evidence are compiler-synthesized (flat model).
+ * Usage is the provider's: one purchased credit per fetch, none when
+ * the fetch is served from the free monthly allowance.
  */
 export default defineEndpoint({
     meta: {
@@ -24,7 +24,8 @@ export default defineEndpoint({
         categories: ["web-scraping"],
         notes: [
             "One credit per page, indexed or live, with or without a " +
-            "prompt. Errors are free.",
+            "prompt. Errors, and pages served from the free monthly " +
+            "allowance, are free.",
         ],
     },
     request: { method: "GET", path: "/v1/fetch" },

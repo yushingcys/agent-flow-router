@@ -7,9 +7,10 @@ const timeBound = zKeenableSearchBody.shape.query_time.unwrap().min(1)
 /**
  * POST /v1/search — ranked web results with extracted snippets.
  *
- * Usage overrides the provider's PER_CALL: a search that found nothing
+ * Usage overrides the provider's model: a search that found nothing
  * (`results: []`) still draws a Keenable credit (console balance delta,
- * drill 2026-09-28) but bills 0, the v1 posture (design D2).
+ * drill 2026-09-28) but bills 0, the v1 posture (design D2), and so does
+ * a search served from the free monthly allowance (`usage.paid` false).
  */
 export default defineEndpoint({
     meta: {
@@ -29,7 +30,8 @@ export default defineEndpoint({
         categories: ["web-search"],
         notes: [
             "One credit per search in either mode. A search that returns " +
-            "no results is free.",
+            "no results, or is served from the free monthly allowance, " +
+            "is free.",
         ],
     },
     request: { method: "POST", path: "/v1/search" },
@@ -58,15 +60,16 @@ export default defineEndpoint({
             unit: Unit.RESULT,
             label: "searches with results",
             description: "searches whose response carried at least one " +
-                "result",
+                "result, paid from purchased credits",
             consumes: { credit: "default", amount: 1 },
         },
         /** The hold promises one search. */
         estimate: () => ({ counts: { RESULT: 1 } }),
         /** v1 `searchActuals`: 0 for `results: []` (the vendor still
-         *  deducts the credit, the buyer is not charged) or a non-object
-         *  body, 1 for any other 2xx object. */
-        evidence: ({ data }) => {
+         *  deducts the credit, the buyer is not charged), a call from the
+         *  free allowance (`usage.paid` false), or a non-object body, 1
+         *  for any other 2xx object. */
+        evidence: ({ data, utils }) => {
             const body = data.output;
             if (
                 typeof body !== "object" || body === null ||
@@ -76,7 +79,9 @@ export default defineEndpoint({
             }
             const results = (body as Record<string, unknown>).results;
             const empty = Array.isArray(results) && results.length === 0;
-            return { counts: { RESULT: empty ? 0 : 1 } };
+            const free = utils.json.optionalGet(body, "$.usage.paid") ===
+                false;
+            return { counts: { RESULT: empty || free ? 0 : 1 } };
         },
     },
 });

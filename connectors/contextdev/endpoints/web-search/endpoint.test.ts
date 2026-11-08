@@ -29,7 +29,31 @@ Deno.test(`${ID} happy (synthetic): two results bill one block of ten`, async ()
     });
     const { key_metadata: _envelope, ...body } = fixture.calls[0].res
         .body as Record<string, Json>;
-    assertEquals(result.output, body);
+    // the NOT_REQUESTED markdown/highlights stubs are dropped
+    assertEquals(result.output, {
+        ...body,
+        results: (body.results as Record<string, Json>[]).map(
+            ({ markdown: _m, highlights: _h, ...rest }) => rest,
+        ),
+    });
+});
+
+Deno.test(`${ID}: requested markdown stays, unrequested highlights go`, async () => {
+    const unit = await testSealedUnit(ID);
+    const fixture = await loadFixture(`${fixturesDir}synthetic-happy.json`);
+    const [first] = (fixture.calls[0].res.body as { results: Json[] })
+        .results as Record<string, Json>[];
+    first.markdown = { markdown: "# Docs", code: "SUCCESS" };
+    const result = await runEndpoint({
+        unit,
+        input: INPUT,
+        mode: "replay",
+        fixture,
+    });
+    const [out] = (result.output as { results: Record<string, Json>[] })
+        .results;
+    assertEquals(out.markdown, { markdown: "# Docs", code: "SUCCESS" });
+    assertEquals("highlights" in out, false);
 });
 
 Deno.test(`${ID} empty (synthetic): no results, no charge`, async () => {

@@ -1,4 +1,4 @@
-import { defineProvider, presets, UsageModelKind } from "@shared/core";
+import { defineProvider, presets, Unit, UsageModelKind } from "@shared/core";
 
 /**
  * Keenable (keenable.ai) — web search and page fetch for AI agents.
@@ -10,14 +10,17 @@ import { defineProvider, presets, UsageModelKind } from "@shared/core";
  * API without an account (shared per-IP pool, `X-Keenable-Title`, no
  * credits) and are not exposed — design D1.
  *
- * Billing: Keenable meters authenticated usage in credits, 100,000
- * requests/month free; every SKU either doc can select (`search.pro`,
- * `search.realtime`, `fetch`, `fetch.live`, with or without `prompt`)
- * drew one credit (MCP `_meta["keenable/usage"]`, drill 2026-09-28).
- * REST responses carry no usage receipt, so there is no
- * `usage.consolidate` and the derived fold settles (design D2; same
- * posture as pdl). One pool `default`, PER_CALL 1 on the provider;
- * search overrides it so an empty result bills 0.
+ * Billing: Keenable meters authenticated usage in credits, one per
+ * search or fetch by default, and every 2xx `/v1/search` and `/v1/fetch`
+ * body ends with `usage: {sku, amount, credits, paid}`
+ * (https://docs.keenable.ai/credits, checked 2026-11-08). `paid` says
+ * which balance the credits came from: `false` is the organization's
+ * free monthly allowance (100,000 requests), `true` purchased credits.
+ * Only purchased credits cost the key holder anything, so the model
+ * counts PURCHASED credits: the evidence counts 0 for an allowance call,
+ * and the provider `consolidate` claims the vendor's own `credits` for a
+ * paid one and strips the `usage` envelope, which describes our account,
+ * from the output. One pool `default`.
  */
 export default defineProvider({
     name: "keenable",
@@ -41,13 +44,49 @@ export default defineProvider({
     usage: {
         /** THE credit system (design D26): Keenable's native meter is
          *  credits, one per search (either mode, D3) or fetch (indexed
-         *  or live, D4). No `consolidate`: no REST body carries a
-         *  receipt. */
+         *  or live, D4). */
         credits: { default: { label: "Keenable credits" } },
         model: {
-            kind: UsageModelKind.PER_CALL,
-            label: "call",
+            kind: UsageModelKind.PER_UNIT,
+            unit: Unit.CREDIT,
+            label: "purchased credits",
+            description: "credits drawn from purchased credits; a call " +
+                "served from the free monthly allowance draws none",
             consumes: { credit: "default", amount: 1 },
+        },
+        /** The hold promises one paid credit. */
+        estimate: () => ({ counts: { CREDIT: 1 } }),
+        /** 0 for a call served from the free allowance (`usage.paid`
+         *  false) or a non-object body, else 1. */
+        evidence: ({ data, utils }) => {
+            const body = data.output;
+            if (
+                typeof body !== "object" || body === null ||
+                Array.isArray(body)
+            ) {
+                return { counts: { CREDIT: 0 } };
+            }
+            const paid = utils.json.optionalGet(body, "$.usage.paid");
+            return { counts: { CREDIT: paid === false ? 0 : 1 } };
+        },
+        /** The vendor's OWN claim (design D27): `usage.credits` of a
+         *  purchased-credit call; an allowance call claims nothing, so the
+         *  fold (0) settles. The envelope leaves the output either way. */
+        consolidate: ({ data, utils }) => {
+            const { value, rest } = utils.json.pluck(data.output, "$.usage");
+            const paid = utils.json.optionalGet(value ?? null, "$.paid");
+            const credits = utils.json.optionalGet(
+                value ?? null,
+                "$.credits",
+            );
+            return {
+                credits: {
+                    ...(paid !== false && typeof credits === "number"
+                        ? { default: credits }
+                        : {}),
+                },
+                output: rest,
+            };
         },
     },
 });
