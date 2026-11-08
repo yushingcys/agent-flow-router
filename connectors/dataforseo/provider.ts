@@ -304,13 +304,43 @@ export default defineProvider({
          * evidence, which read the RAW envelope: the caller gets
          * `tasks[0].result` (v1 `providerFormatOutput`), an empty array
          * when the task carried no rows.
+         *
+         * Since 2026-10-30 Google serves most organic links as
+         * `google.com/goto?url=<opaque token>` and DataForSEO relays them
+         * unresolved with `domain: "google.com"`. The token is encrypted
+         * (only a click resolves it), but the breadcrumb still starts with
+         * the real site's origin, so every goto item (and its goto
+         * sitelinks) takes its `domain` from the nearest breadcrumb; the
+         * `url` stays the goto link, which redirects to the page.
          */
         fromResponse: ({ data, utils }) => {
             const rows = utils.json.optionalGet(
                 data.output,
                 "$.tasks[0].result",
             );
-            return Array.isArray(rows) ? rows : [];
+            const isGoto = (url: unknown) =>
+                typeof url === "string" &&
+                /^https?:\/\/(www\.)?google\.com\/goto\?/.test(url);
+            const siteOf = (crumb: unknown) => {
+                if (typeof crumb !== "string") return undefined;
+                const m = /^https?:\/\/([^\s/›?#]+)/.exec(crumb);
+                return m === null ? undefined : m[1];
+            };
+            const fix = (node: unknown, site: string | undefined): unknown => {
+                if (Array.isArray(node)) return node.map((n) => fix(n, site));
+                if (node === null || typeof node !== "object") return node;
+                const obj = node as Record<string, unknown>;
+                const here = siteOf(obj.breadcrumb) ?? site;
+                const out: Record<string, unknown> = {};
+                for (const key of Object.keys(obj)) {
+                    out[key] = fix(obj[key], here);
+                }
+                if (isGoto(obj.url) && here !== undefined) out.domain = here;
+                return out;
+            };
+            return Array.isArray(rows)
+                ? fix(rows, undefined) as typeof rows
+                : [];
         },
         /**
          * THE error-digestion hook — runs ONLY on provider errors, after
