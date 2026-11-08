@@ -38,26 +38,36 @@ const REPO_ROOT = fromFileUrl(new URL("../../", import.meta.url));
 
 let cachedBundle: Promise<Bundle> | undefined;
 
-/** Compile all connectors once per test process — tests run the ARTIFACT. */
+/** Compile all connectors into the bundle tests run against — tests run the
+ *  ARTIFACT. */
+export async function compileTestBundle(): Promise<Bundle> {
+    const connectorsDir = join(REPO_ROOT, "connectors");
+    const [connectors, leafCategories, compilerDenoJson] = await Promise
+        .all([
+            loadConnectorDefs(connectorsDir),
+            loadCategoryRegistry(connectorsDir),
+            Deno.readTextFile(
+                join(REPO_ROOT, "shared", "compiler", "deno.json"),
+            ),
+        ]);
+    return await compileBundle(connectors, {
+        compilerVersion: JSON.parse(compilerDenoJson).version,
+        builtWithEngineVersion: ENGINE_VERSION,
+        catalogVersion: "0.0.0-test",
+        generatedAt: "1970-01-01T00:00:00.000Z",
+        leafCategories,
+    });
+}
+
+/** The test bundle, once per test process. Every test file runs in its own
+ *  isolate, so `deno task test` compiles it once up front
+ *  (scripts/test-bundle.ts) and points AGENT_FLOW_TEST_BUNDLE at it instead
+ *  of each file compiling it again. */
 export function testBundle(): Promise<Bundle> {
-    cachedBundle ??= (async () => {
-        const connectorsDir = join(REPO_ROOT, "connectors");
-        const [connectors, leafCategories, compilerDenoJson] = await Promise
-            .all([
-                loadConnectorDefs(connectorsDir),
-                loadCategoryRegistry(connectorsDir),
-                Deno.readTextFile(
-                    join(REPO_ROOT, "shared", "compiler", "deno.json"),
-                ),
-            ]);
-        return await compileBundle(connectors, {
-            compilerVersion: JSON.parse(compilerDenoJson).version,
-            builtWithEngineVersion: ENGINE_VERSION,
-            catalogVersion: "0.0.0-test",
-            generatedAt: "1970-01-01T00:00:00.000Z",
-            leafCategories,
-        });
-    })();
+    const path = Deno.env.get("AGENT_FLOW_TEST_BUNDLE");
+    cachedBundle ??= path
+        ? Deno.readTextFile(path).then((text) => JSON.parse(text) as Bundle)
+        : compileTestBundle();
     return cachedBundle;
 }
 
