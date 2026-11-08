@@ -18,6 +18,7 @@ export {
 } from "./fixtures.ts";
 export {
     assertInputAccepted,
+    compileTestBundle,
     estimateEndpoint,
     fixtureReader,
     liveSkip,
