@@ -1,6 +1,6 @@
 {
     "name": "synthetic-fetch-prompt",
-    "description": "SYNTHETIC bounded fetch for keenable#v1/fetch with a 2000-character prompt (schema-gate near-twin of prompt length 2001). Response shape matches the indexed-fetch public twin; query string is the engine's URLSearchParams encoding.",
+    "description": "SYNTHETIC bounded fetch for keenable#v1/fetch with a 2000-character prompt (schema-gate near-twin of prompt length 2001). Response shape matches the indexed-fetch public twin; query string is the engine's URLSearchParams encoding. `usage` envelope added in the documented shape (docs.keenable.ai/credits, purchased credits).",
     "calls": [
         {
             "req": {
@@ -13,7 +13,13 @@
                     "url": "https://example.com/",
                     "title": "Example Domain",
                     "content": "x",
-                    "description": ""
+                    "description": "",
+                    "usage": {
+                        "sku": "fetch",
+                        "amount": 1,
+                        "credits": 1,
+                        "paid": true
+                    }
                 }
             }
         }

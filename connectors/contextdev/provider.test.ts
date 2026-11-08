@@ -290,9 +290,13 @@ Deno.test("contextdev: usage fn provenance - one auth, one consolidate, one from
         "contextdev#web/search",
         "contextdev#web/urls",
     ]);
-    // the one output reshaping is brand search's logo strip
+    // the output reshapings: brand search's logo strip and web search's
+    // NOT_REQUESTED stub strip
     const reshaped = ids.filter((id) =>
         bundle.endpoints[id].output.fromResponse !== undefined
     );
-    assertEquals(reshaped, ["contextdev#brand/search"]);
+    assertEquals(reshaped, [
+        "contextdev#brand/search",
+        "contextdev#web/search",
+    ]);
 });

@@ -11,7 +11,7 @@ import {
 
 const fixturesDir = fromFileUrl(new URL("../../fixtures/", import.meta.url));
 
-Deno.test("keenable: fetch inherits PER_CALL 1, search counts RESULT, one auth fn, no consolidate", async () => {
+Deno.test("keenable: fetch inherits the provider's purchased-credit model, search counts RESULT, one auth fn, one consolidate", async () => {
     const bundle = await testBundle();
     const ids = Object.keys(bundle.endpoints).filter((id) =>
         id.startsWith("keenable#")
@@ -26,31 +26,26 @@ Deno.test("keenable: fetch inherits PER_CALL 1, search counts RESULT, one auth f
     assertEquals(fetchDoc.request.url, "https://api.keenable.ai/v1/fetch");
 
     assertEquals(search.auth.inject.$fn.key, fetchDoc.auth.inject.$fn.key);
-    assertEquals(search.usage.consolidate, undefined);
-    assertEquals(fetchDoc.usage.consolidate, undefined);
+    assertEquals(
+        search.usage.consolidate?.$fn.key,
+        fetchDoc.usage.consolidate?.$fn.key,
+    );
+    assert(search.usage.consolidate);
     assertEquals(search.input.toRequest, undefined);
     assertEquals(fetchDoc.input.toRequest, undefined);
+    // each doc has its own evidence: search's adds "empty bills 0"
+    assert(search.usage.evidence.$fn.key !== fetchDoc.usage.evidence.$fn.key);
 
-    // fetch: flat PER_CALL, compiler-synthesized empty quantities
-    // (tinyfish/pdl enrich posture); engine appends CALL at settle
-    const synthesizedKey = fetchDoc.usage.evidence.$fn.key;
-    assertEquals(fetchDoc.usage.estimate.$fn.key, synthesizedKey);
-    assertEquals(
-        bundle.fnTable[synthesizedKey].provenance,
-        "core#usage.synthesizedEmpty",
-    );
-    // search: its own 0|1 evidence (empty result bills 0)
-    assert(search.usage.evidence.$fn.key !== synthesizedKey);
-
-    const kinds: Record<string, string> = {
-        "keenable#v1/fetch": "PER_CALL",
-        "keenable#v1/search": "PER_UNIT",
+    const units: Record<string, string> = {
+        "keenable#v1/fetch": "CREDIT",
+        "keenable#v1/search": "RESULT",
     };
     for (const id of ids) {
         const doc = bundle.endpoints[id];
         assertEquals(Object.keys(doc.usage.credits), ["default"], id);
         const model = doc.usage.model;
-        assertEquals(model.kind, kinds[id], id);
+        assertEquals(model.kind, "PER_UNIT", id);
+        assertEquals("unit" in model ? model.unit : undefined, units[id], id);
         assertEquals(
             "consumes" in model ? model.consumes : undefined,
             { credit: "default", amount: 1 },
@@ -59,7 +54,7 @@ Deno.test("keenable: fetch inherits PER_CALL 1, search counts RESULT, one auth f
     }
 });
 
-Deno.test("keenable#v1/search happy (synthetic): one credit; fold settles; mode echoed", async () => {
+Deno.test("keenable#v1/search happy (synthetic): one purchased credit; mode echoed", async () => {
     const unit = await testSealedUnit("keenable#v1/search");
     const fixture = await loadFixture(`${fixturesDir}synthetic-search-ok.json`);
     const result = await runEndpoint({
@@ -70,7 +65,7 @@ Deno.test("keenable#v1/search happy (synthetic): one credit; fold settles; mode 
     });
     assertEquals(result.httpStatus, 200);
     assertEquals(result.isProviderError, false);
-    // no consolidate ⇒ no claim ⇒ the DERIVED fold is the bill (D2)
+    // the vendor's paid claim (1 credit) agrees with the fold
     assertEquals(result.usage, {
         credits: { default: 1 },
         evidence: { RESULT: 1 },
@@ -99,6 +94,24 @@ Deno.test("keenable#v1/search empty (synthetic): results [] bills 0", async () =
     assertEquals(result.isProviderError, false);
     assertEquals(result.usage, { credits: {}, evidence: { RESULT: 0 } });
     assertEquals((result.output as Record<string, unknown>).results, []);
+});
+
+Deno.test("keenable#v1/search from the free allowance (usage.paid false): bills 0", async () => {
+    const unit = await testSealedUnit("keenable#v1/search");
+    const fixture = await loadFixture(
+        `${fixturesDir}synthetic-search-allowance.json`,
+    );
+    const result = await runEndpoint({
+        unit,
+        input: { body: { query: "typescript best practices", max_results: 2 } },
+        mode: "replay",
+        fixture,
+    });
+    assertEquals(result.isProviderError, false);
+    assertEquals(result.usage, { credits: {}, evidence: { RESULT: 0 } });
+    const output = result.output as Record<string, unknown>;
+    assertEquals("usage" in output, false);
+    assertEquals((output.results as unknown[]).length, 2);
 });
 
 Deno.test("keenable#v1/search provider error (recorded 401): data, zero usage", async () => {

@@ -1,6 +1,6 @@
 {
     "name": "synthetic-fetch-live",
-    "description": "SYNTHETIC live fetch for keenable#v1/fetch with live=true. Response shape matches the indexed fetch (synthetic-fetch-ok); query string is the engine's URLSearchParams encoding of the boolean.",
+    "description": "SYNTHETIC live fetch for keenable#v1/fetch with live=true. Response shape matches the indexed fetch (synthetic-fetch-ok); query string is the engine's URLSearchParams encoding of the boolean. `usage` envelope added in the documented shape (docs.keenable.ai/credits, purchased credits).",
     "calls": [
         {
             "req": {
@@ -13,7 +13,13 @@
                     "url": "https://example.com/",
                     "title": "Example Domain",
                     "content": "# Example Domain\n\nThis domain is for use in documentation examples without needing permission. Avoid use in operations.",
-                    "description": ""
+                    "description": "",
+                    "usage": {
+                        "sku": "fetch.live",
+                        "amount": 1,
+                        "credits": 1,
+                        "paid": true
+                    }
                 }
             }
         }

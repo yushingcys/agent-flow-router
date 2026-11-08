@@ -10,7 +10,7 @@ import {
 
 const fixturesDir = fromFileUrl(new URL("../../fixtures/", import.meta.url));
 
-Deno.test("keenable#v1/fetch happy (synthetic): one credit; fold settles; markdown content", async () => {
+Deno.test("keenable#v1/fetch happy (synthetic): one purchased credit; markdown content", async () => {
     const unit = await testSealedUnit("keenable#v1/fetch");
     const fixture = await loadFixture(`${fixturesDir}synthetic-fetch-ok.json`);
     const result = await runEndpoint({
@@ -23,7 +23,7 @@ Deno.test("keenable#v1/fetch happy (synthetic): one credit; fold settles; markdo
     assertEquals(result.isProviderError, false);
     assertEquals(result.usage, {
         credits: { default: 1 },
-        evidence: { CALL: 1 },
+        evidence: { CREDIT: 1 },
     });
     const output = result.output as Record<string, unknown>;
     assertEquals("usage" in output, false);
@@ -132,7 +132,7 @@ Deno.test("keenable#v1/fetch: url required; prompt bounded; live accepted; unkno
     assertEquals(okLive.isProviderError, false);
     assertEquals(okLive.usage, {
         credits: { default: 1 },
-        evidence: { CALL: 1 },
+        evidence: { CREDIT: 1 },
     });
 });
 
@@ -151,7 +151,7 @@ Deno.test({
             false,
             JSON.stringify(result.output),
         );
-        assertEquals(Object.keys(result.usage.evidence).sort(), ["CALL"]);
+        assertEquals(Object.keys(result.usage.evidence).sort(), ["CREDIT"]);
         assertEquals(typeof result.usage.credits.default, "number");
         const output = result.output as Record<string, unknown>;
         assertEquals(typeof output.content, "string");

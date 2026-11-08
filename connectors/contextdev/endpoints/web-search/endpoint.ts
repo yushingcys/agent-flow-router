@@ -52,4 +52,27 @@ export default defineEndpoint({
             },
         }),
     },
+    output: {
+        /** Every result carries `markdown` and `highlights` objects, with
+         *  `code: "NOT_REQUESTED"` and a null payload when the caller did
+         *  not ask for them (they cost nothing). Drop those stubs so an
+         *  agent reads only what it asked for. */
+        fromResponse: ({ data }) => {
+            const body = data.output as Record<string, unknown>;
+            if (!Array.isArray(body?.results)) return data.output;
+            const requested = (part: unknown) =>
+                (part as { code?: unknown } | null)?.code !== "NOT_REQUESTED";
+            return {
+                ...body,
+                results: body.results.map((r: Record<string, unknown>) =>
+                    Object.fromEntries(
+                        Object.entries(r).filter(([key, part]) =>
+                            !["markdown", "highlights"].includes(key) ||
+                            requested(part)
+                        ),
+                    )
+                ),
+            } as typeof data.output;
+        },
+    },
 });

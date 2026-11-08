@@ -1,6 +1,6 @@
 {
     "name": "synthetic-happy",
-    "description": "SYNTHETIC — not recorded. Shape from the Web Search response schema (docs.context.dev/api-reference/web-scraping/search, 2026-09-17), two results, credits_consumed 1; the balance is a placeholder.",
+    "description": "SYNTHETIC, not recorded. Shape from the Web Search response schema (docs.context.dev/api-reference/web-scraping/search) and a real 2026-11-08 response: every result carries `markdown` and `highlights` objects, `code: NOT_REQUESTED` when the caller did not ask for them. Two results, credits_consumed 1; the balance is a placeholder.",
     "calls": [
         {
             "req": {
@@ -16,14 +16,28 @@
                             "title": "The go-to web data API",
                             "description": "Scrape websites into Markdown, crawl linked pages, and extract JSON.",
                             "relevance": "high",
-                            "markdown": { "status": "skipped" }
+                            "markdown": {
+                                "markdown": null,
+                                "code": "NOT_REQUESTED"
+                            },
+                            "highlights": {
+                                "highlights": null,
+                                "code": "NOT_REQUESTED"
+                            }
                         },
                         {
                             "url": "https://context.dev/pricing",
                             "title": "Pricing",
                             "description": "Simple, transparent pricing for the web data API.",
                             "relevance": "medium",
-                            "markdown": { "status": "skipped" }
+                            "markdown": {
+                                "markdown": null,
+                                "code": "NOT_REQUESTED"
+                            },
+                            "highlights": {
+                                "highlights": null,
+                                "code": "NOT_REQUESTED"
+                            }
                         }
                     ],
                     "query": "context dev api",
@@ -32,7 +46,10 @@
                         "credits_remaining": 9999
                     },
                     "request_id": "REQ1",
-                    "cache_metadata": { "status": "miss", "age_ms": 0 }
+                    "cache_metadata": {
+                        "status": "miss",
+                        "age_ms": 0
+                    }
                 }
             }
         }
