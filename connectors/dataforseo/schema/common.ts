@@ -24,7 +24,7 @@ const zLocationCode = z.number().int().positive().describe(
     "Numeric location code from the locations dictionary, e.g. 2840 " +
         "(United States). Give one of location_name, location_code, or " +
         "location_coordinate.",
-).optional();
+).meta({ examples: [2840] }).optional();
 const zLocationCoordinate = z.string().min(1).max(60).describe(
     "'latitude,longitude,radius' with the radius in metres (200-19999), " +
         "e.g. '52.6178549,-155.352142,1000'. Alternative to " +
@@ -36,7 +36,7 @@ const zLanguageName = z.string().min(1).max(60).describe(
 ).optional();
 const zLanguageCode = z.string().min(2).max(10).describe(
     "Language code, e.g. 'en'. Give language_name or language_code.",
-).optional();
+).meta({ examples: ["en"] }).optional();
 
 /** The location + language trio shared by SERP, Business Data, Merchant
  *  and App Data products (the vendor validates the pair; 40501 → 400). */
