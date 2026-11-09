@@ -6,7 +6,6 @@ import {
     liveSkip,
     loadFixture,
     runEndpoint,
-    testBundle,
     testSealedUnit,
 } from "@shared/testing";
 
@@ -123,7 +122,7 @@ Deno.test("jina#v1/rerank unauthorized (recorded 401): detail becomes the messag
     );
 });
 
-Deno.test("jina estimates: the stated budget, or the rerank ceiling", async () => {
+Deno.test("jina estimates: the read budget, a search page ceiling, or the rerank ceiling", async () => {
     const read = await estimateEndpoint(
         await testSealedUnit("jina#read"),
         READ as RunInput,
@@ -133,7 +132,13 @@ Deno.test("jina estimates: the stated budget, or the rerank ceiling", async () =
         await testSealedUnit("jina#search"),
         SEARCH as RunInput,
     );
-    assertEquals(search.credits, { default: 20_000 });
+    // Search ignores tokenBudget: 10,000 plus 20,000 per page read
+    assertEquals(search.credits, { default: 110_000 });
+    const serp = await estimateEndpoint(
+        await testSealedUnit("jina#search"),
+        { body: { q: "x", num: 10, respondWith: "no-content" } } as RunInput,
+    );
+    assertEquals(serp.credits, { default: 10_000 });
     // 3 tokens per code unit of query+doc, plus 8 per pair: (16+33)*3+8 +
     // (16+41)*3+8 = 155 + 179
     const rerank = await estimateEndpoint(
@@ -141,15 +146,9 @@ Deno.test("jina estimates: the stated budget, or the rerank ceiling", async () =
         RERANK as RunInput,
     );
     assertEquals(rerank.credits, { default: 334 });
-    // read and search share one estimate source
-    const bundle = await testBundle();
-    assertEquals(
-        bundle.endpoints["jina#read"].usage.estimate.$fn.key,
-        bundle.endpoints["jina#search"].usage.estimate.$fn.key,
-    );
 });
 
-Deno.test("jina inputs: budgets required and bounded; unknown keys rejected", async () => {
+Deno.test("jina inputs: read budget required, bounds held, unknown keys rejected", async () => {
     const cases: [string, Record<string, Json>][] = [
         ["jina#read", { url: "https://example.com" }],
         ["jina#read", { url: "https://example.com", tokenBudget: 0 }],
@@ -164,9 +163,7 @@ Deno.test("jina inputs: budgets required and bounded; unknown keys rejected", as
             tokenBudget: 100,
             bogus: 1,
         }],
-        ["jina#search", { q: "x" }],
-        ["jina#search", { q: "x", tokenBudget: 9999 }],
-        ["jina#search", { q: "x", tokenBudget: 10_000, num: 21 }],
+        ["jina#search", { q: "x", num: 21 }],
         ["jina#v1/rerank", { ...RERANK.body, documents: [] }],
         ["jina#v1/rerank", { ...RERANK.body, model: "jina-reranker-m0" }],
     ];

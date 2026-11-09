@@ -4,7 +4,8 @@ import { z } from "zod";
  * `POST https://s.jina.ai/search` body — the endpoint parameters of
  * `searchIndex` plus the agent-useful `CrawlerOptions` subset
  * (s.jina.ai/openapi.json, 2026-10-23). Mirror carries optionality only
- * (D25); `tokenBudget` is required and `num` bounded at the binding.
+ * (D25); `num` is bounded at the binding, where `tokenBudget` is marked
+ * ignored (Jina search does not enforce it).
  * `respondWith: "no-content"` is the dashboard's SERP-only mode (the
  * OpenAPI types the field as an open string).
  */
