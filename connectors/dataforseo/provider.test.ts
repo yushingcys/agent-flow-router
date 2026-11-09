@@ -1467,3 +1467,59 @@ Deno.test({
         assertEquals(result.usage.evidence, { RESULT: 10 });
     },
 });
+
+Deno.test("dataforseo: a Google goto link takes the real site's domain from its breadcrumb", async () => {
+    const id = "dataforseo#serp/google-organic";
+    const fixture = structuredClone(await fixtureFor(id, "synthetic-happy"));
+    const goto = "https://google.com/goto?url=CAESggEBxCJF1z2EAppbi3nQ";
+    const body = fixture.calls[0].res.body as {
+        tasks: { result: { items: Record<string, unknown>[] }[] }[];
+    };
+    body.tasks[0].result[0].items = [
+        {
+            type: "organic",
+            domain: "google.com",
+            url: goto,
+            breadcrumb:
+                "https://www.proprofsproject.com › blog › free-project-m...",
+            links: [{ type: "link_element", domain: "google.com", url: goto }],
+        },
+        {
+            type: "organic",
+            domain: "www.google.com",
+            url: "https://www.google.com/goto?url=CAES",
+            breadcrumb: "http://hive.com",
+        },
+        {
+            type: "organic",
+            domain: "zapier.com",
+            url: "https://zapier.com/blog/",
+            breadcrumb: "https://zapier.com › blog",
+        },
+        {
+            type: "organic",
+            domain: "google.com",
+            url: "https://google.com/goto?url=CAES",
+            breadcrumb: null,
+        },
+    ];
+    const run = await runEndpoint({
+        unit: await testSealedUnit(id),
+        input: inputFor(id),
+        mode: "replay",
+        fixture,
+    });
+    const items = (run.output as { items: Record<string, unknown>[] }[])[0]
+        .items;
+    assertEquals(items.map((i) => i.domain), [
+        "www.proprofsproject.com",
+        "hive.com",
+        "zapier.com",
+        "google.com",
+    ]);
+    assertEquals(items[0].url, goto);
+    assertEquals(
+        (items[0].links as Record<string, unknown>[])[0].domain,
+        "www.proprofsproject.com",
+    );
+});

@@ -1,4 +1,9 @@
-import { assert, assertAlmostEquals, assertEquals } from "@std/assert";
+import {
+    assert,
+    assertAlmostEquals,
+    assertEquals,
+    assertRejects,
+} from "@std/assert";
 import { fromFileUrl } from "@std/path";
 import {
     estimateEndpoint,
@@ -72,6 +77,13 @@ Deno.test("elevenlabs#text-to-speech: model routes the rate; JSON audio and alig
     const flash = await run("eleven_flash_v2_5");
     assertEquals(flash.usage.evidence, { flash_character: 12 });
     assertAlmostEquals(flash.usage.credits.default, 12 * 0.00004, CENT);
+    // v4 Turbo is half price too (elevenlabs.io/pricing/api)
+    const v4turbo = await run("eleven_v4_turbo");
+    assertEquals(v4turbo.usage.evidence, { flash_character: 12 });
+    const v4 = await run("eleven_v4");
+    assertEquals(v4.usage.evidence, { character: 12 });
+    // a model with no published price of its own is not offered
+    await assertRejects(() => run("eleven_turbo_v2_5"), Error, "INVALID_INPUT");
 });
 
 Deno.test("elevenlabs#v1/text-to-dialogue: billed on every line's characters", async () => {

@@ -79,7 +79,7 @@ const CHAIN_COUNTS: Record<string, Record<string, number>> = {
         default_dataset_item: 2,
     },
     // input mode "Short ($4 per 1k)" selects the short-profile line
-    "harvestapi/linkedin-company-employees": { short_profile: 2 },
+    "harvestapi/linkedin-company-employees": { full_profile: 2 },
     // chain items carry no `type` → all 2 count as base posts;
     // reactions/comments off, profile modes default "short" (free)
     "harvestapi/linkedin-post-search": { post: 2 },
@@ -725,25 +725,13 @@ Deno.test("apify estimates: D29 gating spot checks (input-switched add-on lines)
             evidence: { result: 5, actor_start: 1 },
         },
     );
-    // linkedin-company-employees: the profileScraperMode enum (the
-    // vendor's literal price-bearing strings) SELECTS the profile line.
-    // Absent → the binding pins the actor's own default
-    // "Full ($8 per 1k)" → full_profile ($0.015 start + 2 × $0.004).
+    // linkedin-company-employees: our own profileScraperMode values (the
+    // vendor's carry its free-tier prices, which contradict ours) SELECT
+    // the profile line. Absent → "short", the cheapest mode →
+    // short_profile ($0.015 start + 2 × $0.0015).
     assertEquals(
         await estimateFor("apify#harvestapi/linkedin-company-employees", {
             companies: ["https://www.linkedin.com/company/microsoft"],
-            maxItems: 2,
-        }),
-        {
-            credits: { default: 0.015 + 2 * 0.004 },
-            evidence: { full_profile: 2, actor_start: 1 },
-        },
-    );
-    // "Short ($4 per 1k)" → short_profile at the $0.0015 Business rate
-    assertEquals(
-        await estimateFor("apify#harvestapi/linkedin-company-employees", {
-            companies: ["https://www.linkedin.com/company/microsoft"],
-            profileScraperMode: "Short ($4 per 1k)",
             maxItems: 2,
         }),
         {
@@ -751,11 +739,23 @@ Deno.test("apify estimates: D29 gating spot checks (input-switched add-on lines)
             evidence: { short_profile: 2, actor_start: 1 },
         },
     );
-    // "Full + email search ($12 per 1k)" → full_profile_with_email
+    // "full" → full_profile at the $0.004 Business rate
     assertEquals(
         await estimateFor("apify#harvestapi/linkedin-company-employees", {
             companies: ["https://www.linkedin.com/company/microsoft"],
-            profileScraperMode: "Full + email search ($12 per 1k)",
+            profileScraperMode: "full",
+            maxItems: 2,
+        }),
+        {
+            credits: { default: 0.015 + 2 * 0.004 },
+            evidence: { full_profile: 2, actor_start: 1 },
+        },
+    );
+    // "full_with_email" → full_profile_with_email
+    assertEquals(
+        await estimateFor("apify#harvestapi/linkedin-company-employees", {
+            companies: ["https://www.linkedin.com/company/microsoft"],
+            profileScraperMode: "full_with_email",
             maxItems: 2,
         }),
         {
@@ -983,4 +983,59 @@ Deno.test("apify typed state: a poll fed corrupt state.data fails closed (INVALI
         assert(String(error).includes("INVALID_INPUT"), String(error));
     }
     assert(threw, "corrupt state.data must fail closed");
+});
+
+Deno.test("apify linkedin-company-employees: our mode values reach the actor as its own labels, and no listed value carries a vendor price", async () => {
+    const id = "apify#harvestapi/linkedin-company-employees";
+    const bundle = await testBundle();
+    const mode = (bundle.endpoints[id].input.schema.body as {
+        properties: Record<string, { enum?: string[]; default?: string }>;
+    }).properties.profileScraperMode;
+    assertEquals(mode.enum, ["short", "full", "full_with_email"]);
+    assertEquals(mode.default, "short");
+    const priced = Object.values(bundle.endpoints)
+        .filter((doc) => doc.provider === "apify")
+        .flatMap((doc) =>
+            [
+                ...JSON.stringify(doc.input.schema).matchAll(
+                    /"enum":\[[^\]]*\$\d[^\]]*\]/g,
+                ),
+            ].map((m) => `${doc.id}: ${m[0]}`)
+        );
+    assertEquals(priced, []);
+    const sent: unknown[] = [];
+    const engine = new Engine({
+        transport: directTransport({
+            params: () => Promise.resolve({ apiKey: "test-key" }),
+            fetch: (_target, init?: RequestInit) => {
+                sent.push(JSON.parse(String(init?.body)));
+                return Promise.resolve(
+                    new Response("{}", {
+                        status: 400,
+                        headers: { "content-type": "application/json" },
+                    }),
+                );
+            },
+        }),
+    });
+    const loaded = await engine.load(await testSealedUnit(id));
+    for (const m of [undefined, "full", "full_with_email"]) {
+        await loaded.run({
+            body: {
+                companies: ["https://www.linkedin.com/company/stripe"],
+                maxItems: 1,
+                ...(m ? { profileScraperMode: m } : {}),
+            },
+        });
+    }
+    assertEquals(
+        sent.map((b) =>
+            (b as { profileScraperMode: string }).profileScraperMode
+        ),
+        [
+            "Short ($4 per 1k)",
+            "Full ($8 per 1k)",
+            "Full + email search ($12 per 1k)",
+        ],
+    );
 });

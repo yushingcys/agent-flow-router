@@ -185,7 +185,7 @@
         "companies": [
             "https://www.linkedin.com/company/microsoft"
         ],
-        "profileScraperMode": "Short ($4 per 1k)",
+        "profileScraperMode": "full",
         "maxItems": 2
     },
     "harvestapi/linkedin-job-search": {

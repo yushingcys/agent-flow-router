@@ -32,6 +32,10 @@ export default defineEndpoint({
         notes: [
             "Billed per page of 10 results; each further page adds the " +
             "same price.",
+            "Google now serves most organic links as google.com/goto " +
+            "redirects that only a click resolves. For those results " +
+            "`domain` is the real site (read from `breadcrumb`) and `url` " +
+            "is the goto link, which redirects to the page.",
         ],
     },
     endpoint: "/serp/google-organic",

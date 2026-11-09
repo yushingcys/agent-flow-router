@@ -28,8 +28,9 @@ export default defineEndpoint({
             "delivery with `voice_settings`, chain long scripts with " +
             "`previous_text`/`next_text`, and pick the model: eleven_v3 for " +
             "expressive audio tags like [whispers], multilingual_v2 for " +
-            "stable long-form, Flash/Turbo for half the price. $0.08 per " +
-            "1K characters, $0.04 on Flash/Turbo.",
+            "stable long-form, eleven_flash_v2_5 or eleven_v4_turbo for " +
+            "half the price. $0.08 per 1K characters, $0.04 on " +
+            "eleven_flash_v2_5 and eleven_v4_turbo.",
         docsUrl: "https://elevenlabs.io/docs/api-reference/text-to-speech/" +
             "convert-with-timestamps",
         categories: ["speech"],
@@ -58,22 +59,23 @@ export default defineEndpoint({
                     unit: Unit.CHARACTER,
                     consumes: { credit: "default", amount: 0.00008 },
                     label: "characters",
-                    description: "$0.08 per 1K characters (v3, multilingual)",
+                    description:
+                        "$0.08 per 1K characters (v4, v3, multilingual_v2)",
                 },
                 flash_character: {
                     kind: UsageModelKind.PER_UNIT,
                     unit: Unit.CHARACTER,
                     consumes: { credit: "default", amount: 0.00004 },
                     label: "Flash/Turbo characters",
-                    description: "$0.04 per 1K characters on Flash/Turbo",
+                    description:
+                        "$0.04 per 1K characters on flash_v2_5 and v4_turbo",
                 },
             },
         },
         estimate: ({ data }) => {
             const model = data.input.body.model_id;
             const flash = model === "eleven_flash_v2_5" ||
-                model === "eleven_flash_v2" ||
-                model === "eleven_turbo_v2_5" || model === "eleven_turbo_v2";
+                model === "eleven_v4_turbo";
             const chars = data.input.body.text.length;
             return {
                 counts: flash
@@ -85,8 +87,7 @@ export default defineEndpoint({
         evidence: ({ data }) => {
             const model = data.input.body.model_id;
             const flash = model === "eleven_flash_v2_5" ||
-                model === "eleven_flash_v2" ||
-                model === "eleven_turbo_v2_5" || model === "eleven_turbo_v2";
+                model === "eleven_v4_turbo";
             const chars = data.input.body.text.length;
             return {
                 counts: flash

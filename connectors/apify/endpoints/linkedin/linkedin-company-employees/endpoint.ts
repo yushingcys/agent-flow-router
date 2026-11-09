@@ -1,4 +1,5 @@
 import { defineEndpoint, Unit, UsageModelKind } from "@shared/core";
+import { z } from "zod";
 import { zLinkedinCompanyEmployeesBody } from "./schema/inputs.ts";
 
 /**
@@ -39,17 +40,42 @@ export default defineEndpoint({
             // default) — WE require it, and require it POSITIVE (this
             // vendor reads a non-positive limit as "no limit"): the
             // estimate must be deducible to price the hold (D24)
-            // profileScraperMode is a behavior knob the estimate reads —
-            // binding default = the actor's VERIFIED published default
-            // (D25; this actor's enum values embed its FREE-tier prices
-            // verbatim — vendor quirk, mirrored faithfully)
+            // profileScraperMode is a behavior knob the estimate reads.
+            // The actor's own values embed its FREE-tier prices ("Short
+            // ($4 per 1k)"), which contradict the price this endpoint
+            // bills, so callers pick plain values that toRequest maps to
+            // the actor's labels. The default is the cheapest mode, sent
+            // explicitly (the actor's own default is Full).
             body: zLinkedinCompanyEmployeesBody.extend({
                 maxItems: zLinkedinCompanyEmployeesBody.shape.maxItems
                     .unwrap().min(1),
-                profileScraperMode: zLinkedinCompanyEmployeesBody.shape
-                    .profileScraperMode.unwrap()
-                    .default("Full ($8 per 1k)"),
+                profileScraperMode: z.enum([
+                    "short",
+                    "full",
+                    "full_with_email",
+                ]).describe(
+                    "How much of each profile to scrape: short (basic " +
+                        "profile, the cheapest), full (detailed profile), " +
+                        "or full_with_email (detailed profile plus email " +
+                        "discovery). Each mode has its own per-profile " +
+                        "price in this endpoint's listing.",
+                ).default("short"),
             }),
+        },
+        toRequest: ({ data }) => {
+            const body = data.input.body as Record<string, unknown>;
+            const mode = body.profileScraperMode;
+            return {
+                ...data.input,
+                body: {
+                    ...body,
+                    profileScraperMode: mode === "full"
+                        ? "Full ($8 per 1k)"
+                        : mode === "full_with_email"
+                        ? "Full + email search ($12 per 1k)"
+                        : "Short ($4 per 1k)",
+                },
+            };
         },
     },
     usage: {
@@ -72,35 +98,34 @@ export default defineEndpoint({
                     kind: UsageModelKind.PER_UNIT,
                     unit: Unit.RESULT,
                     label: "basic profiles",
-                    description: "profiles returned in 'Short' mode",
+                    description: "profiles returned in short mode",
                     consumes: { credit: "default", amount: 0.0015 },
                 },
                 full_profile: {
                     kind: UsageModelKind.PER_UNIT,
                     unit: Unit.RESULT,
                     label: "full profiles",
-                    description: "profiles enriched in 'Full' mode",
+                    description: "profiles enriched in full mode",
                     consumes: { credit: "default", amount: 0.004 },
                 },
                 full_profile_with_email: {
                     kind: UsageModelKind.PER_UNIT,
                     unit: Unit.RESULT,
                     label: "profiles with email",
-                    description:
-                        "profiles enriched in 'Full + email search' mode",
+                    description: "profiles enriched in full_with_email mode",
                     consumes: { credit: "default", amount: 0.008 },
                 },
             },
         },
         /** maxItems caps the run exactly (v1 LIMIT_IS_EXACT) — required
          *  ≥1 at the binding, so the estimate is pure arithmetic (D24),
-         *  keyed by the mode the pinned input selects. */
+         *  keyed by the mode the pinned input selects (our own value). */
         estimate: ({ data }) => {
             const body = data.input.body;
             const mode = body.profileScraperMode;
-            const profileKey = mode === "Full ($8 per 1k)"
+            const profileKey = mode === "full"
                 ? "full_profile"
-                : mode === "Full + email search ($12 per 1k)"
+                : mode === "full_with_email"
                 ? "full_profile_with_email"
                 : "short_profile";
             return { counts: { [profileKey]: body.maxItems } };
@@ -115,10 +140,13 @@ export default defineEndpoint({
                 data.input.body ?? {},
                 "$.profileScraperMode",
             );
-            const profileKey = mode === "Full ($8 per 1k)"
-                ? "full_profile"
-                : mode === "Full + email search ($12 per 1k)"
+            // settle sees the DERIVED input, i.e. the actor's own label
+            const profileKey = typeof mode !== "string"
+                ? "short_profile"
+                : /email/i.test(mode)
                 ? "full_profile_with_email"
+                : /^full/i.test(mode)
+                ? "full_profile"
                 : "short_profile";
             return { counts: { [profileKey]: profiles } };
         },
