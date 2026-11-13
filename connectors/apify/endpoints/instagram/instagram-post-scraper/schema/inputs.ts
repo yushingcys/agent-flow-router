@@ -24,4 +24,7 @@ export const zInstagramPostScraperBody = z.object({
     dataDetailLevel: z.enum(["basicData", "detailedData"]).describe(
         "Choose the data package you want to extract. Please note the Detailed data are paid extra.",
     ).optional(),
+    includeMusicData: z.boolean().describe(
+        "Extract music data for Image and Carousel posts. Video posts already include music data with `Detailed data`. Each image or carousel scraped with music data bills the music-data charge event.",
+    ).optional(),
 });

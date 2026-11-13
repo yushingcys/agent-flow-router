@@ -85,6 +85,16 @@ export default defineEndpoint({
                         "information when dataDetailLevel is detailedData",
                     consumes: { credit: "default", amount: 0.0006 },
                 },
+                music_data: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.RESULT,
+                    label: "music data",
+                    description: "surcharge per image or carousel scraped " +
+                        "with music data when includeMusicData is on",
+                    // vendor charge event: "music-data"
+                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-10-07
+                    consumes: { credit: "default", amount: 0.004 },
+                },
             },
         },
         /** resultsLimit (required at the binding) caps EACH profile entry
@@ -103,6 +113,11 @@ export default defineEndpoint({
                     ...(body.dataDetailLevel === "detailedData"
                         ? { post_details: posts }
                         : {}),
+                    // every post could carry music data — the cap is the
+                    // only honest bound for an opted-in surcharge
+                    ...(body.includeMusicData === true
+                        ? { music_data: posts }
+                        : {}),
                 },
             };
         },
@@ -111,15 +126,24 @@ export default defineEndpoint({
          *  run explicitly selected basicData (the actor's own default is
          *  detailedData, so an absent knob still bills the add-on). */
         evidence: ({ data, utils }) => {
-            const posts = Array.isArray(data.output) ? data.output.length : 0;
+            const rows = Array.isArray(data.output) ? data.output : [];
+            const posts = rows.length;
             const detail = utils.json.optionalGet(
                 data.input.body ?? {},
                 "$.dataDetailLevel",
             );
+            const musicOn = utils.json.optionalGet(
+                data.input.body ?? {},
+                "$.includeMusicData",
+            ) === true;
+            const withMusic = rows.filter((row) =>
+                utils.json.optionalGet(row, "$.musicInfo") !== undefined
+            ).length;
             return {
                 counts: {
                     post: posts,
                     ...(detail !== "basicData" ? { post_details: posts } : {}),
+                    ...(musicOn ? { music_data: withMusic } : {}),
                 },
             };
         },

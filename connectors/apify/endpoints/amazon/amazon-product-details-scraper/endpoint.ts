@@ -40,17 +40,33 @@ export default defineEndpoint({
     input: { schema: { body: zAmazonProductDetailsScraperBody } },
     usage: {
         model: {
-            kind: UsageModelKind.PER_UNIT,
-            unit: Unit.RESULT,
-            // vendor charge event: "apify-default-dataset-item"
-            // survey-pinned Business-tier event price
-            consumes: { credit: "default", amount: 0.0015 },
+            // the actor added the platform's flat start event to its card
+            // (pricingInfo 2026-09-27): 1 GB default memory ⇒ the pinned
+            // rate IS the per-run charge
+            kind: UsageModelKind.COMPOSITE,
+            components: {
+                actor_start: {
+                    kind: UsageModelKind.PER_CALL,
+                    label: "actor start",
+                    // vendor charge event: "apify-actor-start"
+                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-09-27
+                    consumes: { credit: "default", amount: 0.00005 },
+                },
+                default_dataset_item: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.RESULT,
+                    label: "products",
+                    // vendor charge event: "apify-default-dataset-item"
+                    // survey-pinned Business-tier event price
+                    consumes: { credit: "default", amount: 0.0015 },
+                },
+            },
         },
         /** one result per Params entry (ASIN/URL, v1 ONE_PER_QUERY) — an
          *  empty batch promises 0 (deduced, design D25). */
         estimate: ({ data }) => ({
             counts: {
-                "RESULT": data.input.body.Params.length,
+                "default_dataset_item": data.input.body.Params.length,
             },
         }),
     },

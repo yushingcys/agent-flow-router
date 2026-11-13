@@ -28,10 +28,11 @@ export default defineEndpoint({
         categories: ["app-stores", "company-reviews"],
         notes: [
             "Billing: a one-time setup fee plus one review event per review " +
-            "returned. The actor-start platform event is priced per GB and " +
-            "this actor runs at 4 GB by default, so the settled start " +
-            "charge can be a few hundredths of a cent above the pinned rate " +
-            "(drift pins the published rate).",
+            "returned — or one rating-sorted-review per iOS review when " +
+            "sorting by rating polarity. The actor-start platform event is " +
+            "priced per GB and this actor runs at 4 GB by default, so the " +
+            "settled start charge can be a few hundredths of a cent above " +
+            "the pinned rate (drift pins the published rate).",
         ],
     },
     /** PUBLIC identity (design D22): the actor's own owner/slug path,
@@ -86,9 +87,20 @@ export default defineEndpoint({
                     kind: UsageModelKind.PER_UNIT,
                     unit: Unit.RESULT,
                     label: "reviews",
-                    // vendor charge event: "review"
-                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-10-13
-                    // (repriced 2026-09-28)
+                    // vendor charge event: "review" — the default sorts and
+                    // ALL macOS reviews (rating sorts ignore macOS)
+                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-10-27
+                    consumes: { credit: "default", amount: 0.0006 },
+                },
+                rating_sorted_review: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.RESULT,
+                    label: "rating-sorted reviews (iOS)",
+                    description:
+                        "per iOS review returned when sort is mostfavorable " +
+                        "or mostcritical — the vendor's costlier route",
+                    // vendor charge event: "rating-sorted-review"
+                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-11-11
                     consumes: { credit: "default", amount: 0.00125 },
                 },
                 default_dataset_item: {
@@ -110,18 +122,56 @@ export default defineEndpoint({
             const apps = (body.product_ids?.length ?? 0) ||
                 (body.app_name ? 1 : 0);
             const reviews = body.max_reviews * apps;
+            // rating polarity sorts bill iOS reviews on the dearer
+            // rating-sorted-review route — the platform split is unknowable
+            // pre-run, so the hold prices the full cap at the higher rate
+            // (a macOS row always bills the plain review event: the hold
+            // stays sufficient either way)
+            const ratingSort = body.sort === "mostfavorable" ||
+                body.sort === "mostcritical";
             return {
-                counts: { review: reviews, default_dataset_item: reviews },
+                counts: {
+                    ...(ratingSort
+                        ? { rating_sorted_review: reviews }
+                        : { review: reviews }),
+                    default_dataset_item: reviews,
+                },
             };
         },
         /** OVERRIDES the provider evidence (per-line story for this card). */
         evidence: ({ data, utils }) => {
             const rows = Array.isArray(data.output) ? data.output : [];
-            const reviews = rows.filter((row) =>
-                utils.json.optionalGet(row, "$.error") === undefined
-            ).length;
+            const sort = utils.json.optionalGet(
+                data.input.body ?? {},
+                "$.sort",
+            );
+            const ratingSort = sort === "mostfavorable" ||
+                sort === "mostcritical";
+            let review = 0;
+            let ratingSorted = 0;
+            for (const row of rows) {
+                if (utils.json.optionalGet(row, "$.error") !== undefined) {
+                    continue;
+                }
+                // under a rating sort only iOS rows bill the dearer route —
+                // macOS ignores sort and stays on the plain review event
+                if (
+                    ratingSort &&
+                    utils.json.optionalGet(row, "$.app_platform") === "ios"
+                ) {
+                    ratingSorted += 1;
+                } else {
+                    review += 1;
+                }
+            }
             return {
-                counts: { review: reviews, default_dataset_item: rows.length },
+                counts: {
+                    review,
+                    ...(ratingSort
+                        ? { rating_sorted_review: ratingSorted }
+                        : {}),
+                    default_dataset_item: rows.length,
+                },
             };
         },
     },
