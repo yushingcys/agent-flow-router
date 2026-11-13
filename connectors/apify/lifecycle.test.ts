@@ -87,6 +87,9 @@ const CHAIN_COUNTS: Record<string, Record<string, number>> = {
     // no oldestPostDate, no AI toggles, no transcription mode; chain
     // items carry no duration → base videos only
     "streamers/youtube-scraper": { result: 2 },
+    // no private_sellers_only, no seller_country "CN" → the standard
+    // dataset rate (D29 dataset split, 2026-10-16)
+    "xmiso_scrapers/eu-amazon-sellers-email-leads": { standard_result: 2 },
     // ---- johnvc actors (add-apify-johnvc-actors): every card also
     // carries the platform's per-row default_dataset_item line (D5), so
     // the 2 chain rows settle it alongside the actor's own metered line

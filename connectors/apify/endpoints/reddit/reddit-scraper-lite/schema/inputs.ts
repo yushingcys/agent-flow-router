@@ -9,6 +9,9 @@ import { z } from "zod";
  * accepts supersets — unknown fields pass through.
  */
 export const zRedditScraperLiteBody = z.object({
+    sessionToken: z.string().describe(
+        "Required. Provide the value of your 'reddit_session' cookie from a dedicated Reddit account (found in Browser DevTools -> Application -> Cookies -> https://www.reddit.com). Also accepts exported Cookie-Editor JSON or Cookie header strings. Do NOT run multiple Actor runs at the same time using the same sessionToken.",
+    ),
     startUrls: z.array(z.any()).describe(
         "If you already have URL(s) of page(s) you wish to scrape, you can set them here. If you want to use the search field below, remove all startUrls here.",
     ).optional(),

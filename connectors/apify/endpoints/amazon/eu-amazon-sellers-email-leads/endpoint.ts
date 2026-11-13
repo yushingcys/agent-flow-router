@@ -42,22 +42,68 @@ export default defineEndpoint({
         },
     },
     usage: {
+        /** The card split into per-dataset rates (pricingInfo 2026-10-16):
+         *  private_sellers_only bills the private-seller rate (the vendor's
+         *  own input doc), seller_country "CN" routes to the cheaper
+         *  chinese sellers dataset, everything else bills standard-result.
+         *  Both cheaper-than-private routings are bounded by the standard
+         *  rate, so an unguessable mix can never under-hold. */
         model: {
-            kind: UsageModelKind.PER_UNIT,
-            unit: Unit.RESULT,
-            // vendor charge event: "apify-default-dataset-item"
-            // survey-pinned Business-tier event price — SCHEDULED:
-            // effective 2026-09-17 (0.0069 bills until then; the drift
-            // suite reconciles scheduled pins, design D29)
-            consumes: { credit: "default", amount: 0.0079 },
+            kind: UsageModelKind.COMPOSITE,
+            components: {
+                standard_result: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.RESULT,
+                    label: "results",
+                    // vendor charge event: "standard-result" (was
+                    // apify-default-dataset-item until the 2026-10-16 split)
+                    consumes: { credit: "default", amount: 0.0079 },
+                },
+                private_seller_result: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.RESULT,
+                    label: "private-seller results",
+                    description: "per result when private_sellers_only " +
+                        "selects the private sellers dataset",
+                    // vendor charge event: "private-seller-result"
+                    consumes: { credit: "default", amount: 0.0109 },
+                },
+                chinese_seller_result: {
+                    kind: UsageModelKind.PER_UNIT,
+                    unit: Unit.RESULT,
+                    label: "chinese-seller results",
+                    description: 'per result when seller_country "CN" ' +
+                        "routes to the chinese sellers dataset",
+                    // vendor charge event: "chinese-seller-result"
+                    consumes: { credit: "default", amount: 0.0029 },
+                },
+            },
         },
         /** max_results caps the run exactly (v1 LIMIT_IS_EXACT) —
          *  required at the binding, so the estimate is pure arithmetic
-         *  (D25). */
-        estimate: ({ data }) => ({
-            counts: {
-                "RESULT": data.input.body.max_results,
-            },
-        }),
+         *  (D25). The dataset the run bills is the input's own choice. */
+        estimate: ({ data }) => {
+            const body = data.input.body;
+            const key = body.private_sellers_only === true
+                ? "private_seller_result"
+                : body.seller_country === "CN"
+                ? "chinese_seller_result"
+                : "standard_result";
+            return { counts: { [key]: body.max_results } };
+        },
+        /** ≥2 metered lines ⇒ doc-level quantities: the billed dataset is
+         *  the input's choice; the default-dataset rows are the count. */
+        evidence: ({ data, utils }) => {
+            const rows = Array.isArray(data.output) ? data.output.length : 0;
+            const body = data.input.body ?? {};
+            const key =
+                utils.json.optionalGet(body, "$.private_sellers_only") ===
+                        true
+                    ? "private_seller_result"
+                    : utils.json.optionalGet(body, "$.seller_country") === "CN"
+                    ? "chinese_seller_result"
+                    : "standard_result";
+            return { counts: { [key]: rows } };
+        },
     },
 });

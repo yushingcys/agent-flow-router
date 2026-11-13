@@ -79,8 +79,8 @@ export default defineEndpoint({
                     label: "results (blocks of 10)",
                     description: "charged per started block of 10 rows",
                     // vendor charge event: "result_returned"
-                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-09-22
-                    consumes: { credit: "default", amount: 0.01 },
+                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-10-31
+                    consumes: { credit: "default", amount: 0.005 },
                 },
                 default_dataset_item: {
                     kind: UsageModelKind.PER_UNIT,

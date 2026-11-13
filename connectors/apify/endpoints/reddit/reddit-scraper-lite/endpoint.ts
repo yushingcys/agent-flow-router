@@ -12,9 +12,11 @@ export default defineEndpoint({
     meta: {
         displayName: "Pull Reddit Posts",
         summary: "Scrape Reddit posts, comments, communities, and user " +
-            "profiles without login.",
+            "profiles with a Reddit session token.",
         description: "Scrapes Reddit posts, comments, communities, and user " +
-            "profiles without login. Returns post and comment " +
+            "profiles. Requires the caller's Reddit session token " +
+            "(sessionToken input) — the vendor switched to logged-in " +
+            "access. Returns post and comment " +
             "content with metadata, community information, and user " +
             "data. Supports limiting by number of posts or items " +
             "with results exported in multiple formats.",

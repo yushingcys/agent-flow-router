@@ -131,12 +131,6 @@
         ],
         "maxReviews": 2
     },
-    "crawlerbros/reddit-comment-scraper": {
-        "postUrls": [
-            "https://www.reddit.com/r/programming/comments/1g5x1wz/"
-        ],
-        "maxComments": 2
-    },
     "curious_coder/facebook-ads-library-scraper": {
         "urls": [
             {
@@ -365,7 +359,8 @@
         "maxItems": 2,
         "skipComments": true,
         "searchPosts": true,
-        "searchComments": false
+        "searchComments": false,
+        "sessionToken": "test-session-token-placeholder"
     },
     "web_wanderer/amazon-reviews-extractor": {
         "products": [

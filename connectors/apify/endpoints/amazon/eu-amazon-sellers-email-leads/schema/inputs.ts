@@ -84,6 +84,9 @@ export const zEuAmazonSellersEmailLeadsBody = z.object({
     max_results: z.number().int().max(100000).describe(
         "Maximum results you want to get",
     ).optional(),
+    private_sellers_only: z.boolean().describe(
+        "Return only private-label sellers (sellers with their own brand). Adds the private_seller_brand_name field to the output. Results with this option are charged at the private-seller rate.",
+    ).optional(),
     offset: z.number().int().max(999999).describe(
         "How many rows to skip. Useful when you already downloaded x rows and don't want to get duplicates",
     ).optional(),

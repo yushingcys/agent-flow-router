@@ -92,8 +92,8 @@ export default defineEndpoint({
                     unit: Unit.PAGE,
                     label: "result pages",
                     // vendor charge event: "page_processed"
-                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-09-22
-                    consumes: { credit: "default", amount: 0.015 },
+                    // Business-tier (GOLD) price, /v2/acts pricingInfo 2026-11-12
+                    consumes: { credit: "default", amount: 0.00972 },
                 },
                 booking_option_processed: {
                     kind: UsageModelKind.PER_UNIT,
