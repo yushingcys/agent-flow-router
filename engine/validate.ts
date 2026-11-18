@@ -48,13 +48,24 @@ function run(
     }
     if (validator(data)) return { ok: true };
     const first = (validator.errors ?? [])[0] as
-        | { instancePath?: string; message?: string }
+        | {
+            instancePath?: string;
+            message?: string;
+            keyword?: string;
+            params: { allowedValues?: Json[]; allowedValue?: Json };
+        }
         | undefined;
+    const allowed = first?.keyword === "enum"
+        ? first.params.allowedValues?.map((value) => JSON.stringify(value))
+            .join(", ")
+        : first?.keyword === "const"
+        ? JSON.stringify(first.params.allowedValue)
+        : undefined;
     return {
         ok: false,
         message: `${first?.instancePath ?? ""} ${
             first?.message ?? "schema mismatch"
-        }`.trim(),
+        }${allowed === undefined ? "" : `: ${allowed}`}`.trim(),
     };
 }
 
