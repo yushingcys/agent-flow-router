@@ -1,5 +1,7 @@
 import { assert, assertEquals } from "@std/assert";
 import { fromFileUrl } from "@std/path";
+import { directTransport, Engine } from "@agent-flow/connector-engine";
+import type { Json } from "@shared/core";
 import {
     liveSkip,
     loadFixture,
@@ -92,6 +94,61 @@ Deno.test("exa#search: `stream` is not exposed, and stripped defensively before 
         fixture,
     });
     assertEquals(result.isProviderError, false);
+});
+
+Deno.test("exa#search: preserves nested stream fields while dropping top-level stream", async () => {
+    const fixture = await loadFixture(`${fixturesDir}happy.json`);
+    const bodies: unknown[] = [];
+    const loaded = await new Engine({
+        transport: directTransport({
+            params: () => Promise.resolve({ apiKey: "test-key" }),
+            fetch: (_url, init) => {
+                bodies.push(JSON.parse((init as RequestInit).body as string));
+                const response = fixture.calls[0].res;
+                return Promise.resolve(
+                    new Response(JSON.stringify(response.body), {
+                        status: response.status,
+                        headers: { "content-type": "application/json" },
+                    }),
+                );
+            },
+        }),
+    }).load(await testSealedUnit("exa#search"));
+    const outputSchema = {
+        type: "object",
+        properties: {
+            stream: { type: "string" },
+            items: {
+                type: "array",
+                items: {
+                    type: "object",
+                    properties: { stream: { type: "boolean" } },
+                },
+            },
+        },
+        required: ["stream"],
+    };
+    const inputs: Record<string, Json>[] = [
+        { stream: true, outputSchema },
+        { outputSchema },
+        { stream: false, outputSchema: {} },
+    ];
+    for (const body of inputs) {
+        const result = await loaded.run({
+            body: { query: "streams", ...body },
+        });
+        assertEquals(result.httpStatus, 200);
+    }
+    assertEquals(
+        bodies,
+        [outputSchema, outputSchema, {}].map((schema) => ({
+            query: "streams",
+            type: "auto",
+            numResults: 10,
+            moderation: false,
+            outputSchema: schema,
+        })),
+    );
 });
 
 Deno.test({
