@@ -129,6 +129,37 @@ Deno.test("fishaudio#speech-to-text: multipart upload, model header, billed per 
     );
 });
 
+for (
+    const [contentType, boundary] of [
+        ["audio/mpeg", 4000],
+        ["audio/wav", 32000],
+        ["audio/pcm", 32000],
+    ] as const
+) {
+    for (
+        const bytes of [0, boundary - 2, boundary - 1, boundary, boundary + 1]
+    ) {
+        const base64 = new Uint8Array(bytes).toBase64();
+        const padding = base64.match(/=+$/)?.[0].length ?? 0;
+        Deno.test(`fishaudio#speech-to-text: ${bytes} bytes (${contentType}, padding=${padding}) at ${boundary}-byte boundary`, async () => {
+            const unit = await testSealedUnit("fishaudio#speech-to-text");
+            const input = { body: { audio: { base64, contentType } } };
+            const seconds = Math.ceil(bytes / boundary);
+            const { engine } = capture({
+                text: "",
+                duration: bytes / boundary,
+                segments: [],
+            });
+            const result = await (await engine.load(unit)).run(input);
+            assertEquals(result.usage.evidence, { SECOND: seconds });
+            assertEquals(
+                (await estimateEndpoint(unit, input)).evidence,
+                result.usage.evidence,
+            );
+        });
+    }
+}
+
 Deno.test("fishaudio#voices/clone: recordings go out as repeated file parts; free", async () => {
     const unit = await testSealedUnit("fishaudio#voices/clone");
     assertEquals(unit.doc.usage.model.kind, "FREE");

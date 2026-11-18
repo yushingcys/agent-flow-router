@@ -63,7 +63,12 @@ export default defineEndpoint({
         },
         estimate: ({ data }) => {
             const file = data.input.body.audio;
-            const bytes = Math.floor(file.base64.length * 3 / 4);
+            const bytes = Math.floor(file.base64.length * 3 / 4) -
+                (file.base64.endsWith("==")
+                    ? 2
+                    : file.base64.endsWith("=")
+                    ? 1
+                    : 0);
             const raw = /wav|pcm/.test(file.contentType ?? "");
             return {
                 counts: { SECOND: Math.ceil(bytes / (raw ? 32000 : 4000)) },
