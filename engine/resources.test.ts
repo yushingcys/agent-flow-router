@@ -11,6 +11,7 @@ import {
     zBundle,
 } from "@shared/core";
 import { compileBundle, CompileError } from "@shared/compiler";
+import { estimateEndpoint } from "@shared/testing";
 import {
     directTransport,
     Engine,
@@ -223,6 +224,26 @@ async function bundleOf(mutate?: (c: ConnectorSource[]) => void) {
     mutate?.(connectors);
     return await compileBundle(connectors, COMPILE_OPTS);
 }
+
+Deno.test("resources: pure estimates need no owned resources", async () => {
+    const bundle = await bundleOf();
+    for (
+        const [id, input] of [
+            ["resdemo#widgets/use", { body: { id: "w-1" } }],
+            ["resdemo#widgets/read", {}],
+        ] as const
+    ) {
+        assertEquals(await estimateEndpoint(sealUnit(bundle, id), input), {
+            credits: {},
+            evidence: {},
+        });
+    }
+    const error = await assertRejects(
+        () => estimateEndpoint(sealUnit(bundle, "resdemo#widgets/use"), {}),
+        EngineError,
+    );
+    assertEquals(error.code, EngineErrorCode.INVALID_INPUT);
+});
 
 Deno.test("resources: a bound doc without a ResourceReader fails load — NO_RESOURCE_READER", async () => {
     const bundle = await bundleOf();
