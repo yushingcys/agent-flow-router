@@ -52,7 +52,7 @@ export default defineEndpoint({
         // non-strict (newer exa params pass through) — strip as defense-in-depth.
         toRequest: ({ data, utils }) => ({
             ...data.input,
-            body: utils.json.omit(data.input.body ?? {}, ["stream"]),
+            body: utils.json.pluck(data.input.body ?? {}, "$.stream").rest,
         }),
     },
     usage: {
