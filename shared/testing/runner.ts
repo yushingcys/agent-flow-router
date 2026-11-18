@@ -252,6 +252,7 @@ export async function estimateEndpoint(
     input: RunInput,
 ): Promise<Usage> {
     const loaded = await new Engine({
+        resources: fixtureReader([]),
         transport: {
             execute: () =>
                 Promise.reject(new Error("estimate is pure — no IO allowed")),

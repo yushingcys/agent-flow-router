@@ -66,6 +66,7 @@ const input: RunInput = {
 
 const { bundle } = await compileToOutput();
 const loaded = await new Engine({
+    resources: { owned: () => Promise.resolve([]) },
     transport: {
         execute: () =>
             Promise.reject(new Error("estimate is pure — no IO allowed")),
