@@ -13,24 +13,15 @@
 import { Command } from "@cliffy/command";
 import { z } from "zod";
 import {
-    type Json,
     type OwnedResource,
     parseSchema,
-    type RunInput,
     sealUnit,
     zOwnedResource,
 } from "@shared/core";
 import { directTransport, Engine } from "@agent-flow/connector-engine";
 import { compileToOutput } from "./lib.ts";
 import { admitInto, KvResourceStore, persistEffects } from "./store/kv.ts";
-
-function parseJson(flag: string, raw: string): Json {
-    try {
-        return JSON.parse(raw) as Json;
-    } catch (error) {
-        throw new Error(`${flag} is not valid JSON: ${error}`);
-    }
-}
+import { runInputFromFlags } from "./run-input.ts";
 
 const { options, args } = await new Command()
     .name("engine:run")
@@ -59,27 +50,7 @@ const { options, args } = await new Command()
 
 const endpointId = args[0];
 
-const input: RunInput = {
-    ...(options.body !== undefined
-        ? { body: parseJson("--body", options.body) }
-        : {}),
-    ...(options.queryParams !== undefined
-        ? {
-            queryParams: parseJson(
-                "--query-params",
-                options.queryParams,
-            ) as RunInput["queryParams"],
-        }
-        : {}),
-    ...(options.pathParams !== undefined
-        ? {
-            pathParams: parseJson(
-                "--path-params",
-                options.pathParams,
-            ) as RunInput["pathParams"],
-        }
-        : {}),
-};
+const input = runInputFromFlags(options);
 
 const { bundle, cacheHit } = await compileToOutput();
 console.error(
