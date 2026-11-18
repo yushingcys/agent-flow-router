@@ -21,6 +21,66 @@ const CENT = 1e-12;
 /** "ID3" - three bytes of a pretend upload. */
 const UPLOAD = { base64: "SUQz", contentType: "audio/mpeg", filename: "a.mp3" };
 
+for (
+    const endpoint of [
+        "audio-isolation",
+        "forced-alignment",
+        "speech-to-speech",
+        "speech-to-text",
+    ]
+) {
+    for (
+        const [contentType, boundary] of [
+            ["audio/mpeg", 4000],
+            ["audio/pcm", 32000],
+        ] as const
+    ) {
+        Deno.test(`elevenlabs#v1/${endpoint}: base64 padding at ${boundary}-byte boundary`, async () => {
+            const unit = await testSealedUnit(`elevenlabs#v1/${endpoint}`);
+            for (
+                const bytes of [
+                    boundary - 2,
+                    boundary - 1,
+                    boundary,
+                    boundary + 1,
+                ]
+            ) {
+                const file = {
+                    base64: new Uint8Array(bytes).toBase64(),
+                    contentType,
+                };
+                const body: Json = endpoint === "speech-to-text"
+                    ? {
+                        model_id: "scribe_v2",
+                        file,
+                        keyterms: ["Fish"],
+                        transcript_edit: "Fix spelling",
+                    }
+                    : endpoint === "forced-alignment"
+                    ? { file, text: "Hello" }
+                    : { audio: file };
+                const seconds = bytes <= boundary ? 1 : 2;
+                assertEquals(
+                    (await estimateEndpoint(unit, {
+                        body,
+                        ...(endpoint === "speech-to-speech"
+                            ? { pathParams: { voice_id: "voice" } }
+                            : {}),
+                    })).evidence,
+                    endpoint === "speech-to-text"
+                        ? {
+                            audio_second: seconds,
+                            keyterm_second: seconds,
+                            edit_second: seconds,
+                        }
+                        : { SECOND: seconds },
+                    `${bytes} bytes (${contentType})`,
+                );
+            }
+        });
+    }
+}
+
 Deno.test("elevenlabs: nine endpoints under Monid's paths, one auth fn, dollars", async () => {
     const bundle = await testBundle();
     const ids = Object.keys(bundle.endpoints)
