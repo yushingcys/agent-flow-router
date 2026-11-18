@@ -41,9 +41,18 @@ export async function inputsKey(versions: string[]): Promise<string> {
         }
     }
     files.sort();
-    for (const file of files) {
-        parts.push(`${file}:${await sha256Hex(await Deno.readTextFile(file))}`);
-    }
+    let next = 0;
+    await Promise.all(
+        Array.from({ length: Math.min(16, files.length) }, async () => {
+            while (next < files.length) {
+                const index = next++;
+                const file = files[index];
+                parts[index + 1] = `${file}:${await sha256Hex(
+                    await Deno.readTextFile(file),
+                )}`;
+            }
+        }),
+    );
     return await sha256Hex(parts.join("\n"));
 }
 
