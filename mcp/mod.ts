@@ -236,7 +236,9 @@ export function createRouterServer(
         !doc.resources || !!ctx.resources
     );
     const endpoint = (id: string) => {
-        const doc = bundle.endpoints[id];
+        const doc = Object.hasOwn(bundle.endpoints, id)
+            ? bundle.endpoints[id]
+            : undefined;
         if (!doc) throw new Error(`unknown endpoint ${id}; use discover`);
         if (doc.resources && !ctx.resources) {
             throw new Error(

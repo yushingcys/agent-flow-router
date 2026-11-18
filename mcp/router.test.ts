@@ -131,3 +131,34 @@ Deno.test("shared MCP adapter preserves a host's refusal as a tool error", async
         await server.close();
     }
 });
+
+Deno.test("inherited object keys are unknown endpoints, not crashes", async () => {
+    const server = createRouterServer(bundle);
+    const client = new Client({ name: "test", version: "0" });
+    const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
+    await server.connect(serverSide);
+    await client.connect(clientSide);
+    try {
+        for (const id of ["constructor", "toString", "__proto__"]) {
+            for (
+                const [name, args] of [
+                    ["inspect", { endpoint: id }],
+                    ["run", { endpoint: id, input: {} }],
+                ] as const
+            ) {
+                const out = await client.callTool({
+                    name,
+                    arguments: args,
+                }) as { isError?: boolean; content: { text: string }[] };
+                assertEquals(out.isError, true);
+                assertEquals(
+                    out.content[0].text,
+                    `unknown endpoint ${id}; use discover`,
+                );
+            }
+        }
+    } finally {
+        await client.close();
+        await server.close();
+    }
+});
