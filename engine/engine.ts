@@ -624,7 +624,7 @@ export class LoadedEndpoint implements RunnableEndpoint {
         }
         let tick = await this.start(runInput, run);
         while (tick.kind === RunKind.RUNNING) {
-            if (this.now().getTime() > deadline) {
+            if (this.now().getTime() >= deadline) {
                 const stopped = await this.stop(runInput, tick.state, run);
                 if (stopped.kind === RunKind.COMPLETED) return stopped;
                 throw new EngineError(
@@ -641,6 +641,7 @@ export class LoadedEndpoint implements RunnableEndpoint {
                 Math.min(tick.pollAfterMs, Math.max(remaining, 0)),
                 opts?.signal,
             );
+            if (this.now().getTime() >= deadline) continue;
             tick = await this.poll(runInput, tick.state, run);
         }
         return tick;

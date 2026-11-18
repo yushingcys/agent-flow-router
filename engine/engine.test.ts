@@ -1931,6 +1931,47 @@ Deno.test("lifecycle: a long pollAfterMs cannot oversleep the run budget", async
     }
 });
 
+Deno.test("lifecycle: run() timeout prevents polling at or after the deadline", async () => {
+    for (const overshootMs of [1, 0]) {
+        const seen: Array<{ method: string; url: string }> = [];
+        const sleeps: number[] = [];
+        let fakeMs = 0;
+        const engine = new Engine({
+            transport: scriptTransport([
+                { status: 201, body: { jobId: "j1" } },
+                { status: 200, body: { status: "completed" } },
+                { status: 200, body: [] },
+            ], seen),
+            sleep: (ms) => {
+                sleeps.push(ms);
+                fakeMs += ms + overshootMs;
+                return Promise.resolve();
+            },
+            now: () => new Date(fakeMs),
+        });
+        const loaded = await engine.load(
+            await asyncUnit((connectors) => {
+                connectors[0].provider.timeouts = {
+                    requestMs: 1_000,
+                    runMs: 10,
+                    pollMs: 100,
+                };
+            }),
+        );
+        const error = await assertRejects(() =>
+            loaded.run({ body: { q: "x" } })
+        );
+        assert(error instanceof EngineError);
+        assertEquals(error.code, EngineErrorCode.TIMEOUT);
+        assertEquals(sleeps, [10]);
+        assertEquals(fakeMs, 10 + overshootMs);
+        assertEquals(seen, [
+            { method: "POST", url: "https://api.asyncdemo.test/jobs" },
+            { method: "POST", url: "https://api.asyncdemo.test/jobs/j1/abort" },
+        ]);
+    }
+});
+
 Deno.test("lifecycle: run() timeout stops the vendor job then throws TIMEOUT", async () => {
     const seen: Array<{ method: string; url: string }> = [];
     // deterministic clock: each read advances 1s — runMs 3500 expires after
