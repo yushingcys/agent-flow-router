@@ -78,7 +78,12 @@ export default defineEndpoint({
             const body = data.input.body;
             const file = body.file;
             const seconds = file === undefined ? 3600 : Math.ceil(
-                Math.floor(file.base64.length * 3 / 4) /
+                (Math.floor(file.base64.length * 3 / 4) -
+                    (file.base64.endsWith("==")
+                        ? 2
+                        : file.base64.endsWith("=")
+                        ? 1
+                        : 0)) /
                     (/wav|pcm/.test(file.contentType ?? "") ? 32000 : 4000),
             );
             return {
