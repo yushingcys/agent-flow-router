@@ -78,6 +78,10 @@ import { validateAgainst } from "./validate.ts";
 /** The compatibility contract — the engine package version IS the version. */
 export const ENGINE_VERSION: string = denoJson.version;
 
+function stateBytes(state: RunState): number {
+    return new TextEncoder().encode(JSON.stringify(state)).length;
+}
+
 /**
  * Default: silent. The engine stays standalone (no pino at import time —
  * `Logger` is a type-only seam); hosts that want logs (CLI, hosted workers)
@@ -700,6 +704,14 @@ export class LoadedEndpoint implements RunnableEndpoint {
                 }`,
             );
         }
+        const bytes = stateBytes(state);
+        const max = contractConfig.schema.stateMaxBytes;
+        if (bytes > max) {
+            throw new EngineError(
+                EngineErrorCode.INVALID_INPUT,
+                `${this.doc.id}: threaded run state is ${bytes} bytes (max ${max})`,
+            );
+        }
         const schema = this.doc.lifecycle?.stateSchema;
         if (schema && parsed.data.data !== undefined) {
             const check = validateAgainst(schema, parsed.data.data);
@@ -1055,7 +1067,7 @@ export class LoadedEndpoint implements RunnableEndpoint {
                 );
             }
         }
-        const bytes = new TextEncoder().encode(JSON.stringify(state)).length;
+        const bytes = stateBytes(state);
         const max = contractConfig.schema.stateMaxBytes;
         if (bytes > max) {
             throw new EngineError(

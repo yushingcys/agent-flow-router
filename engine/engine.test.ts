@@ -1558,6 +1558,56 @@ Deno.test("lifecycle: corrupt threaded state fails closed on the way in (INVALID
     );
 });
 
+Deno.test("lifecycle: threaded state accepts the byte cap and rejects one byte over before IO (INVALID_INPUT)", async () => {
+    const seen: Array<{ method: string; url: string }> = [];
+    const engine = new Engine({
+        transport: scriptTransport([
+            { status: 200, body: {} },
+            { status: 200, body: {} },
+        ], seen),
+        now: () => new Date("2026-01-01T00:00:00.000Z"),
+    });
+    const loaded = await engine.load(
+        await asyncUnit((connectors) => {
+            connectors[0].provider.lifecycle!.poll = async ({ utils }) => {
+                await utils.http({ method: "GET", path: "/jobs/j1" });
+                return {
+                    kind: "COMPLETED",
+                    httpStatus: 200,
+                    output: {},
+                    state: {},
+                };
+            };
+        }),
+    );
+    const state = testState({
+        externalRunId: "j1",
+        data: { blob: "é" },
+    });
+    const max = contractConfig.schema.stateMaxBytes;
+    const baseBytes = new TextEncoder().encode(JSON.stringify(state)).length;
+    state.data = { blob: "é" + "x".repeat(max - baseBytes) };
+    assertEquals(new TextEncoder().encode(JSON.stringify(state)).length, max);
+    const result = await loaded.poll({ body: { q: "x" } }, state);
+    assertEquals(result.kind, "COMPLETED");
+    assertEquals(seen.length, 1);
+
+    state.data = { blob: "é" + "x".repeat(max - baseBytes + 1) };
+    assertEquals(
+        new TextEncoder().encode(JSON.stringify(state)).length,
+        max + 1,
+    );
+    seen.length = 0;
+    try {
+        await expectCode(
+            loaded.poll({ body: { q: "x" } }, state),
+            EngineErrorCode.INVALID_INPUT,
+        );
+    } finally {
+        assertEquals(seen.length, 0);
+    }
+});
+
 Deno.test("lifecycle: reserved state.externalRunId must be a non-empty string", async () => {
     const engine = new Engine({
         transport: scriptTransport([{ status: 201, body: { jobId: 42 } }]),
