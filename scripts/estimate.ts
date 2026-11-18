@@ -14,17 +14,10 @@
  * Flags mirror engine:run — zRunInput's fields in CLI kebab-case.
  */
 import { Command } from "@cliffy/command";
-import { type Json, type RunInput, sealUnit } from "@shared/core";
+import { sealUnit } from "@shared/core";
 import { Engine } from "@agent-flow/connector-engine";
 import { compileToOutput } from "./lib.ts";
-
-function parseJson(flag: string, raw: string): Json {
-    try {
-        return JSON.parse(raw) as Json;
-    } catch (error) {
-        throw new Error(`${flag} is not valid JSON: ${error}`);
-    }
-}
+import { runInputFromFlags } from "./run-input.ts";
 
 const { options, args } = await new Command()
     .name("engine:estimate")
@@ -42,27 +35,7 @@ const { options, args } = await new Command()
 
 const endpointId = args[0];
 
-const input: RunInput = {
-    ...(options.body !== undefined
-        ? { body: parseJson("--body", options.body) }
-        : {}),
-    ...(options.queryParams !== undefined
-        ? {
-            queryParams: parseJson(
-                "--query-params",
-                options.queryParams,
-            ) as RunInput["queryParams"],
-        }
-        : {}),
-    ...(options.pathParams !== undefined
-        ? {
-            pathParams: parseJson(
-                "--path-params",
-                options.pathParams,
-            ) as RunInput["pathParams"],
-        }
-        : {}),
-};
+const input = runInputFromFlags(options);
 
 const { bundle } = await compileToOutput();
 const loaded = await new Engine({

@@ -26,7 +26,7 @@
  */
 import { join } from "@std/path";
 import { Command } from "@cliffy/command";
-import { type Json, type RunInput, sealUnit } from "@shared/core";
+import { sealUnit } from "@shared/core";
 import {
     type RecordedCall,
     runEndpoint,
@@ -35,14 +35,7 @@ import {
     zFixture,
 } from "@shared/testing";
 import { compileToOutput, findEndpointDir, parseEndpointId } from "./lib.ts";
-
-function parseJson(flag: string, raw: string): Json {
-    try {
-        return JSON.parse(raw) as Json;
-    } catch (error) {
-        throw new Error(`${flag} is not valid JSON: ${error}`);
-    }
-}
+import { runInputFromFlags } from "./run-input.ts";
 
 const { options, args } = await new Command()
     .name("record")
@@ -63,27 +56,7 @@ const { options, args } = await new Command()
 const [endpointId, scenario] = args;
 const selector = parseEndpointId(endpointId); // split needed only for the fixture path
 
-const input: RunInput = {
-    ...(options.body !== undefined
-        ? { body: parseJson("--body", options.body) }
-        : {}),
-    ...(options.queryParams !== undefined
-        ? {
-            queryParams: parseJson(
-                "--query-params",
-                options.queryParams,
-            ) as RunInput["queryParams"],
-        }
-        : {}),
-    ...(options.pathParams !== undefined
-        ? {
-            pathParams: parseJson(
-                "--path-params",
-                options.pathParams,
-            ) as RunInput["pathParams"],
-        }
-        : {}),
-};
+const input = runInputFromFlags(options);
 
 const { bundle } = await compileToOutput();
 const unit = sealUnit(bundle, endpointId);
