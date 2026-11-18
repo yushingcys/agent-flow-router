@@ -1,5 +1,6 @@
 import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
 import { z } from "zod";
+import { validateAgainst, validateInputAgainst } from "./validate.ts";
 import { greaterThan, parse } from "@std/semver";
 import type { ConnectorSource, Json, RunState, SealedUnit } from "@shared/core";
 import {
@@ -30,6 +31,42 @@ import {
 // ---------------------------------------------------------------------------
 // helpers: compile a tiny in-memory connector, then poke the sealed unit
 // ---------------------------------------------------------------------------
+
+for (const validate of [validateAgainst, validateInputAgainst]) {
+    Deno.test(`${validate.name}: allowed values in validation errors`, () => {
+        const schema = {
+            type: "object",
+            properties: {
+                settings: {
+                    type: "object",
+                    properties: { duration: { enum: ["5", "10"] } },
+                },
+            },
+        };
+        assertEquals(validate(schema, { settings: { duration: "7" } }), {
+            ok: false,
+            message:
+                '/settings/duration must be equal to one of the allowed values: "5", "10"',
+        });
+        assertEquals(validate(schema, { settings: { duration: "5" } }), {
+            ok: true,
+        });
+        assertEquals(validate(schema, {}), { ok: true });
+        assertEquals(validate({ enum: [5, false, null, { a: 1 }] }, "no"), {
+            ok: false,
+            message:
+                'must be equal to one of the allowed values: 5, false, null, {"a":1}',
+        });
+        assertEquals(validate({ const: false }, true), {
+            ok: false,
+            message: "must be equal to constant: false",
+        });
+        assertEquals(validate({ type: "string" }, 5), {
+            ok: false,
+            message: "must be string",
+        });
+    });
+}
 
 const COMPILE_OPTS = {
     compilerVersion: "0.1.0",
