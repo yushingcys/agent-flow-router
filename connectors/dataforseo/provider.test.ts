@@ -513,7 +513,7 @@ Deno.test("dataforseo docs: the card in the rate table is the doc's model", asyn
     }
 });
 
-Deno.test("dataforseo docs: one Basic inject, one relay, one digest, one meter, one evidence; the four override starts and two polls", async () => {
+Deno.test("dataforseo docs: one Basic inject, one relay, one digest, one meter, keyword-ideas evidence override; the four override starts and two polls", async () => {
     const bundle = await testBundle();
     const ids = await dataforseoIds();
     const first = bundle.endpoints[ids[0]];
@@ -549,11 +549,18 @@ Deno.test("dataforseo docs: one Basic inject, one relay, one digest, one meter, 
             id,
         );
         assert(doc.usage.consolidate, `${id}: the receipt must be read`);
-        assertEquals(
-            doc.usage.evidence.$fn.key,
-            first.usage.evidence.$fn.key,
-            id,
-        );
+        if (id === "dataforseo#labs/keyword-ideas") {
+            assert(
+                doc.usage.evidence.$fn.key !== first.usage.evidence.$fn.key,
+                id,
+            );
+        } else {
+            assertEquals(
+                doc.usage.evidence.$fn.key,
+                first.usage.evidence.$fn.key,
+                id,
+            );
+        }
         // the LLM cap rides toRequest on the four response docs only
         assertEquals(
             doc.input.toRequest !== undefined,

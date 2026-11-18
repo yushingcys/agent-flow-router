@@ -64,6 +64,23 @@ export default defineEndpoint({
         },
         // include_clickstream_data doubles the call: the rows twice
         // plus a second base fee, which is 100 rows at this card
+        evidence: ({ data, utils }) => {
+            const items = utils.json.optionalGet(
+                data.output,
+                "$.tasks[0].result[0].items",
+            );
+            const declared = utils.json.optionalGet(
+                data.output,
+                "$.tasks[0].result[0].items_count",
+            );
+            const rows = Array.isArray(items)
+                ? items.length
+                : typeof declared === "number"
+                ? declared
+                : 0;
+            const calls = data.input.body.include_clickstream_data ? 2 : 1;
+            return { counts: { rows: calls * rows + (calls - 1) * 100 } };
+        },
         estimate: ({ data }) => {
             const calls = data.input.body.include_clickstream_data ? 2 : 1;
             return {
