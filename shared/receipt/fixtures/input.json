@@ -1,0 +1,12 @@
+{
+    "body": {
+        "query": "batteries",
+        "apiKey": "sekret"
+    },
+    "headers": {
+        "authorization": "Bearer sekret"
+    },
+    "queryParams": {
+        "n": 1
+    }
+}

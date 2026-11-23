@@ -1,0 +1,9 @@
+{
+    "alg": "Ed25519",
+    "keys": [
+        {
+            "id": "ed25519-fixture",
+            "publicKey": "18wPsqD0bW6hzNOkEOPvP-1t9Fuo8qeqFDrNYt4WvdU"
+        }
+    ]
+}

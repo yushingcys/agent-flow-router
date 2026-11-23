@@ -1,0 +1,20 @@
+{
+    "alg": "Ed25519",
+    "payload": {
+        "v": 1,
+        "alg": "Ed25519",
+        "hash": "sha256",
+        "runId": "run_fixture",
+        "endpoint": "exa#search",
+        "docHash": "sha256:abababababababababababababababababababababababababababababababab",
+        "upstream": "https://api.exa.ai/search",
+        "inputHash": "d40d06264ee29aa5559cedb97c8fce5c965a225f2eb8226efd1e88bfdfd4677e",
+        "outputHash": "4f2b016b08fe5a7575e7d53a297009bf036b4bcf9c5c7ee6c0bf9cf8e3ee51a8",
+        "charged": "$0.005000",
+        "at": "2026-11-23T00:00:00.000Z",
+        "keyId": "ed25519-fixture",
+        "logSeq": 2,
+        "logHash": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+    },
+    "signature": "hkZaIFhH2F3RM5Ffvhd9moZxoXST2_E_iiiyuYkHEODjut7a9dzCwPcgSSNYET7cgKkneJfgXNrn9Y_mfg1mBQ"
+}

@@ -17,6 +17,7 @@
         "engine:run": "deno run --unstable-kv --allow-read --allow-write --allow-env --allow-net --allow-run=git scripts/run.ts",
         "catalog": "deno run --allow-read --allow-write --allow-env --allow-run=git scripts/catalog.ts",
         "record": "deno run --allow-read --allow-write --allow-env --allow-net --allow-run=git scripts/record.ts",
+        "verify-receipt": "deno run --unstable-kv --allow-read --allow-write --allow-env --allow-net --allow-run=git scripts/verify-receipt.ts",
         "version:check": "deno run --allow-read --allow-run=git scripts/version-check.ts",
         "ids:check": "deno run --allow-read --allow-write --allow-env --allow-run=git scripts/ids-check.ts",
         "webhook": "deno run --unstable-kv --allow-read --allow-write --allow-env --allow-net --allow-run=git,cloudflared,tailscale scripts/webhook.ts",
