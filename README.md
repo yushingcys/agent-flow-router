@@ -62,6 +62,16 @@ deno task engine:run 'exa#search' --body '{"query":"battery suppliers","numResul
 
 The catalog is connector code, not a grant of provider access or redistribution rights. Configure and use each provider under its applicable terms. Usage measurements are provider units; the router does not debit a customer balance.
 
+## Verify a hosted receipt
+
+A signed receipt from the hosted gateway can be checked here. The check uses the public keys and, when you replay, your own provider key. It does not use an Agent Flow API key.
+
+```bash
+deno task verify-receipt receipt.json --input input.json --hosted-output output.json
+```
+
+That fetches `https://letagentflow.com/keys`, checks the Ed25519 signature, and compares the receipt with the endpoint compiled from this checkout (`endpoint`, `docHash`, `upstream`, `inputHash`). Credential-shaped fields are removed before the input and output hashes, the same way the gateway hashes them. The replay then runs through the local engine. Provider responses are not bit-stable: the command compares HTTP status, the output schema, and a diff, and says so. Pass `--deterministic` only for an endpoint whose response is documented as bit-stable. `--no-replay` stops after the signature and the catalog checks. `--keys keys.json` verifies offline. `--input` is the run input (`body`, `queryParams`, `pathParams`). Replay uses the same provider environment variables as `deno task engine:run` and can spend that provider account.
+
 ## Embed it
 
 - `engine/mod.ts`: `Engine`, `Transport`, `ParamsResolver`, and execution contracts.
