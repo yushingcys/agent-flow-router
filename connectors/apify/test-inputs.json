@@ -110,6 +110,10 @@
             }
         ]
     },
+    "axlymxp/shein-scraper": {
+        "keywords": "dress",
+        "limit": 10
+    },
     "burbn/google-shopping-scraper": {
         "searchQuery": "usb cable",
         "limit": 10
@@ -130,6 +134,10 @@
             "ChIJj61dQgK6j4AR4GeTYWZsKWw"
         ],
         "maxReviews": 2
+    },
+    "crw/temu-products-scraper": {
+        "keyword": "wireless earbuds",
+        "max_items": 10
     },
     "curious_coder/facebook-ads-library-scraper": {
         "urls": [
@@ -175,6 +183,12 @@
             "https://www.linkedin.com/in/satyanadella"
         ]
     },
+    "fatihtahta/nike-scraper": {
+        "queries": [
+            "running shoes"
+        ],
+        "limit": 10
+    },
     "harvestapi/linkedin-company-employees": {
         "companies": [
             "https://www.linkedin.com/company/microsoft"
@@ -219,6 +233,12 @@
         "profileScraperMode": "Short",
         "search": "plumber",
         "maxItems": 2
+    },
+    "hello.datawizards/nordstrom-product-bulk-scraper-pro": {
+        "queries": [
+            "jacket"
+        ],
+        "itemLimit": 2
     },
     "johnvc/apple-app-store-reviews-api": {
         "product_ids": [
@@ -313,12 +333,24 @@
         "getFollowers": true,
         "getFollowing": false
     },
+    "moving_beacon-owner1/adidas-product-scraper": {
+        "query": "samba",
+        "maxResults": 10
+    },
+    "pintostudio/macys-product-search": {
+        "query": "coat",
+        "perPage": "10"
+    },
     "practicaltools/apify-reddit-api": {
         "searches": [
             "deno"
         ],
         "maxItems": 2,
         "skipComments": true
+    },
+    "rl1987/stockx-api-scraper": {
+        "q": "Jordan 1",
+        "maxItems": 2
     },
     "scraptik/tiktok-api": {
         "profile_username": "tiktok"
@@ -370,5 +402,10 @@
     },
     "xmiso_scrapers/eu-amazon-sellers-email-leads": {
         "max_results": 2
+    },
+    "xtracto/shopee-search": {
+        "mode": "keyword",
+        "keyword": "laptop",
+        "maxProducts": 10
     }
 }
