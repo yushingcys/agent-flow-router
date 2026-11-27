@@ -167,6 +167,9 @@ const CHAIN_COUNTS: Record<string, Record<string, number>> = {
         videoprocessed: 2,
         default_dataset_item: 2,
     },
+    // test input is search mode with includeDetails off (binding
+    // default), so the 2 chain rows are product-list rows only
+    "rl1987/stockx-api-scraper": { plp_row: 2 },
 };
 
 const inputFor = (id: string): RunInput => {
@@ -1040,5 +1043,153 @@ Deno.test("apify linkedin-company-employees: our mode values reach the actor as 
             "Full ($8 per 1k)",
             "Full + email search ($12 per 1k)",
         ],
+    );
+});
+
+Deno.test("apify estimates: shopping keyword actors (pinned 2026-11-27)", async () => {
+    // Nike: limit listings per query. 1 query × 10 × $0.001
+    assertEquals(
+        await estimateFor("apify#fatihtahta/nike-scraper", {
+            queries: ["running shoes"],
+            limit: 10,
+        }),
+        { credits: { default: 0.01 }, evidence: { RESULT: 10 } },
+    );
+    // a query and a URL are both sources
+    assertEquals(
+        await estimateFor("apify#fatihtahta/nike-scraper", {
+            queries: ["running shoes"],
+            startUrls: ["https://www.nike.com/w/mens-shoes-nik1zy7ok"],
+            limit: 10,
+        }),
+        { credits: { default: 0.02 }, evidence: { RESULT: 20 } },
+    );
+    // Adidas: maxResults products + the start unit price
+    assertEquals(
+        await estimateFor("apify#moving_beacon-owner1/adidas-product-scraper", {
+            query: "samba",
+            maxResults: 5,
+        }),
+        {
+            credits: { default: 0.00005 + 5 * 0.01 },
+            evidence: { actor_start: 1, default_dataset_item: 5 },
+        },
+    );
+    // Macy's: one page, perPage is the actor's page-size string
+    assertEquals(
+        await estimateFor("apify#pintostudio/macys-product-search", {
+            query: "coat",
+            perPage: "8",
+        }),
+        {
+            credits: { default: 0.00005 + 8 * 0.0079 },
+            evidence: { actor_start: 1, default_dataset_item: 8 },
+        },
+    );
+    // Shopee keyword with its source set; a keyword mode with no keyword
+    // estimates 0 rows (the start fee still bills)
+    assertEquals(
+        await estimateFor("apify#xtracto/shopee-search", {
+            mode: "keyword",
+            keyword: "laptop",
+            maxProducts: 3,
+        }),
+        {
+            credits: { default: 0.01 + 3 * 0.005 },
+            evidence: { actor_start: 1, default_dataset_item: 3 },
+        },
+    );
+    assertEquals(
+        await estimateFor("apify#xtracto/shopee-search", {
+            mode: "keyword",
+            maxProducts: 3,
+        }),
+        {
+            credits: { default: 0.01 },
+            evidence: { actor_start: 1, default_dataset_item: 0 },
+        },
+    );
+    // StockX search: maxItems list rows. Details add the same count on
+    // pdp-row. A page cap of 1 tightens 100 items to ~40. Sales history
+    // is ids (capped by maxItems) × maxSalesPerProduct (default 100).
+    assertEquals(
+        await estimateFor("apify#rl1987/stockx-api-scraper", {
+            q: "Jordan 1",
+            maxItems: 4,
+        }),
+        {
+            credits: { default: 4 * 0.0025392 },
+            evidence: { plp_row: 4 },
+        },
+    );
+    assertEquals(
+        await estimateFor("apify#rl1987/stockx-api-scraper", {
+            q: "Jordan 1",
+            maxItems: 4,
+            includeDetails: true,
+        }),
+        {
+            credits: { default: 4 * 0.0025392 + 4 * 0.0012696 },
+            evidence: { plp_row: 4, pdp_row: 4 },
+        },
+    );
+    assertEquals(
+        await estimateFor("apify#rl1987/stockx-api-scraper", {
+            q: "Jordan 1",
+            maxItems: 100,
+            maxPages: 1,
+        }),
+        {
+            credits: { default: 40 * 0.0025392 },
+            evidence: { plp_row: 40 },
+        },
+    );
+    assertEquals(
+        await estimateFor("apify#rl1987/stockx-api-scraper", {
+            mode: "product",
+            productIds: ["air-jordan-1"],
+            maxItems: 10,
+        }),
+        {
+            credits: { default: 0.0012696 },
+            evidence: { pdp_row: 1 },
+        },
+    );
+    assertEquals(
+        await estimateFor("apify#rl1987/stockx-api-scraper", {
+            mode: "salesHistory",
+            productIds: ["a", "b"],
+            maxItems: 10,
+        }),
+        {
+            credits: { default: 200 * 0.0012696 },
+            evidence: { sales_history_row: 200 },
+        },
+    );
+    // Temu / Shein: the cap is the result count. Nordstrom: itemLimit
+    // per query.
+    assertEquals(
+        await estimateFor("apify#crw/temu-products-scraper", {
+            keyword: "wireless earbuds",
+            max_items: 10,
+        }),
+        { credits: { default: 0.1 }, evidence: { RESULT: 10 } },
+    );
+    assertEquals(
+        await estimateFor("apify#axlymxp/shein-scraper", {
+            keywords: "dress",
+            limit: 4,
+        }),
+        { credits: { default: 0.2 }, evidence: { RESULT: 4 } },
+    );
+    assertEquals(
+        await estimateFor(
+            "apify#hello.datawizards/nordstrom-product-bulk-scraper-pro",
+            { queries: ["jacket", "boots"], itemLimit: 3 },
+        ),
+        {
+            credits: { default: 0.005 + 6 * 0.005 },
+            evidence: { actor_start: 1, default_dataset_item: 6 },
+        },
     );
 });

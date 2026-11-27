@@ -123,6 +123,11 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         description: "Google Shopping data: products, prices, and sellers.",
     },
     {
+        id: "temu",
+        displayName: "Temu",
+        description: "Temu data: products, prices, and search results.",
+    },
+    {
         id: "tiktok-shop",
         displayName: "TikTok Shop",
         description: "TikTok Shop data: products, reviews, and sellers.",
@@ -164,6 +169,21 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         description: "Meijer data: products, prices, and availability.",
     },
     {
+        id: "adidas",
+        displayName: "Adidas",
+        description: "Adidas data: products, prices, and search results.",
+    },
+    {
+        id: "macys",
+        displayName: "Macy's",
+        description: "Macy's data: products, prices, and search results.",
+    },
+    {
+        id: "nike",
+        displayName: "Nike",
+        description: "Nike data: products, prices, and search results.",
+    },
+    {
         id: "nordstrom",
         displayName: "Nordstrom",
         description: "Nordstrom data: products, category listings, and prices.",
@@ -172,6 +192,17 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         id: "segari",
         displayName: "Segari",
         description: "Segari data: products, prices, and availability.",
+    },
+    {
+        id: "shopee",
+        displayName: "Shopee",
+        description: "Shopee data: products, prices, and search results.",
+    },
+    {
+        id: "stockx",
+        displayName: "StockX",
+        description:
+            "StockX data: resale listings, bids, asks, and search results.",
     },
     {
         id: "shein",
