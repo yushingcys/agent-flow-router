@@ -1192,4 +1192,50 @@ Deno.test("apify estimates: shopping keyword actors (pinned 2026-11-27)", async 
             evidence: { actor_start: 1, default_dataset_item: 6 },
         },
     );
+    // Costco: one keyword is one source. A keyword plus a URL is two.
+    // Neither source still pays the flat start.
+    assertEquals(
+        await estimateFor("apify#e-commerce/costco-fast-product-scraper", {
+            keyword: "olive oil",
+            maxProductsPerUrl: 4,
+        }),
+        {
+            credits: { default: 0.00007 + 4 * 0.0029 },
+            evidence: { start: 1, push_product: 4 },
+        },
+    );
+    assertEquals(
+        await estimateFor("apify#e-commerce/costco-fast-product-scraper", {
+            keyword: "olive oil",
+            startUrls: [{ url: "https://www.costco.com/olive-oil.html" }],
+            maxProductsPerUrl: 2,
+        }),
+        {
+            credits: { default: 0.00007 + 4 * 0.0029 },
+            evidence: { start: 1, push_product: 4 },
+        },
+    );
+    assertEquals(
+        await estimateFor("apify#e-commerce/costco-fast-product-scraper", {
+            maxProductsPerUrl: 3,
+        }),
+        {
+            credits: { default: 0.00007 },
+            evidence: { start: 1, push_product: 0 },
+        },
+    );
+    // Newegg: maxItems is the run cap once any keyword or URL is present.
+    assertEquals(
+        await estimateFor("apify#kawsar/newegg-product-scraper", {
+            keywords: ["RTX 4070"],
+            maxItems: 5,
+        }),
+        { credits: { default: 5 * 0.0029 }, evidence: { RESULT: 5 } },
+    );
+    assertEquals(
+        await estimateFor("apify#kawsar/newegg-product-scraper", {
+            maxItems: 5,
+        }),
+        { credits: {}, evidence: { RESULT: 0 } },
+    );
 });

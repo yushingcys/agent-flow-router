@@ -225,6 +225,67 @@ export const LEAF_CATEGORIES = defineLeafCategories([
         description: "Zepto data: products, prices, and availability.",
     },
     {
+        id: "aliexpress",
+        displayName: "AliExpress",
+        description: "AliExpress data: products, prices, and search results.",
+    },
+    {
+        id: "asos",
+        displayName: "ASOS",
+        description: "ASOS data: products, prices, and search results.",
+    },
+    {
+        id: "barnes-and-noble",
+        displayName: "Barnes & Noble",
+        description: "Barnes & Noble data: books, prices, and search results.",
+    },
+    {
+        id: "costco",
+        displayName: "Costco",
+        description: "Costco data: products, prices, and search results.",
+    },
+    {
+        id: "ikea",
+        displayName: "IKEA",
+        description: "IKEA data: products, prices, and search results.",
+    },
+    {
+        id: "mercari",
+        displayName: "Mercari",
+        description: "Mercari data: listings, prices, and search results.",
+    },
+    {
+        id: "napa",
+        displayName: "NAPA",
+        description: "NAPA Auto Parts data: parts, prices, and availability.",
+    },
+    {
+        id: "newegg",
+        displayName: "Newegg",
+        description: "Newegg data: products, prices, and search results.",
+    },
+    {
+        id: "sams-club",
+        displayName: "Sam's Club",
+        description:
+            "Sam's Club data: products, member prices, and search results.",
+    },
+    {
+        id: "trader-joes",
+        displayName: "Trader Joe's",
+        description: "Trader Joe's data: products, prices, and search results.",
+    },
+    {
+        id: "wayfair",
+        displayName: "Wayfair",
+        description: "Wayfair data: products, prices, and search results.",
+    },
+    {
+        id: "whole-foods",
+        displayName: "Whole Foods",
+        description: "Whole Foods data: products, prices, and search results.",
+    },
+    {
         id: "ai-search",
         displayName: "AI Search",
         description:

@@ -27,6 +27,23 @@ export const zLon = z.number().min(-180).max(180);
 /** A non-negative result offset. */
 export const zOffset = z.number().int().min(0);
 
+/** Retail keyword, 1–500 characters (litescrape SDK RetailQuery, 0.7.0). */
+export const zRetailQuery = z.string().min(1).max(500);
+
+/** One-based retail result page, 1–100. */
+export const zRetailPage = z.number().int().min(1).max(100);
+
+/** Retail product-page URL (litescrape SDK ProductUrl: 1–4096 characters). */
+export const zProductUrl = z.string().min(1).max(4096);
+
+/** Numeric store id, 1–8 digits (litescrape SDK StoreId). */
+export const zStoreId = z.string().regex(/^[0-9]{1,8}$/);
+
+/** Shared request budget on the retail surfaces. */
+export const zRetailTimeout = z.number().gt(0).max(90).describe(
+    "Total request execution budget in seconds, greater than 0 and at most 90.",
+);
+
 // An http(s) URL: the pattern survives compilation and keeps `data:` URIs
 // (which would bloat the run record) off the wire.
 export const zHttpUrl = z.string().regex(/^https?:\/\//);

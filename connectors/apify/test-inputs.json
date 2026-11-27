@@ -407,5 +407,15 @@
         "mode": "keyword",
         "keyword": "laptop",
         "maxProducts": 10
+    },
+    "e-commerce/costco-fast-product-scraper": {
+        "keyword": "olive oil",
+        "maxProductsPerUrl": 4
+    },
+    "kawsar/newegg-product-scraper": {
+        "keywords": [
+            "RTX 4070"
+        ],
+        "maxItems": 5
     }
 }

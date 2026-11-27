@@ -6,7 +6,8 @@ import { defineProvider, presets } from "@shared/core";
  * Maps (places, reviews, posts, foot traffic, photos), Bing and DuckDuckGo
  * search and maps, Apple Maps places and reviews, Yelp and Tripadvisor
  * search, places, and reviews, and Google Play and Apple App Store
- * listings, products, and reviews. Thirty-three synchronous GETs on ONE
+ * listings, products, and reviews, plus unofficial retail search for
+ * AliExpress, Wayfair, IKEA, and Whole Foods. Forty-one synchronous GETs on ONE
  * host (`https://api.litescrape.com/api/<engine>/<kind>`) with ONE Bearer
  * key, so the akta shape: both provider-wide hooks live here and every
  * endpoint inherits them.
