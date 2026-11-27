@@ -1,0 +1,35 @@
+{
+    "name": "synthetic-active-listings-ok",
+    "description": "SYNTHETIC happy chain for etsy#listings/active: a keyword search sorted by price. Envelope {count, results} and ShopListing/Money field names from Etsy's OpenAPI 3.0 document (etsy.com/openapi/generated/oas/3.0.0.json, read 2026-11-27); values invented. Replace via `deno task record` when ETSY_API_KEY exists.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.url}}?limit=2&keywords=walnut+desk+organizer&sort_on=price&sort_order=asc"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "count": 1,
+                    "results": [
+                        {
+                            "listing_id": 1000000001,
+                            "user_id": 2000001,
+                            "shop_id": 3000001,
+                            "title": "Walnut Desk Organizer",
+                            "state": "active",
+                            "quantity": 4,
+                            "url": "https://www.etsy.com/listing/1000000001/walnut-desk-organizer",
+                            "tags": ["walnut", "desk organizer"],
+                            "price": {
+                                "amount": 4500,
+                                "divisor": 100,
+                                "currency_code": "USD"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

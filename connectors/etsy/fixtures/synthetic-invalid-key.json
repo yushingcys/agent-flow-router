@@ -1,0 +1,15 @@
+{
+    "name": "synthetic-invalid-key",
+    "description": "SYNTHETIC provider error for etsy#listings/active: the 403 envelope Etsy answers with a bad key or shared secret (body as observed from openapi.etsy.com with a deliberately invalid key, 2026-11-27). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": { "method": "GET", "url": "{{request.url}}?keywords=mug" },
+            "res": {
+                "status": 403,
+                "body": {
+                    "error": "API key not found or not active, or incorrect shared secret for API key."
+                }
+            }
+        }
+    ]
+}

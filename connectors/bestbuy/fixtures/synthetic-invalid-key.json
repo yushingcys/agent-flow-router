@@ -1,0 +1,19 @@
+{
+    "name": "synthetic-invalid-key",
+    "description": "SYNTHETIC provider error for bestbuy#products/{sku}: the 403 envelope Best Buy answers with an invalid key (body as observed from api.bestbuy.com with a deliberately invalid key, 2026-11-27). Vendor non-2xx is DATA: zero usage.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/products/6418599.json?apiKey=test-key"
+            },
+            "res": {
+                "status": 403,
+                "body": {
+                    "errorCode": "403",
+                    "errorMessage": "We were unable to validate your API Key."
+                }
+            }
+        }
+    ]
+}
