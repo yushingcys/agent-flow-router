@@ -8,14 +8,13 @@ export default defineEndpoint({
         displayName: "Get Product Store Availability",
         summary: "Best Buy stores near a ZIP code that have a SKU " +
             "available.",
-        description: "List the Best Buy stores near a ZIP code (or one " +
-            "store) where a SKU can be bought or picked up today, with " +
+        description:
+            "List the Best Buy stores near a ZIP code where a SKU can be bought or picked up today, with " +
             "each store's address, distance and pickup eligibility.",
         docsUrl:
             "https://bestbuyapis.github.io/api-documentation/#in-store-availability",
         notes: [
-            "Send postalCode or storeId. A store absent from `stores` " +
-            "does not have the SKU available.",
+            "A store absent from `stores` does not have the SKU available.",
         ],
     },
     endpoint: "/products/{sku}/stores",

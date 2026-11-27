@@ -144,13 +144,16 @@ Deno.test("bestbuy#products/{sku} provider error (synthetic 403): message lifted
     );
 });
 
-Deno.test("bestbuy: numeric SKU, bounded pageSize, strict keys", async () => {
+Deno.test("bestbuy: numeric SKU, required postalCode, bounded pageSize, strict keys", async () => {
     const product = await testSealedUnit("bestbuy#products/{sku}");
     const search = await testSealedUnit("bestbuy#products/search");
+    const stores = await testSealedUnit("bestbuy#products/{sku}/stores");
     const synthetic = await fixture("synthetic-product-ok");
     const cases: [typeof product, Record<string, Json>][] = [
         [product, { pathParams: { sku: "abc" } }],
         [product, { pathParams: { sku: "1" }, queryParams: { apiKey: "k" } }],
+        [stores, { pathParams: { sku: "1" } }],
+        [stores, { pathParams: { sku: "1" }, queryParams: { storeId: "10" } }],
         [search, { pathParams: { filter: "" } }],
         [search, {
             pathParams: { filter: "search=tv" },
