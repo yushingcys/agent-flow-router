@@ -20,7 +20,7 @@ export const zGoogleFlightsQuery = z.strictObject({
         "The currency of the returned prices. Default to USD.",
     ).optional(),
     type: z.string().describe(
-        "The type of the flights. Available options: 1 - Round trip (default) 2 - One way 3 - Multi-city When this parameter is set to 3, use multi_city_json to set the flight information. To obtain the returning flight information for Round Trip (1), you need to make another request using a departure_token.",
+        'Flight type as a string, not an integer. "1" round trip (default), "2" one way, "3" multi-city. When this parameter is set to "3", use multi_city_json to set the flight information. To obtain the returning flight information for round trip ("1"), make another request using a departure_token.',
     ).optional(),
     outbound_date: z.string().describe(
         "The outbound date. The format is YYYY-MM-DD. e.g. 2026-10-28 Parameter is required when type is 1 (Round trip) or 2 (One way), unless selected_flights_json is used. Parameter can't be used when type is 3 (Multi-city). Use date inside multi_city_json instead.",
@@ -29,7 +29,7 @@ export const zGoogleFlightsQuery = z.strictObject({
         "The return date. The format is YYYY-MM-DD. e.g. 2026-11-03 Parameter is required when type is 1 (Round trip), unless selected_flights_json is used. Parameter can't be used when type is 2 (One way) or 3 (Multi-city).",
     ).optional(),
     travel_class: z.string().describe(
-        "The travel class. Available options: 1 - Economy (default) 2 - Premium economy 3 - Business 4 - First",
+        'Travel class as a string, not an integer. "1" economy (default), "2" premium economy, "3" business, "4" first.',
     ).optional(),
     multi_city_json: z.string().describe(
         "The flight information for multi-city flights. It's a JSON string containing multiple flight information objects. Each object should contain the following fields: departure_id - The departure airport code or location kgmid. The format is the same as the main departure_id parameter. arrival_id - The arrival airport code or location kgmid. The format is the same as the main arrival_id parameter. date - Flight date.",
@@ -59,7 +59,7 @@ export const zGoogleFlightsQuery = z.strictObject({
         "The sorting order of the results. Available options: 1 - Top flights (default) 2 - Price 3 - Departure time 4 - Arrival time 5 - Duration 6 - Emissions",
     ).optional(),
     stops: z.string().describe(
-        "The number of stops during the flight. Available options: 0 - Any number of stops (default) 1 - Nonstop only 2 - 1 stop or fewer 3 - 2 stops or fewer",
+        'Stops as a string, not an integer. "0" any number of stops (default), "1" nonstop only, "2" 1 stop or fewer, "3" 2 stops or fewer.',
     ).optional(),
     exclude_airlines: z.string().describe(
         "The airline codes to be excluded. Split multiple airlines with comma. It can't be used together with include_airlines. Each airline code should be a 2-character IATA code consisting of either two uppercase letters or one uppercase letter and one digit. You can search for airline codes on IATA. For example, UA is United Airlines.",
