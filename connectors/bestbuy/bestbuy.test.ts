@@ -160,6 +160,10 @@ Deno.test("bestbuy: numeric SKU, bounded pageSize, strict keys", async () => {
             pathParams: { filter: "search=tv" },
             queryParams: { format: "xml" },
         }],
+        [search, {
+            pathParams: { filter: "search=tv" },
+            queryParams: { facets: "manufacturer" },
+        }],
     ];
     for (const [unit, input] of cases) {
         await assertRejects(

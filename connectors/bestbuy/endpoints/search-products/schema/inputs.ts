@@ -35,7 +35,7 @@ export const zSearchProductsQuery = z.strictObject({
         "Deep-paging cursor: * for the first page, then the previous " +
             "response's nextCursorMark.",
     ),
-    facets: z.string().min(1).optional().describe(
+    facet: z.string().min(1).optional().describe(
         "Attribute(s) to count values of across the matches, e.g. " +
             "manufacturer or manufacturer,10.",
     ),
