@@ -12,12 +12,12 @@ const fixtures = fromFileUrl(new URL("./fixtures/", import.meta.url));
 const fixture = (name: string) =>
     loadFixture(`${fixtures}synthetic-${name}.json`);
 
-Deno.test("anyapi: 237 generated SKUs share one auth, consolidate and error digest", async () => {
+Deno.test("anyapi: 240 generated SKUs share one auth, consolidate and error digest", async () => {
     const bundle = await testBundle();
     const docs = Object.values(bundle.endpoints).filter((d) =>
         d.provider === "anyapi"
     );
-    assertEquals(docs.length, 237);
+    assertEquals(docs.length, 240);
     const [first] = docs;
     for (const doc of docs) {
         const sku = doc.id.slice("anyapi#".length);

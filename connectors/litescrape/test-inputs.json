@@ -201,5 +201,45 @@
             "place_id": "1234567",
             "num": 1
         }
+    },
+    "wayfair/search": {
+        "queryParams": {
+            "query": "desk"
+        }
+    },
+    "wayfair/product": {
+        "queryParams": {
+            "url": "https://www.wayfair.com/p/desk-w111003401.html"
+        }
+    },
+    "aliexpress/search": {
+        "queryParams": {
+            "query": "mug"
+        }
+    },
+    "aliexpress/product": {
+        "queryParams": {
+            "url": "https://www.aliexpress.com/item/1005008176579188.html"
+        }
+    },
+    "ikea/search": {
+        "queryParams": {
+            "query": "desk"
+        }
+    },
+    "ikea/product": {
+        "queryParams": {
+            "url": "https://www.ikea.com/us/en/p/billy-bookcase-white-20522046/"
+        }
+    },
+    "wholefoods/search": {
+        "queryParams": {
+            "query": "coffee"
+        }
+    },
+    "wholefoods/product": {
+        "queryParams": {
+            "url": "https://www.wholefoodsmarket.com/product/example-coffee-b079ltr61q"
+        }
     }
 }

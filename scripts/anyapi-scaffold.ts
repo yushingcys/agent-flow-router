@@ -324,6 +324,35 @@ function oneOfNote(body: Node): string | undefined {
     return `Send at least one of: ${names.join(", ")}.`;
 }
 
+/** Shopping searches to keep even when Monid's listing does not sell
+ *  them. The wipe below would otherwise drop them on the next scaffold. */
+const EXTRA_LISTING: { endpoint: string; categories: string[] }[] = [
+    { endpoint: "/asos.search", categories: ["asos"] },
+    { endpoint: "/mercari.search", categories: ["mercari"] },
+    { endpoint: "/samsclub.search", categories: ["sams-club"] },
+];
+const listed = new Set(listing.map((item) => item.endpoint));
+for (const extra of EXTRA_LISTING) {
+    if (!listed.has(extra.endpoint)) listing.push(extra);
+}
+
+/** Prepended to the catalog description and repeated as a note. These
+ *  are AnyAPI's own sources, not the retailer's official API. */
+const UNOFFICIAL_NOTE: Record<string, string> = {
+    "asos.search":
+        "Unofficial third-party data from AnyAPI, not an official ASOS API. " +
+        "ASOS's terms may prohibit scraping, and results can stop when " +
+        "AnyAPI's sources change.",
+    "mercari.search":
+        "Unofficial third-party data from AnyAPI, not an official Mercari " +
+        "API. Mercari's terms may prohibit scraping, and results can stop " +
+        "when AnyAPI's sources change.",
+    "samsclub.search":
+        "Unofficial third-party data from AnyAPI, not an official Sam's " +
+        "Club API. Sam's Club's terms may prohibit scraping, and results " +
+        "can stop when AnyAPI's sources change.",
+};
+
 const skipped: string[] = [];
 await Deno.remove(OUT, { recursive: true }).catch(() => {});
 let written = 0;
@@ -360,7 +389,10 @@ for (
         : "zBody";
     const docsUrl = /\]\((https:\/\/getanyapi\.com\/api\/[^)]+)\)/.exec(
         op.description,
-    )?.[1];
+    )?.[1] ??
+        (UNOFFICIAL_NOTE[sku]
+            ? `https://getanyapi.com/api/${sku.replace(".", "/")}`
+            : undefined);
     const categories = [
         ...new Set(
             item.categories.filter((c) => c !== "anyapi").map((c) =>
@@ -368,9 +400,17 @@ for (
             ),
         ),
     ];
-    const description = clean(api.description);
-    const summary = /^.+?[.!?](?=\s|$)/.exec(description)?.[0] ?? description;
-    const note = oneOfNote(body);
+    const catalogDescription = clean(api.description);
+    const warning = UNOFFICIAL_NOTE[sku];
+    const description = warning
+        ? `${warning} ${catalogDescription}`
+        : catalogDescription;
+    const summarySource = warning ? catalogDescription : description;
+    const summary = /^.+?[.!?](?=\s|$)/.exec(summarySource)?.[0] ??
+        summarySource;
+    const notes = [oneOfNote(body), warning].filter((note): note is string =>
+        note !== undefined
+    );
     const coreImports = [
         "defineEndpoint",
         ...(model.includes("Unit.") ? ["Unit"] : []),
@@ -394,7 +434,9 @@ for (
         ...(categories.length
             ? [`categories: ${JSON.stringify(categories)},`]
             : []),
-        ...(note ? [`notes: [${q(note)}],`] : []),
+        ...(notes.length
+            ? [`notes: [${notes.map((note) => q(note)).join(", ")}],`]
+            : []),
         "},",
         `endpoint: ${q(`/${sku}`)},`,
         `request: { method: "POST", path: ${q(`/v1/run/${sku}`)} },`,

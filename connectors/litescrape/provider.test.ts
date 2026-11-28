@@ -11,7 +11,7 @@ import {
 import { directTransport, Engine } from "@agent-flow/connector-engine";
 
 /**
- * THE litescrape suite (design D6, the surf D2 layout): 33 docs of ONE
+ * THE litescrape suite (design D6, the surf D2 layout): 41 docs of ONE
  * billing shape — a PER_UNIT·RESULT line of one Litescrape credit, settled
  * 0|1 by each endpoint's own result-group check — so the tests live once
  * here and iterate the catalog, while every endpoint keeps its OWN
@@ -140,6 +140,14 @@ const RATE: Record<string, number> = {
     "litescrape#tripadvisor/place": 1,
     "litescrape#tripadvisor/reviews": 1,
     "litescrape#tripadvisor/search": 1,
+    "litescrape#aliexpress/product": 1,
+    "litescrape#aliexpress/search": 1,
+    "litescrape#ikea/product": 1,
+    "litescrape#ikea/search": 1,
+    "litescrape#wayfair/product": 1,
+    "litescrape#wayfair/search": 1,
+    "litescrape#wholefoods/product": 1,
+    "litescrape#wholefoods/search": 1,
     "litescrape#yelp/reviews": 1,
     "litescrape#yelp/search": 1,
 };
@@ -177,7 +185,7 @@ const EMPTY_CASES = [
 
 Deno.test("litescrape docs: every endpoint is in the rate table", async () => {
     const ids = await litescrapeIds();
-    assertEquals(ids.length, 33);
+    assertEquals(ids.length, 41);
     // a new endpoint must state its draw
     assertEquals(Object.keys(RATE).sort(), ids);
 });
@@ -269,7 +277,7 @@ Deno.test("litescrape docs: one auth, one CSV join, one error digest, one estima
         bundle.endpoints["litescrape#google-play/movies"].usage.evidence.$fn
             .key,
     );
-    assertEquals(evidenceKeys.size, 22);
+    assertEquals(evidenceKeys.size, 24);
 });
 
 Deno.test("litescrape meta: the verbatim-links caveat rides every doc; the vendor's combination rules ride notes", async () => {
@@ -311,6 +319,8 @@ Deno.test("litescrape meta: the verbatim-links caveat rides every doc; the vendo
         notesOf(id).includes("Alpha upstream")
     );
     assertEquals(alpha, [
+        "litescrape#aliexpress/product",
+        "litescrape#aliexpress/search",
         "litescrape#app-store/product",
         "litescrape#app-store/reviews",
         "litescrape#app-store/search",
@@ -322,6 +332,12 @@ Deno.test("litescrape meta: the verbatim-links caveat rides every doc; the vendo
         "litescrape#google-play/reviews",
         "litescrape#google/ads",
         "litescrape#google/local",
+        "litescrape#ikea/product",
+        "litescrape#ikea/search",
+        "litescrape#wayfair/product",
+        "litescrape#wayfair/search",
+        "litescrape#wholefoods/product",
+        "litescrape#wholefoods/search",
     ]);
     // no rule, no note beyond the provider's four
     assertEquals(
@@ -394,7 +410,7 @@ Deno.test("litescrape schemas: strict mirrors, unions without defaults, the live
 });
 
 // ---------------------------------------------------------------------------
-// the 33 relays
+// the 41 relays
 // ---------------------------------------------------------------------------
 
 Deno.test("litescrape: every endpoint's happy run draws one credit and relays the body verbatim, links included", async () => {

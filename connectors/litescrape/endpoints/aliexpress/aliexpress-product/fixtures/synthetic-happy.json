@@ -1,0 +1,33 @@
+{
+    "name": "synthetic-happy",
+    "description": "SYNTHETIC \u2014 not recorded (no Litescrape key held, 2026-11-27): the shape follows the published response groups on https://litescrape.com/docs/aliexpress-product. Unverified against live traffic \u2014 replace via `deno task record`. A 200 carrying the product result group: 1 Litescrape credit, RESULT 1. The api.litescrape.com follow-up link is relayed verbatim.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "https://api.litescrape.com/api/aliexpress/product?url=https%3A%2F%2Fwww.aliexpress.com%2Fitem%2F1005008176579188.html"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "search_metadata": {
+                        "id": "synthetic-retail-product",
+                        "status": "Success",
+                        "json_endpoint": "https://api.litescrape.com/api/aliexpress/product?url=https%3A%2F%2Fwww.aliexpress.com%2Fitem%2F1005008176579188.html"
+                    },
+                    "search_parameters": {
+                        "url": "https://www.aliexpress.com/item/1005008176579188.html"
+                    },
+                    "product": {
+                        "title": "Example Product",
+                        "price": {
+                            "amount": 19.99,
+                            "currency": "USD",
+                            "text": "$19.99"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

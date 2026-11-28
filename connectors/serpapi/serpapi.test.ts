@@ -13,10 +13,13 @@ import {
 const fixtures = fromFileUrl(new URL("./fixtures/", import.meta.url));
 const fixture = (name: string) => loadFixture(`${fixtures}${name}.json`);
 
-/** Every endpoint Monid lists for SerpApi (monid.ai/tools/serpapi, read
- *  2026-10-27) and the SerpApi engine it runs; null = no engine. */
+/** Every SerpApi endpoint in this catalog and the engine it runs;
+ *  null = no engine. The original Monid list (2026-10-27) plus the
+ *  retail engines added for product comparison. */
 const ENGINES: Record<string, string | null> = {
     "airbnb/search": "airbnb",
+    "autozone/product": "autozone_product",
+    "autozone/search": "autozone",
     "amazon/autocomplete": "amazon_autocomplete",
     "amazon/product": "amazon_product",
     "amazon/search": "amazon",
@@ -26,6 +29,8 @@ const ENGINES: Record<string, string | null> = {
     "apple-maps/place": "apple_maps_places",
     "apple-maps/search": "apple_maps",
     "baidu/news": "baidu_news",
+    "booking/search": "booking",
+    "barnes-and-noble/search": "barnes_and_noble",
     "baidu/search": "baidu",
     "bing/copilot": "bing_copilot",
     "bing/images": "bing_images",
@@ -42,6 +47,7 @@ const ENGINES: Record<string, string | null> = {
     "duckduckgo/maps": "duckduckgo_maps",
     "duckduckgo/news": "duckduckgo_news",
     "duckduckgo/search": "duckduckgo",
+    "expedia/hotels": "expedia_hotels",
     "ebay/product": "ebay_product",
     "ebay/search": "ebay",
     "ebay/seller": "ebay_seller",
@@ -64,6 +70,7 @@ const ENGINES: Record<string, string | null> = {
     "google/finance-markets": "google_finance_markets",
     "google/flights": "google_flights",
     "google/flights-autocomplete": "google_flights_autocomplete",
+    "google/flights-calendar": "google_flights_calendar",
     "google/flights-deals": "google_flights_deals",
     "google/forums": "google_forums",
     "google/gemini": "google_gemini",
@@ -116,9 +123,12 @@ const ENGINES: Record<string, string | null> = {
     "naver/ai-mode": "naver_ai_mode",
     "naver/ai-overview": "naver_ai_overview",
     "naver/search": "naver",
+    "napa/search": "napa",
     "opentable/reviews": "open_table_reviews",
     "search-index/search": "search_index",
     "target/search": "target",
+    "trader-joes/product": "trader_joes_product",
+    "trader-joes/search": "trader_joes",
     "tripadvisor/place": "tripadvisor_place",
     "tripadvisor/reviews": "tripadvisor_reviews",
     "tripadvisor/search": "tripadvisor",
@@ -142,13 +152,13 @@ const ENGINES: Record<string, string | null> = {
     "zillow/search": "zillow",
 };
 
-Deno.test("serpapi: Monid's 124 endpoints, one auth fn, one engine each", async () => {
+Deno.test("serpapi: every catalog endpoint, one auth fn, one engine each", async () => {
     const bundle = await testBundle();
     const ids = Object.keys(bundle.endpoints).filter((id) =>
         id.startsWith("serpapi#")
     ).sort();
     assertEquals(ids, Object.keys(ENGINES).map((p) => `serpapi#${p}`).sort());
-    assertEquals(ids.length, 124);
+    assertEquals(ids.length, 133);
     const auth = bundle.endpoints["serpapi#google/search"].auth.inject.$fn.key;
     for (const id of ids) {
         const doc = bundle.endpoints[id];
