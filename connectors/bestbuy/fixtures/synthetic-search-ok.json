@@ -1,0 +1,38 @@
+{
+    "name": "synthetic-search-ok",
+    "description": "SYNTHETIC happy chain for bestbuy#products/search: a UPC exact match. Envelope (from/to/total/currentPage/totalPages/canonicalUrl/products) and attribute names from the Products API docs (bestbuyapis.github.io/api-documentation, read 2026-11-27); values invented. Replace via `deno task record` when BESTBUY_API_KEY exists (scrub apiKey from the request URL first).",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/products(upc%3D190199246850)?show=sku%2Cname%2CmodelNumber%2Cupc%2CregularPrice%2CsalePrice%2ConlineAvailability%2CinStoreAvailability&pageSize=2&format=json&apiKey=test-key"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "from": 1,
+                    "to": 1,
+                    "currentPage": 1,
+                    "total": 1,
+                    "totalPages": 1,
+                    "queryTime": "0.004",
+                    "totalTime": "0.021",
+                    "partial": false,
+                    "canonicalUrl": "/v1/products(upc=\"190199246850\")?show=sku,name,modelNumber,upc,regularPrice,salePrice,onlineAvailability,inStoreAvailability&pageSize=2&format=json&apiKey=YourAPIKey",
+                    "products": [
+                        {
+                            "sku": 6418599,
+                            "name": "Example Wireless Earbuds - White",
+                            "modelNumber": "EX-100",
+                            "upc": "190199246850",
+                            "regularPrice": 249.99,
+                            "salePrice": 199.99,
+                            "onlineAvailability": true,
+                            "inStoreAvailability": true
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

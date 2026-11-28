@@ -1,0 +1,25 @@
+{
+    "name": "synthetic-product-ok",
+    "description": "SYNTHETIC happy chain for bestbuy#products/{sku}: one SKU's price and availability attributes, names from the Products API docs (bestbuyapis.github.io/api-documentation, read 2026-11-27); values invented.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/products/6418599.json?show=sku%2Cname%2CregularPrice%2CsalePrice%2ConSale%2ConlineAvailability%2CinStoreAvailability%2Corderable&apiKey=test-key"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "sku": 6418599,
+                    "name": "Example Wireless Earbuds - White",
+                    "regularPrice": 249.99,
+                    "salePrice": 199.99,
+                    "onSale": true,
+                    "onlineAvailability": true,
+                    "inStoreAvailability": true,
+                    "orderable": "Available"
+                }
+            }
+        }
+    ]
+}

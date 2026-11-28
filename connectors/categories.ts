@@ -144,9 +144,20 @@ export const LEAF_CATEGORIES = defineLeafCategories([
             "AutoZone data: products, category listings, and vehicle fitment.",
     },
     {
+        id: "bestbuy",
+        displayName: "Best Buy",
+        description:
+            "Best Buy data: products, prices, and online and in-store availability.",
+    },
+    {
         id: "cvs",
         displayName: "CVS",
         description: "CVS data: products, prices, and availability.",
+    },
+    {
+        id: "etsy",
+        displayName: "Etsy",
+        description: "Etsy data: active marketplace listings and prices.",
     },
     {
         id: "homedepot",

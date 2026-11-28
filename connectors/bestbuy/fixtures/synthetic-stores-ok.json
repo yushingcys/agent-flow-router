@@ -1,0 +1,31 @@
+{
+    "name": "synthetic-stores-ok",
+    "description": "SYNTHETIC happy chain for bestbuy#products/{sku}/stores: stores near a ZIP code with the SKU available. Envelope (ispuEligible, stores[]) from the In-Store Availability docs (bestbuyapis.github.io/api-documentation, read 2026-11-27); store values invented.",
+    "calls": [
+        {
+            "req": {
+                "method": "GET",
+                "url": "{{request.origin}}/v1/products/6418599/stores.json?postalCode=55423&apiKey=test-key"
+            },
+            "res": {
+                "status": 200,
+                "body": {
+                    "ispuEligible": true,
+                    "stores": [
+                        {
+                            "storeID": "1000",
+                            "name": "Example Store",
+                            "address": "100 Example Ave",
+                            "city": "Richfield",
+                            "state": "MN",
+                            "postalCode": "55423",
+                            "distance": 1.2,
+                            "lowStock": false,
+                            "minPickupHours": 1
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
